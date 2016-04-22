@@ -1,10 +1,8 @@
-Rebel Fighter - 2D Shooting Game - V 1.0
+Rebel Fighter2 - 2D Shooting Game - V 0.1
 
 Developer: Tom Jaejoon Lee
 E-mail: serialkk@naver.com
-Developement Environment: Microsoft VisualStudio2005
-DirectX SDK: DirectX 2008 November
-Last change: 2009-08-28
-License: MIT, if you don't know this MIT license. please read LICENSE file.
+Developement Environment: Microsoft Visual Studio 2015 Community Edition
+DirectX SDK: Microsoft DirectX SDK (June 2010)
+First change: 2016-04-22
 
-Demo Video: https://youtu.be/HrQw38jDG74
