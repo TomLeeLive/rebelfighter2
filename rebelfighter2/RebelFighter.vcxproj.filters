@@ -45,6 +45,9 @@
     <ClCompile Include="RebelFighter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KSound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_StdAfx.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayerData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KSound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

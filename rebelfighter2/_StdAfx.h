@@ -62,6 +62,8 @@
 //09-08-28 Ãß°¡
 #include "MiMp3.h"
 
+#include "KSound.h"
+
 #include "Main.h"
 
 

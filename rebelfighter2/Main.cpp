@@ -72,6 +72,44 @@ INT CMain::Init()
 	//m_pMp[1] = new CMiMp3;
 	//m_pMp[1]->Create("Sound/menubg.mp3");
 
+	m_pSound.Init();
+	int iIndex = 0;
+	iIndex = m_pSound.Load("Sound/alarm.wav");
+	iIndex = m_pSound.Load("Sound/beam1.wav");
+	iIndex = m_pSound.Load("Sound/bonus.wav");
+	iIndex = m_pSound.Load("Sound/cannon1.wav");
+	iIndex = m_pSound.Load("Sound/electricityloop2.wav");
+	iIndex = m_pSound.Load("Sound/explosion.wav");
+	iIndex = m_pSound.Load("Sound/fireby.wav");
+	iIndex = m_pSound.Load("Sound/gungexpl.wav");
+	iIndex = m_pSound.Load("Sound/ioncannon.wav");
+	iIndex = m_pSound.Load("Sound/javjab1.wav");
+	iIndex = m_pSound.Load("Sound/menubg.mp3");
+	iIndex = m_pSound.Load("Sound/missile.wav");
+	iIndex = m_pSound.Load("Sound/misslfly.wav");
+	iIndex = m_pSound.Load("Sound/playbg.mp3");
+	iIndex = m_pSound.Load("Sound/score.wav");
+	iIndex = m_pSound.Load("Sound/shokwav2.wav");
+	iIndex = m_pSound.Load("Sound/tie.wav");
+	iIndex = m_pSound.Load("Sound/tie_b.wav");
+	iIndex = m_pSound.Load("Sound/tielsr1.wav");
+	iIndex = m_pSound.Load("Sound/tielsr2.wav");
+	iIndex = m_pSound.Load("Sound/xwlsr1.wav");
+	iIndex = m_pSound.Load("Sound/dark_side.wav");
+	iIndex = m_pSound.Load("Sound/dark_side2_y.wav");
+	iIndex = m_pSound.Load("Sound/dont_underestimate.wav");
+	iIndex = m_pSound.Load("Sound/dontmake.wav");
+	iIndex = m_pSound.Load("Sound/expecting_you.wav");
+	iIndex = m_pSound.Load("Sound/goodinu.wav");
+	iIndex = m_pSound.Load("Sound/mustobey.wav");
+	iIndex = m_pSound.Load("Sound/r2_d2.wav");
+	iIndex = m_pSound.Load("Sound/the_force.wav");
+	iIndex = m_pSound.Load("Sound/useforce.wav");
+	iIndex = m_pSound.Load("Sound/withyou.wav");
+	iIndex = m_pSound.Load("Sound/wontfail.wav");
+	iIndex = m_pSound.Load("Sound/xwenglp.wav");
+	iIndex = m_pSound.Load("Sound/your_father.wav");
+
 	return hr;
 }
 
@@ -100,6 +138,9 @@ void CMain::Destroy()
 	std::vector<CCharacterData*>::iterator _LT=pvTie0.end();
 	for(; _FT != _LT; ++_FT) { if (*_FT != 0) delete (*_FT); }
 	pvTie0.clear();
+
+
+	m_pSound.Release();
 
 	// Release COM
 	CoUninitialize();
@@ -767,6 +808,8 @@ int		CMain::StartFrameMove()				// 시작 갱신
 	//m_pMp[0]->Reset();//m_pSndGameBg->Reset();
 	//m_pMp[1]->Play();//m_pSndGameMenu->Play();
 	//m_pMp[1]->SetVolume(9000L);//m_pSndGameMenu->SetVolume(1000);
+	//m_pSound.Stop(29);
+	//m_pSound.Play(10, true);
 
 	if(0 == m_KeyOld[VK_RETURN] && m_KeyCur[VK_RETURN] )
 	{
@@ -801,7 +844,8 @@ int		CMain::PlayFrameMove()				// 플레이 갱신
 	//m_pMp[1]->Reset();//m_pSndGameMenu->Reset();
 	//m_pMp[1]->Stop();//m_pSndGameMenu->Stop();
 	//m_pMp[0]->Play();//m_pSndGameBg->Play(0, DSBPLAY_LOOPING);
-
+	//m_pSound.Stop(10);
+	//m_pSound.Play(13, true);
 
 	//this->BoomSprite();
 	this->InputMove();
@@ -1406,6 +1450,8 @@ void CMain::PlayRender()				// 플레이 렌더링
 				//m_pSndGameover->Reset();
 				//m_pSndGameover->Play();
 				//m_pSndGameover->SetVolume(0);
+				//m_pSound.Stop(13);
+				//m_pSound.Play(29, true);
 			}
 			////////////////////////////////////////////////////////////////////////////
 			m_ImgRc2.right =m_ImgRc2.left +70;

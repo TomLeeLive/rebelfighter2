@@ -1,5 +1,5 @@
 #pragma once
-
+#include "KSound.h"
 class CMain : public CD3DApplication
 {
 public:
@@ -18,6 +18,7 @@ public:
 	DWORD				m_dTimeBegin;					// 시작 타임
 	DWORD				m_dTimeEnd;					// 끝 타임
 
+	KSound				m_pSound;
 	//CMiMp3*			m_pMp[2];
 
 	//CSoundManager* m_pSoundManager; 
