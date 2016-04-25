@@ -31,6 +31,7 @@ CMain::CMain(void)
 
 	m_nGamePhase=0;
 
+	
 	//for(int i=0; i<2; ++i)
 	//{
 	//	m_pMp[i]=NULL;
@@ -57,6 +58,7 @@ INT CMain::Init()
 
 	hr=this->SoundLoad();
 
+	//m_pSound.Play(10, true);
 	//m_dTimeBegin	=timeGetTime();
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -782,6 +784,9 @@ int		CMain::StartFrameMove()				// 시작 갱신
 	{
 		m_nGamePhase = 1;
 		ImgArrayInit();
+	
+		//m_pSound.Stop(10);
+		//m_pSound.Play(13, true);
 		return 0;
 	}
 	
@@ -1411,6 +1416,9 @@ void CMain::PlayRender()				// 플레이 렌더링
 			}
 			else
 			{
+				//m_pSound.Stop(13);
+				//m_pSound.Play(22, true);
+
 				m_nGamePhase=2;
 				//m_pMp[0]->Reset();//m_pSndGameBg->Reset();
 				//m_pMp[0]->Stop();//m_pSndGameBg->Stop();
@@ -1533,6 +1541,10 @@ int		CMain::EndFrameMove()						// 게임오버 갱신
 	{
 		m_nGamePhase = 0;
 		ImgArrayInit();
+
+		//m_pSound.Stop(22);
+		//m_pSound.Play(10, true);
+
 		//m_pSndExplo->Stop();
 		//m_pSndTie->Reset();
 		//m_pSndTie->Stop();
@@ -1757,19 +1769,19 @@ INT	CMain::TextureLoad()
 		,"Texture2/playerShip1_red.png",0xFFFF00FF)))
 		hr= -1;
 
-	/*
+	
 	if(FAILED(GameTextureLoad(m_pGameTex[2].m_pTex
 		,&m_pGameTex[2].m_pImg
 		,m_pd3dDevice
 		,"Texture/Laser1.png",0xFFFFFFFF)))
 		hr= -1;
-	*/
+	/*
 	if (FAILED(GameTextureLoad(m_pGameTex[2].m_pTex
 		, &m_pGameTex[2].m_pImg
 		, m_pd3dDevice
 		, "Texture2/Lasers/laserRed13.png", 0xFFFFFFFF)))
 		hr = -1;
-
+		*/
 	/*
 	if(FAILED(GameTextureLoad(m_pGameTex[3].m_pTex
 		,&m_pGameTex[3].m_pImg
@@ -1782,19 +1794,19 @@ INT	CMain::TextureLoad()
 		, m_pd3dDevice
 		, "texture2/Enemies/enemyBlack1.png", 0xFFFFFFFF)))
 		hr = -1;
-	/*
+	
 	if(FAILED(GameTextureLoad(m_pGameTex[4].m_pTex
 		,&m_pGameTex[4].m_pImg
 		,m_pd3dDevice
 		,"Texture/Laser2.png",0xFFFFFFFF)))
 		hr= -1;
-	*/
+	/*
 	if (FAILED(GameTextureLoad(m_pGameTex[4].m_pTex
 		, &m_pGameTex[4].m_pImg
 		, m_pd3dDevice
 		, "Texture2/Lasers/laserGreen03.png", 0xFFFFFFFF)))
 		hr = -1;
-
+		*/
 	if(FAILED(GameTextureLoad(m_pGameTex[5].m_pTex
 		,&m_pGameTex[5].m_pImg
 		,m_pd3dDevice
@@ -1819,6 +1831,7 @@ INT	CMain::TextureLoad()
 		,"Texture/Tie2.png",0xFFFF00FF)))
 		hr= -1;
 	*/
+
 	if (FAILED(GameTextureLoad(m_pGameTex[8].m_pTex
 		, &m_pGameTex[8].m_pImg
 		, m_pd3dDevice

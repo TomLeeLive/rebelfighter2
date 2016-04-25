@@ -69,6 +69,44 @@
 #include "Main.h"
 
 
+#define SND_ALARM 				0
+#define SND_BEAM1				1
+#define SND_BONUS				2
+#define SND_CANNON				3
+#define SND_ELECTRICITYLOOP2	4
+#define SND_EXPLOSION			5
+#define SND_FIREBY				6
+#define SND_GUNGEXPL			7
+#define SND_IONCANNON			8
+#define SND_JAVJAB1				9
+#define SND_MENUBG				10
+#define SND_MISSILE				11
+#define SND_MISSLFLY			12
+#define SND_PLAYBG				13
+#define SND_SCORE				14
+#define SND_SHOKWAV2			15
+#define SND_TIE					16
+#define SND_TIE_B				17
+#define SND_TIELSR1				18
+#define SND_TIELSR2				19
+#define SND_XWLSR1				20
+#define SND_R2_D2				21
+#define SND_THE_FORCE			22
+#define SND_XWENGLP				23
+#define SND_GOODINU				24
+#define SND_USEFORCE			25
+#define SND_WITHYOU				26
+#define SND_WONTFAIL			27
+#define SND_DARK_SIDE			28
+#define SND_DARK_SIDE2_Y		29
+#define SND_DONT_UNDERESTIMATE	30
+#define SND_DONTMAKE			31
+#define SND_EXPECTING_YOU		32
+#define SND_MUSTOBEY			33
+#define SND_YOUR_FATHER			34
+
+
+
 
 #endif
 
