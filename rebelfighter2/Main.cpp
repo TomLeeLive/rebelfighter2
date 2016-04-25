@@ -1468,7 +1468,7 @@ void CMain::PlayRender()				// 플레이 렌더링
 	g_text.Draw(killcount, 660, 70);
 	g_text.Draw("FlightTime",660,90);
 	g_text.Draw(timeBuf,660,110);
-	g_text.Draw("------------------",660,150);
+	//g_text.Draw("------------------",660,150);
 	g_text.Draw(enemyBuf,660,160);
 	g_text.Draw("------------------",660,170);
 	g_text.Draw(lasercntBuf,660,180);
@@ -1480,7 +1480,7 @@ void CMain::PlayRender()				// 플레이 렌더링
 	g_text.Draw(curmissilecntBuf,660,280);
 	g_text.Draw("------------------",660,290);
 	g_text.Draw(vectorsize, 660, 300);
-	g_text.Draw("------------------",660,310);
+	//g_text.Draw("------------------",660,310);
 
 	/////////////////////////////////////////////////////////////////////////////
 	//FPS 화면에 출력
@@ -1744,29 +1744,56 @@ INT	CMain::TextureLoad()
 		,"Texture/bg2.png",0x0)))
 		hr= -1;
 
+	/*
+	if(FAILED(GameTextureLoad(m_pGameTex[1].m_pTex
+	,&m_pGameTex[1].m_pImg
+	,m_pd3dDevice
+	,"Texture2/xwing.png",0xFFFF00FF)))
+	hr= -1;
+	*/
 	if(FAILED(GameTextureLoad(m_pGameTex[1].m_pTex
 		,&m_pGameTex[1].m_pImg
 		,m_pd3dDevice
-		,"Texture/xwing.png",0xFFFF00FF)))
+		,"Texture2/playerShip1_red.png",0xFFFF00FF)))
 		hr= -1;
 
+	/*
 	if(FAILED(GameTextureLoad(m_pGameTex[2].m_pTex
 		,&m_pGameTex[2].m_pImg
 		,m_pd3dDevice
 		,"Texture/Laser1.png",0xFFFFFFFF)))
 		hr= -1;
+	*/
+	if (FAILED(GameTextureLoad(m_pGameTex[2].m_pTex
+		, &m_pGameTex[2].m_pImg
+		, m_pd3dDevice
+		, "Texture2/Lasers/laserRed13.png", 0xFFFFFFFF)))
+		hr = -1;
 
+	/*
 	if(FAILED(GameTextureLoad(m_pGameTex[3].m_pTex
 		,&m_pGameTex[3].m_pImg
 		,m_pd3dDevice
 		,"Texture/Tie.png",0xFFFF00FF)))
 		hr= -1;
-
+	*/
+	if (FAILED(GameTextureLoad(m_pGameTex[3].m_pTex
+		, &m_pGameTex[3].m_pImg
+		, m_pd3dDevice
+		, "texture2/Enemies/enemyBlack1.png", 0xFFFFFFFF)))
+		hr = -1;
+	/*
 	if(FAILED(GameTextureLoad(m_pGameTex[4].m_pTex
 		,&m_pGameTex[4].m_pImg
 		,m_pd3dDevice
 		,"Texture/Laser2.png",0xFFFFFFFF)))
 		hr= -1;
+	*/
+	if (FAILED(GameTextureLoad(m_pGameTex[4].m_pTex
+		, &m_pGameTex[4].m_pImg
+		, m_pd3dDevice
+		, "Texture2/Lasers/laserGreen03.png", 0xFFFFFFFF)))
+		hr = -1;
 
 	if(FAILED(GameTextureLoad(m_pGameTex[5].m_pTex
 		,&m_pGameTex[5].m_pImg
@@ -1783,14 +1810,21 @@ INT	CMain::TextureLoad()
 	if(FAILED(GameTextureLoad(m_pGameTex[7].m_pTex
 		,&m_pGameTex[7].m_pImg
 		,m_pd3dDevice
-		,"Texture/statusbar.png",0x0)))
+		,"Texture/statusbar2.png",0x0)))
 		hr= -1;
-
+	/*
 	if(FAILED(GameTextureLoad(m_pGameTex[8].m_pTex
 		,&m_pGameTex[8].m_pImg
 		,m_pd3dDevice
 		,"Texture/Tie2.png",0xFFFF00FF)))
 		hr= -1;
+	*/
+	if (FAILED(GameTextureLoad(m_pGameTex[8].m_pTex
+		, &m_pGameTex[8].m_pImg
+		, m_pd3dDevice
+		, "texture2/Enemies/enemyBlack2.png", 0xFFFFFFFF)))
+		hr = -1;
+
 
 	if(FAILED(GameTextureLoad(m_pGameTex[9].m_pTex
 		,&m_pGameTex[9].m_pImg
