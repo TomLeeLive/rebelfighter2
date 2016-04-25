@@ -238,23 +238,21 @@ INT CD3DApplication::Run()
 
 void CD3DApplication::UpdateFrame()
 {
-	static int		iCnt =0;
-	static DWORD		dB = timeGetTime();
-	DWORD			dE = timeGetTime();
+	//static int		iCnt = 0;
+	//static DWORD		dB = timeGetTime();
+	//DWORD			dE = timeGetTime();
 
-	++iCnt;
+	//++iCnt;
 
-	if(iCnt>30)		// 30Frame을 기준
-	{
-		double dDelta = DOUBLE(dE-dB);
+	//if (iCnt>30)		// 30Frame을 기준
+	//{
+	//double dDelta = DOUBLE(dE - dB);
 
-		m_deltatime= dDelta/iCnt;
-		m_fFps = iCnt*1000.f/dDelta;
+	//m_deltatime = dDelta / iCnt;
+	m_fFps = m_timer.m_iFPS;//iCnt*1000.f / dDelta;
 
-		m_movingdist = float(0.3*m_deltatime);
+	m_movingdist = g_fSecondPerFrame * 300.0f;//float(0.3*m_deltatime);
 
-
-		iCnt = 0;
-		dB	= dE;
-	}
+	//	iCnt = 0;
+	//	dB = dE;
 }

@@ -58,6 +58,7 @@ INT CMain::Init()
 	hr=this->SoundLoad();
 
 	//m_dTimeBegin	=timeGetTime();
+	m_timer.Init();
 
 ////////////////////////////////////////////////////////////////////////////////
 	memset(m_KeyOld, 0, sizeof(m_KeyOld));
@@ -106,6 +107,8 @@ void CMain::Destroy()
 
 	m_pSound.Release();
 
+	m_timer.Release();
+
 	// Release COM
 	CoUninitialize();
 }
@@ -126,6 +129,8 @@ INT CMain::GameFrameMove()
 
 	if(HIBYTE(GetAsyncKeyState(VK_RETURN)))
 		m_KeyCur[VK_RETURN] = 1;
+
+	m_timer.Frame();
 
 	switch(m_nGamePhase)
 	{
@@ -326,7 +331,7 @@ INT CMain::GameRender()
 	m_pd3dDevice->Clear( 0
 		, NULL
 		, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER
-		, 0x00000000
+		, D3DCOLOR_XRGB(94, 63, 107)
 		, 1.0f
 		, 0 );
 
@@ -334,6 +339,8 @@ INT CMain::GameRender()
 		return -1;
 
 	//m_pd3dSprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+	m_timer.Render();
 
 	switch(m_nGamePhase)
 	{
@@ -1768,7 +1775,7 @@ INT	CMain::TextureLoad()
 	if(FAILED(GameTextureLoad(m_pGameTex[5].m_pTex
 		,&m_pGameTex[5].m_pImg
 		,m_pd3dDevice
-		,"Texture/title.png",0x0)))
+		,"Texture/title2.png",0x0)))
 		hr= -1;
 
 	if(FAILED(GameTextureLoad(m_pGameTex[6].m_pTex
@@ -1876,13 +1883,13 @@ INT	CMain::TextureLoad()
 	if(FAILED(GameTextureLoad(m_pGameTex[23].m_pTex
 		,&m_pGameTex[23].m_pImg
 		,m_pd3dDevice
-		,"Texture/bg2_1.png",0x0)))
+		,"Texture/bg4.png",0x0)))
 		hr= -1;
 
 	if(FAILED(GameTextureLoad(m_pGameTex[24].m_pTex
 		,&m_pGameTex[24].m_pImg
 		,m_pd3dDevice
-		,"Texture/bg2_2.png",0x0)))
+		,"Texture/bg4.png",0x0)))
 		hr= -1;
 
 	if(FAILED(GameTextureLoad(m_pGameTex[25].m_pTex

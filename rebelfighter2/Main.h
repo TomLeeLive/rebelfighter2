@@ -1,5 +1,6 @@
 #pragma once
-#include "KSound.h"
+//#include "_StdAfx.h"
+
 class CMain : public CD3DApplication
 {
 public:
@@ -8,19 +9,17 @@ public:
 
 public:
 
-	std::vector<CLaserData*>		pvLaser0;			//주인공 총알 벡터 컨테이너
-	std::vector<CLaserData*>		pvLaser1;			//적 총알 벡터 컨테이너
-	std::vector<CCharacterData*> pvTie0;			//적 케릭터 벡터 컨테이너
+	std::vector<CLaserData*>		pvLaser0;	//주인공 총알 벡터 컨테이너
+	std::vector<CLaserData*>		pvLaser1;	//적 총알 벡터 컨테이너
+	std::vector<CCharacterData*> pvTie0;	    //적 케릭터 벡터 컨테이너
 
 	CGameTexture*		m_pTx;
-	RECT				m_ImgRc2;						// RECT 애니 이미지
+	RECT				m_ImgRc2;				// RECT 애니 이미지
 
-	DWORD				m_dTimeBegin;					// 시작 타임
-	DWORD				m_dTimeEnd;					// 끝 타임
+	DWORD				m_dTimeBegin;			// 시작 타임
+	DWORD				m_dTimeEnd;				// 끝 타임
 
-	KSound				m_pSound;
-
-
+	KSound				m_pSound;				// 사운드(fmod)
 
 	char phpBuf[80], scoreBuf[80], stageBuf[80], lifeBuf[80]
 	, playerabilBuf[80], vectorsize[80], killcount[80], timeBuf[80]
@@ -103,6 +102,7 @@ public:
 	int		ImgArrayInit();					// Image Array Init
 	void	ImgArrayDestroy();				// Image Array Delete
 	void	ImgArrayShuffle();				// Image Array Shuffle
+
 ////////////////////////////////////////////////////////////////////////////////
 	
 	void	InputMove();
@@ -119,6 +119,7 @@ public:
 };
 
 extern CMain*	g_pApp; //외부 연결 범위 선언
+
 
 // _StdAfx.h에서 이 헤더를 인클루드 하였으므로
 // SpBasic.cpp에서 선언된 g_pApp를 #define GMAIN g_pApp등으로 쓸 수 있다.
