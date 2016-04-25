@@ -19,41 +19,7 @@ public:
 	DWORD				m_dTimeEnd;					// 끝 타임
 
 	KSound				m_pSound;
-	//CMiMp3*			m_pMp[2];
 
-	//CSoundManager* m_pSoundManager; 
-	//CSound* m_pSndXwLsr1;
-	//CSound* m_pSndExplo;
-	//CSound* m_pSndTLsr1;
-	//CSound* m_pSndAlarm;
-	//CSound* m_pSndElectro;
-	//CSound* m_pSndForce;
-	//CSound* m_pSndIon;
-	//CSound* m_pSndLaser;
-	//CSound* m_pSndLaserHit;
-	//CSound* m_pSndLaserby;
-	//CSound* m_pSndMissl;
-	//CSound* m_pSndMisslby;
-	//CSound* m_pSndScore;
-	//CSound* m_pSndShHit;
-	//CSound* m_pSndTLsr2;
-	//CSound* m_pSndXwLsr2;
-	//CSound* m_pSndTie;
-	//CSound* m_pSndBonus;
-	//CSound* m_pSndEngine;
-	//CSound* m_pSndR2;
-	//CSound* m_pSndGameover;
-	//CSound* m_pSndHpup;
-	//CSound* m_pSndLaserup;
-	//CSound* m_pSndPowerup;
-	//CSound* m_pSndSpeedup;
-	//CSound* m_pSndBossline1;
-	//CSound* m_pSndBossline2;
-	//CSound* m_pSndBossline3;
-	//CSound* m_pSndBossline4;
-	//CSound* m_pSndBossline5;
-	//CSound* m_pSndBossline6;
-	//CSound* m_pSndBossline7;
 
 
 	char phpBuf[80], scoreBuf[80], stageBuf[80], lifeBuf[80]
@@ -92,19 +58,19 @@ public:
 	D3DXVECTOR3 vcPos1;						//배경위치
 	D3DXVECTOR3 vcPos2;						//배경위치
 	D3DXVECTOR3 vcBar;						//상태바위치
-	D3DXVECTOR3 vcLpos0;						//주인공총알위치0
-	D3DXVECTOR3 vcLpos1;						//적총알위치0
+	D3DXVECTOR3 vcLpos0;					//주인공총알위치0
+	D3DXVECTOR3 vcLpos1;					//적총알위치0
 	//D3DXVECTOR3 boom;						//폭발위치
 	
 	CMain();
 	virtual ~CMain(void);
 
-	virtual INT	Init();					//게임 객체 생성, 초기화
+	virtual INT		Init();					//게임 객체 생성, 초기화
 	virtual void	Destroy();				//게임 객체 소멸
-	virtual INT	GameFrameMove();		//게임 객체 갱신
-	virtual INT	GameRender();			//게임 객체 렌더링
+	virtual INT		GameFrameMove();		//게임 객체 갱신
+	virtual INT		GameRender();			//게임 객체 렌더링
 
-	INT ColCheck();	//충돌체크 함수1: 적총알이 주인공에 맞았는지 체크
+	INT ColCheck();		//충돌체크 함수1: 적총알이 주인공에 맞았는지 체크
 	INT ColCheck2();	//충돌체크 함수2: 주인공총알이 적에 맞았는지 체크
 	INT ColCheck3();	//충돌체크 함수3: 적과 주인공의 충돌 체크
 
@@ -124,7 +90,7 @@ public:
 	void	ScoreRender();					// 스코어 렌더링
 	void	ScoreRndBck();					// 스코어 Back buffer 렌더링
 
-	int		EndFrameMove();				// 게임오버 갱신
+	int		EndFrameMove();					// 게임오버 갱신
 	void	EndRender();					// 게임오버 렌더링
 	void	EndRndBck();					// 게임오버 Back buffer 렌더링
 

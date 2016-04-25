@@ -23,8 +23,8 @@ CMain::CMain(void)
 	score = 0;			//점수
 
 	vcPos= D3DXVECTOR3(0,0,0);			//배경위치
-	vcPos1= D3DXVECTOR3(-75,0,0);			//배경위치
-	vcPos2= D3DXVECTOR3(-75,-600,0);			//배경위치
+	vcPos1= D3DXVECTOR3(-75,0,0);		//배경위치
+	vcPos2= D3DXVECTOR3(-75,-600,0);	//배경위치
 
 	m_pTx = NULL;
 	SetRect(&m_ImgRc2,0,0,0, 70);		// RECT 애니 이미지
@@ -55,7 +55,7 @@ INT CMain::Init()
 
 	hr=this->TextureLoad();
 
-	//hr=this->SoundLoad();
+	hr=this->SoundLoad();
 
 	//m_dTimeBegin	=timeGetTime();
 
@@ -72,43 +72,7 @@ INT CMain::Init()
 	//m_pMp[1] = new CMiMp3;
 	//m_pMp[1]->Create("Sound/menubg.mp3");
 
-	m_pSound.Init();
-	int iIndex = 0;
-	iIndex = m_pSound.Load("Sound/alarm.wav");
-	iIndex = m_pSound.Load("Sound/beam1.wav");
-	iIndex = m_pSound.Load("Sound/bonus.wav");
-	iIndex = m_pSound.Load("Sound/cannon1.wav");
-	iIndex = m_pSound.Load("Sound/electricityloop2.wav");
-	iIndex = m_pSound.Load("Sound/explosion.wav");
-	iIndex = m_pSound.Load("Sound/fireby.wav");
-	iIndex = m_pSound.Load("Sound/gungexpl.wav");
-	iIndex = m_pSound.Load("Sound/ioncannon.wav");
-	iIndex = m_pSound.Load("Sound/javjab1.wav");
-	iIndex = m_pSound.Load("Sound/menubg.mp3");
-	iIndex = m_pSound.Load("Sound/missile.wav");
-	iIndex = m_pSound.Load("Sound/misslfly.wav");
-	iIndex = m_pSound.Load("Sound/playbg.mp3");
-	iIndex = m_pSound.Load("Sound/score.wav");
-	iIndex = m_pSound.Load("Sound/shokwav2.wav");
-	iIndex = m_pSound.Load("Sound/tie.wav");
-	iIndex = m_pSound.Load("Sound/tie_b.wav");
-	iIndex = m_pSound.Load("Sound/tielsr1.wav");
-	iIndex = m_pSound.Load("Sound/tielsr2.wav");
-	iIndex = m_pSound.Load("Sound/xwlsr1.wav");
-	iIndex = m_pSound.Load("Sound/dark_side.wav");
-	iIndex = m_pSound.Load("Sound/dark_side2_y.wav");
-	iIndex = m_pSound.Load("Sound/dont_underestimate.wav");
-	iIndex = m_pSound.Load("Sound/dontmake.wav");
-	iIndex = m_pSound.Load("Sound/expecting_you.wav");
-	iIndex = m_pSound.Load("Sound/goodinu.wav");
-	iIndex = m_pSound.Load("Sound/mustobey.wav");
-	iIndex = m_pSound.Load("Sound/r2_d2.wav");
-	iIndex = m_pSound.Load("Sound/the_force.wav");
-	iIndex = m_pSound.Load("Sound/useforce.wav");
-	iIndex = m_pSound.Load("Sound/withyou.wav");
-	iIndex = m_pSound.Load("Sound/wontfail.wav");
-	iIndex = m_pSound.Load("Sound/xwenglp.wav");
-	iIndex = m_pSound.Load("Sound/your_father.wav");
+	
 
 	return hr;
 }
@@ -457,20 +421,20 @@ INT CMain::ColCheck()
 		{
 			SetRect(&rcCol1 , INT(TempPos.x+4)
 				, INT(TempPos.y)
-				, INT(TempPos.x+4) + 5//m_pGameTex[4].GetImageWidth()
-				, INT(TempPos.y) + 30//m_pGameTex[4].GetImageHeight()
+				, INT(TempPos.x+4) + 5	//m_pGameTex[4].GetImageWidth()
+				, INT(TempPos.y) + 30	//m_pGameTex[4].GetImageHeight()
 				);
 
 			SetRect(&rcCol2 , INT(m_xwing.vcPosC.x+22)
 				, INT(m_xwing.vcPosC.y)
-				, INT(m_xwing.vcPosC.x+22) + 11//m_pGameTex[1].GetImageWidth()
-				, INT(m_xwing.vcPosC.y) + 56//m_pGameTex[1].GetImageHeight()
+				, INT(m_xwing.vcPosC.x+22) + 11	//m_pGameTex[1].GetImageWidth()
+				, INT(m_xwing.vcPosC.y) + 56	//m_pGameTex[1].GetImageHeight()
 				);
 
 			SetRect(&rcColSound , INT(m_xwing.vcPosC.x-112)
 				, INT(m_xwing.vcPosC.y)
-				, INT(m_xwing.vcPosC.x-112) + 275//m_pGameTex[1].GetImageWidth()
-				, INT(m_xwing.vcPosC.y+56) //+ m_pGameTex[1].GetImageHeight()
+				, INT(m_xwing.vcPosC.x-112) + 275	//m_pGameTex[1].GetImageWidth()
+				, INT(m_xwing.vcPosC.y+56)			//+ m_pGameTex[1].GetImageHeight()
 				);
 		}
 		else
@@ -483,13 +447,13 @@ INT CMain::ColCheck()
 
 		SetRect(&rcCol2 , INT(m_xwing.vcPosC.x+22)
 			, INT(m_xwing.vcPosC.y)
-			, INT(m_xwing.vcPosC.x+22) + 11//m_pGameTex[1].GetImageWidth()
-			, INT(m_xwing.vcPosC.y) + 56//m_pGameTex[1].GetImageHeight()
+			, INT(m_xwing.vcPosC.x+22) + 11		//m_pGameTex[1].GetImageWidth()
+			, INT(m_xwing.vcPosC.y) + 56		//m_pGameTex[1].GetImageHeight()
 			);
 		SetRect(&rcColSound , INT(m_xwing.vcPosC.x-112)
 			, INT(m_xwing.vcPosC.y)
-			, INT(m_xwing.vcPosC.x-112) + 275//m_pGameTex[1].GetImageWidth()
-			, INT(m_xwing.vcPosC.y+56) //+ m_pGameTex[1].GetImageHeight()
+			, INT(m_xwing.vcPosC.x-112) + 275	//m_pGameTex[1].GetImageWidth()
+			, INT(m_xwing.vcPosC.y+56)			//+ m_pGameTex[1].GetImageHeight()
 			);
 		}
 		///////////////////////////////////////////////////////////////////////
@@ -608,8 +572,8 @@ INT CMain::ColCheck2()
 
 				SetRect(&rcCol2 , INT((*_FT)->vcPosC.x+29)
 					, INT((*_FT)->vcPosC.y+61)
-					, INT((*_FT)->vcPosC.x+29) + 41//m_pGameTex[3].GetImageWidth()
-					, INT((*_FT)->vcPosC.y+61) + 44//m_pGameTex[3].GetImageHeight()
+					, INT((*_FT)->vcPosC.x+29) + 41	//m_pGameTex[3].GetImageWidth()
+					, INT((*_FT)->vcPosC.y+61) + 44	//m_pGameTex[3].GetImageHeight()
 					);
 			}
 			else
@@ -1939,171 +1903,46 @@ INT	CMain::TextureLoad()
 INT CMain::SoundLoad()
 {
 	HRESULT hr=0;
-	////////////////////////////////////////////////////////////////////////////////
-	//m_pSoundManager = new CSoundManager;
-	//if(FAILED(m_pSoundManager->Initialize(m_hWnd,DSSCL_PRIORITY)))
-	//	hr= -1;
 
-	////////////////////////////////////////////////////////////////////////////////
-	//주인공 총알 사운드1
-	//if(FAILED(m_pSoundManager->Create(&m_pSndXwLsr1,"Sound/xwlsr1.wav")))
-	//	hr= -1;
+	m_pSound.Init();
 
-	////////////////////////////////////////////////////////////////////////////////
-	//폭발 사운드
-	//if(FAILED(m_pSoundManager->Create(&m_pSndExplo,"Sound/explosion.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//타이파이터1 총알 사운드1
-	//if(FAILED(m_pSoundManager->Create(&m_pSndTLsr1,"Sound/tielsr1.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//타이파이터2 총알 사운드2
-	//if(FAILED(m_pSoundManager->Create(&m_pSndTLsr2,"Sound/tielsr2.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//주인공 총알 사운드2
-	//if(FAILED(m_pSoundManager->Create(&m_pSndXwLsr2,"Sound/cannon1.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//알람 사운드
-	//if(FAILED(m_pSoundManager->Create(&m_pSndAlarm,"Sound/alarm.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//스코어, 스테이지 자막 사운드
-	//if(FAILED(m_pSoundManager->Create(&m_pSndScore,"Sound/score.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//보스의 포스기술 발동 사운드
-	//if(FAILED(m_pSoundManager->Create(&m_pSndForce,"Sound/beam1.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//전기가 지지직 거리는 소리
-	//if(FAILED(m_pSoundManager->Create(&m_pSndElectro,"Sound/electricityloop2.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//레이저가 지나가는 소리
-	//if(FAILED(m_pSoundManager->Create(&m_pSndLaserby,"Sound/fireby.wav")))
-	//	hr= -1;
-
-	//////////////////////////////////////////////////////////////////////////////////
-	////총알 끼리 맞는 소리
-	//if(FAILED(m_pSoundManager->Create(&m_pSndLaserHit,"gungexpl.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//이온 캐논
-	//if(FAILED(m_pSoundManager->Create(&m_pSndIon,"Sound/ioncannon.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//주인공 쉴드에 레이저가 맞을때
-	//if(FAILED(m_pSoundManager->Create(&m_pSndShHit,"Sound/javjab1.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//미사일 발사
-	//if(FAILED(m_pSoundManager->Create(&m_pSndMissl,"Sound/missile.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//미사일이 지나갈때
-	//if(FAILED(m_pSoundManager->Create(&m_pSndMisslby,"Sound/misslfly.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//레이저발사 사운드, 포스발동 등 이용할것
-	//if(FAILED(m_pSoundManager->Create(&m_pSndLaser,"Sound/shokwav2.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//적이 지나갈때
-	//if(FAILED(m_pSoundManager->Create(&m_pSndTie,"Sound/tie.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//보너스 사운드
-	//if(FAILED(m_pSoundManager->Create(&m_pSndBonus,"Sound/bonus.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//비행기 엔진
-	//if(FAILED(m_pSoundManager->Create(&m_pSndEngine,"Sound2/xwenglp.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//보너스: 라이프업! R2D2 소리
-	//if(FAILED(m_pSoundManager->Create(&m_pSndR2,"Sound2/r2_d2.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//게임 오버
-	//if(FAILED(m_pSoundManager->Create(&m_pSndGameover,"Sound2/the_force.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//스피드 업!
-	//if(FAILED(m_pSoundManager->Create(&m_pSndSpeedup,"Sound2/goodinu.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//파워 업!
-	//if(FAILED(m_pSoundManager->Create(&m_pSndPowerup,"Sound2/useforce.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//H.P 업!
-	//if(FAILED(m_pSoundManager->Create(&m_pSndHpup,"Sound2/withyou.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//레이저 업!
-	//if(FAILED(m_pSoundManager->Create(&m_pSndLaserup,"Sound2/wontfail.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//보스 대사1
-	//if(FAILED(m_pSoundManager->Create(&m_pSndBossline1,"Sound2/dark_side.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//보스 대사2
-	//if(FAILED(m_pSoundManager->Create(&m_pSndBossline2,"Sound2/dark_side2_y.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//보스 대사3
-	//if(FAILED(m_pSoundManager->Create(&m_pSndBossline3,"Sound2/dont_underestimate.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//보스 대사4
-	//if(FAILED(m_pSoundManager->Create(&m_pSndBossline4,"Sound2/dontmake.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//보스 대사5
-	//if(FAILED(m_pSoundManager->Create(&m_pSndBossline5,"Sound2/expecting_you.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//보스 대사6
-	//if(FAILED(m_pSoundManager->Create(&m_pSndBossline6,"Sound2/mustobey.wav")))
-	//	hr= -1;
-
-	////////////////////////////////////////////////////////////////////////////////
-	//보스 대사7
-	//if(FAILED(m_pSoundManager->Create(&m_pSndBossline7,"Sound2/your_father.wav")))
-	//	hr= -1;
+	int iIndex = 0;
 	
+	iIndex = m_pSound.Load("Sound/alarm.wav");		//알람 사운드
+	iIndex = m_pSound.Load("Sound/beam1.wav");		//보스의 포스기술 발동 사운드
+	iIndex = m_pSound.Load("Sound/bonus.wav");		//보너스 사운드
+	iIndex = m_pSound.Load("Sound/cannon1.wav");	//주인공 총알 사운드2
+	iIndex = m_pSound.Load("Sound/electricityloop2.wav");	//전기가 지지직 거리는 소리
+	iIndex = m_pSound.Load("Sound/explosion.wav");	//폭발 사운드
+	iIndex = m_pSound.Load("Sound/fireby.wav");		//레이저가 지나가는 소리
+	iIndex = m_pSound.Load("Sound/gungexpl.wav");	//총알 끼리 맞는 소리
+	iIndex = m_pSound.Load("Sound/ioncannon.wav");	//이온 캐논
+	iIndex = m_pSound.Load("Sound/javjab1.wav");	//주인공 쉴드에 레이저가 맞을때
+	iIndex = m_pSound.Load("Sound/menubg.mp3");		//시작메뉴 bgm
+	iIndex = m_pSound.Load("Sound/missile.wav");	//미사일 발사
+	iIndex = m_pSound.Load("Sound/misslfly.wav");	//미사일이 지나갈때
+	iIndex = m_pSound.Load("Sound/playbg.mp3");		//게임 bgm
+	iIndex = m_pSound.Load("Sound/score.wav");		//스코어, 스테이지 자막 사운드
+	iIndex = m_pSound.Load("Sound/shokwav2.wav");	//레이저발사 사운드, 포스발동 등 이용할것
+	iIndex = m_pSound.Load("Sound/tie.wav");		//적이 지나갈때
+	iIndex = m_pSound.Load("Sound/tie_b.wav");
+	iIndex = m_pSound.Load("Sound/tielsr1.wav");	//타이파이터1 총알 사운드1
+	iIndex = m_pSound.Load("Sound/tielsr2.wav");	//타이파이터2 총알 사운드2
+	iIndex = m_pSound.Load("Sound/xwlsr1.wav");		//주인공 총알 사운드1
+	iIndex = m_pSound.Load("Sound/r2_d2.wav");		//보너스: 라이프업! R2D2 소리
+	iIndex = m_pSound.Load("Sound/the_force.wav");	//게임 오버 bgm
+	iIndex = m_pSound.Load("Sound/xwenglp.wav");	//비행기 엔진
+	iIndex = m_pSound.Load("Sound/goodinu.wav");	//스피드 업!
+	iIndex = m_pSound.Load("Sound/useforce.wav");	//파워 업!
+	iIndex = m_pSound.Load("Sound/withyou.wav");	//H.P 업!
+	iIndex = m_pSound.Load("Sound/wontfail.wav");	//레이저 업!
+	iIndex = m_pSound.Load("Sound/dark_side.wav");	//보스 대사1
+	iIndex = m_pSound.Load("Sound/dark_side2_y.wav");//보스 대사2
+	iIndex = m_pSound.Load("Sound/dont_underestimate.wav");//보스 대사3
+	iIndex = m_pSound.Load("Sound/dontmake.wav");	//보스 대사4
+	iIndex = m_pSound.Load("Sound/expecting_you.wav");//보스 대사5
+	iIndex = m_pSound.Load("Sound/mustobey.wav");	//보스 대사6
+	iIndex = m_pSound.Load("Sound/your_father.wav");//보스 대사7
 
 	return hr;
 }
