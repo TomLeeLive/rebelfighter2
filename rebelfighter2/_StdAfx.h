@@ -64,7 +64,7 @@
 
 #include "KSound.h"
 
-#include "KTimer.h"
+#include "Timer.h"
 
 #include "Main.h"
 

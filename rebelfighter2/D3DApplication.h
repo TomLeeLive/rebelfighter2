@@ -1,4 +1,4 @@
-#include "KTimer.h"
+#include "Timer.h"
 
 class CD3DApplication
 {
@@ -24,7 +24,7 @@ public:
 	UINT					m_gamebegin	;	//게임시작시간
 	UINT					m_alphatime	;	//timegettime함수의 리턴값을 게임시작시간으로 뺀 값, 즉 게임 프로그램이 시작되고서부터의 시간
 
-	KTimer					m_timer;				// 타이머
+	CTimer					m_timer;				// 타이머
 
 	CD3DApplication();
 	virtual ~CD3DApplication();
@@ -38,10 +38,10 @@ public:
 	////////////////////////////////////////////////////////////////////////////////
 	
 	virtual LRESULT MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam ); 
-	virtual INT	Init() { m_timer.Init(); return 0; };				//게임 객체 생성, 초기화
-	virtual void	Destroy() { m_timer.Release(); return; };				//게임 객체 소멸
-	virtual INT	GameFrameMove() { m_timer.Frame(); return 0; };		//게임 객체 갱신
-	virtual INT	GameRender() { m_timer.Render(); return 0; };			//게임 객체 렌더링
+	virtual INT	Init();				//게임 객체 생성, 초기화
+	virtual void	Destroy();				//게임 객체 소멸
+	virtual INT	GameFrameMove();		//게임 객체 갱신
+	virtual INT	GameRender();			//게임 객체 렌더링
 
 	virtual void UpdateFrame();
 };

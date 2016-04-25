@@ -124,6 +124,8 @@ INT CD3DApplication::Create( HINSTANCE hInst)
 		return -1;
 	}
 
+	m_timer.Init();
+
 	return 0;
 
 
@@ -141,6 +143,7 @@ void CD3DApplication::Cleanup()
 
 	//
 	////////////////////////////////////////////////////////////////////////////
+	m_timer.Release();
 	Destroy();
 
 	//com∞¥√º¿« «ÿ¡¶¥¬ release()
@@ -194,6 +197,14 @@ INT CD3DApplication::Run()
 	MSG msg;
 	memset( &msg, 0, sizeof(msg) );
 
+	/*
+	Init() { m_timer.Init(); return 0; };
+	Destroy() { m_timer.Release(); return; };
+	GameFrameMove() { m_timer.Frame(); return 0; };
+	GameRender() { m_timer.Render(); return 0; };
+	*/
+
+
 	while( msg.message!=WM_QUIT )
 	{
 		if( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
@@ -211,11 +222,16 @@ INT CD3DApplication::Run()
 			//
 			////////////////////////////////////////////////////////////////////
 
+			m_timer.Frame();
+
 			if(FAILED(GameFrameMove()))
 			{
 				PostQuitMessage(0);
 				continue;
 			}
+			
+			m_timer.Render();
+
 			if(FAILED(GameRender()))
 			{
 				PostQuitMessage(0);
@@ -233,7 +249,10 @@ INT CD3DApplication::Run()
 	return 0;
 }
 
-
+INT		CD3DApplication::Init() { return 0; };				//∞‘¿” ∞¥√º ª˝º∫, √ ±‚»≠
+void	CD3DApplication::Destroy() { return; };				//∞‘¿” ∞¥√º º“∏Í
+INT		CD3DApplication::GameFrameMove() { return 0; };		//∞‘¿” ∞¥√º ∞ªΩ≈
+INT		CD3DApplication::GameRender() { return 0; };		//∞‘¿” ∞¥√º ∑ª¥ı∏µ
 
 
 void CD3DApplication::UpdateFrame()
@@ -256,3 +275,4 @@ void CD3DApplication::UpdateFrame()
 	//	iCnt = 0;
 	//	dB = dE;
 }
+

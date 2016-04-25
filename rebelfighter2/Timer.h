@@ -1,6 +1,6 @@
 #pragma once
 
-class KTimer //: public TBase
+class CTimer //: public TBase
 {
 public:
 	int		 m_iFPS; // 초당 프레임 카운터
@@ -17,7 +17,7 @@ public:
 	bool     Render();// 드로우
 	bool     Release();// 삭제, 소멸
 public:
-	KTimer();
-	virtual ~KTimer();
+	CTimer();
+	virtual ~CTimer();
 };
 

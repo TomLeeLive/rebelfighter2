@@ -1,6 +1,6 @@
 #include "_StdAfx.h"
 float g_fSecondPerFrame = 0.0f;
-bool     KTimer::Init()
+bool     CTimer::Init()
 {
 	m_fSecondPerFrame = 0.0f;
 	m_iFPS = 0;
@@ -12,7 +12,7 @@ bool     KTimer::Init()
 }; // 초기화
    //__imp__timeGetTime@0 외부 기호(참조 위치 : "publi
    //winmm.lib
-bool     KTimer::Frame() {
+bool     CTimer::Frame() {
 	DWORD dwCurrentTick = timeGetTime();
 	DWORD dwElapseTick = dwCurrentTick - m_dwBeforeTick;
 	m_fSecondPerFrame = dwElapseTick / 1000.0f;
@@ -30,7 +30,7 @@ bool     KTimer::Frame() {
 	m_dwBeforeTick = dwCurrentTick;
 	return true;
 };
-bool     KTimer::Render() {
+bool     CTimer::Render() {
 #ifdef _DEBUG
 	static float fTime = 0.0f;
 	fTime += m_fSecondPerFrame;
@@ -53,15 +53,15 @@ bool     KTimer::Render() {
 #endif
 	return true;
 };
-bool     KTimer::Release() {
+bool     CTimer::Release() {
 	return true;
 };
 
-KTimer::KTimer()
+CTimer::CTimer()
 {
 }
 
 
-KTimer::~KTimer()
+CTimer::~CTimer()
 {
 }

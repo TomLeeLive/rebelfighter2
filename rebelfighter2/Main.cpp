@@ -58,7 +58,6 @@ INT CMain::Init()
 	hr=this->SoundLoad();
 
 	//m_dTimeBegin	=timeGetTime();
-	m_timer.Init();
 
 ////////////////////////////////////////////////////////////////////////////////
 	memset(m_KeyOld, 0, sizeof(m_KeyOld));
@@ -107,7 +106,6 @@ void CMain::Destroy()
 
 	m_pSound.Release();
 
-	m_timer.Release();
 
 	// Release COM
 	CoUninitialize();
@@ -130,7 +128,6 @@ INT CMain::GameFrameMove()
 	if(HIBYTE(GetAsyncKeyState(VK_RETURN)))
 		m_KeyCur[VK_RETURN] = 1;
 
-	m_timer.Frame();
 
 	switch(m_nGamePhase)
 	{
@@ -340,7 +337,6 @@ INT CMain::GameRender()
 
 	//m_pd3dSprite->Begin(D3DXSPRITE_ALPHABLEND);
 
-	m_timer.Render();
 
 	switch(m_nGamePhase)
 	{
