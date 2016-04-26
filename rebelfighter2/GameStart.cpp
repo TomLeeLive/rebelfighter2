@@ -22,6 +22,8 @@ void CGameStart::Frame()
 		if (0 == GMAIN->m_KeyOld[VK_RETURN] && GMAIN->m_KeyCur[VK_RETURN])
 		{
 			GMAIN->m_nGamePhase = ST_SINGLEGAME;
+			GMAIN->m_pSound.Stop(SND_MENUBG);
+			GMAIN->m_pSound.Play(SND_PLAYBG, true);
 			//ImgArrayInit();
 
 			//m_pSound.Stop(10);

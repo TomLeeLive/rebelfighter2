@@ -6,7 +6,7 @@
 
 using namespace FMOD;
 
-const int g_iMaxSound = 3;
+const int g_iMaxSound = 34;
 // c,  c++
 class KSound
 {

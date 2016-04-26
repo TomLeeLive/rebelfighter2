@@ -46,7 +46,7 @@ INT CMain::Init()
 
 	hr=this->TextureLoad();
 
-	hr=this->SoundLoad();
+
 
 	//m_pSound.Play(10, true);
 	//m_dTimeBegin	=timeGetTime();
@@ -63,7 +63,12 @@ INT CMain::Init()
 	m_gamehowto.Init();
 	m_gamemulti.Init();
 	
-	m_nGamePhase = ST_START;
+	
+	
+	hr = this->SoundLoad();
+
+	
+	GMAIN->m_pSound.Play(SND_MENUBG, true);
 	//m_pMp[0] = new CMiMp3;
 	//m_pMp[0]->Create("Sound/playbg.mp3");
 
@@ -71,6 +76,7 @@ INT CMain::Init()
 	//m_pMp[1]->Create("Sound/menubg.mp3");
 
 	
+	m_nGamePhase = ST_START;
 
 	return hr;
 }
@@ -115,9 +121,6 @@ INT CMain::GameFrameMove()
 	switch(m_nGamePhase)
 	{
 	case ST_START:	
-////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////
 		m_gamestart.Frame();
 		break;
 

@@ -9,6 +9,10 @@ void CGameEnd::Frame()
 	{
 		GMAIN->m_nGamePhase = ST_START;
 		GGAME->Init();
+
+		GMAIN->m_pSound.Stop(SND_THE_FORCE);
+		GMAIN->m_pSound.Play(SND_MENUBG, true);
+
 		//ImgArrayInit();
 
 		//m_pSound.Stop(22);
