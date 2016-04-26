@@ -388,16 +388,19 @@ void CGamePlay::Frame()
 							switch (rand() % 1)
 							{
 							case 0:
+								GMAIN->m_pSound.Play(SND_TIELSR1, true);
 								//m_pSndTLsr1->Reset();
 								//m_pSndTLsr1->Play();
 								//m_pSndTLsr1->SetVolume(0);
 								break;
 							case 1:
+								GMAIN->m_pSound.Play(SND_TIELSR2, true);
 								//m_pSndTLsr2->Reset();
 								//m_pSndTLsr2->Play();
 								//m_pSndTLsr2->SetVolume(0);
 								break;
 							default:
+								GMAIN->m_pSound.Play(SND_TIELSR1, true);
 								//m_pSndTLsr1->Reset();
 								//m_pSndTLsr1->Play();
 								//m_pSndTLsr1->SetVolume(0);
@@ -406,12 +409,14 @@ void CGamePlay::Frame()
 						}
 						else if (attackname == "Missile")
 						{
+							GMAIN->m_pSound.Play(SND_MISSILE, true);
 							//m_pSndMissl->Reset();
 							//m_pSndMissl->Play();
 							//m_pSndMissl->SetVolume(0);
 						}
 						else if (attackname == "Ion")
 						{
+							GMAIN->m_pSound.Play(SND_IONCANNON, true);
 							//m_pSndIon->Reset();
 							//m_pSndIon->Play();
 							//m_pSndIon->SetVolume(0);
@@ -681,6 +686,8 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 							if ((*_FT)->name == "Life")
 							{
 								m_xwing.m_life++;
+								GMAIN->m_pSound.Play(SND_BONUS, true);
+								GMAIN->m_pSound.Play(SND_R2_D2, true);
 								//m_pSndBonus->Reset();
 								//m_pSndBonus->Play();
 								//m_pSndBonus->SetVolume(0);
@@ -691,6 +698,8 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 							else if ((*_FT)->name == "Laser")
 							{
 								m_xwing.m_laserable++;
+								GMAIN->m_pSound.Play(SND_BONUS, true);
+								GMAIN->m_pSound.Play(SND_WONTFAIL, true);
 								//m_pSndBonus->Reset();
 								//m_pSndBonus->Play();
 								//m_pSndBonus->SetVolume(0);
@@ -701,6 +710,8 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 							else if ((*_FT)->name == "Power")
 							{
 								m_xwing.m_power++;
+								GMAIN->m_pSound.Play(SND_BONUS, true);
+								GMAIN->m_pSound.Play(SND_USEFORCE, true);
 								//m_pSndBonus->Reset();
 								//m_pSndBonus->Play();
 								//m_pSndBonus->SetVolume(0);
@@ -711,6 +722,8 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 							else if ((*_FT)->name == "Hp")
 							{
 								m_xwing.hp = 100;
+								GMAIN->m_pSound.Play(SND_BONUS, true);
+								GMAIN->m_pSound.Play(SND_WITHYOU, true);
 								//m_pSndBonus->Reset();
 								//m_pSndBonus->Play();
 								//m_pSndBonus->SetVolume(0);
@@ -721,6 +734,8 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 							else if ((*_FT)->name == "Speed")
 							{
 								m_xwing.m_speed++;
+								GMAIN->m_pSound.Play(SND_BONUS, true);
+								GMAIN->m_pSound.Play(SND_GOODINU, true);
 								//m_pSndBonus->Reset();
 								//m_pSndBonus->Play();
 								//m_pSndBonus->SetVolume(0);
@@ -743,6 +758,8 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 						if (score != 0 && score % 1000 == 0)
 						{
 							m_xwing.m_life++;
+							GMAIN->m_pSound.Play(SND_BONUS, true);
+							GMAIN->m_pSound.Play(SND_R2_D2, true);
 							//m_pSndBonus->Reset();
 							//m_pSndBonus->Play();
 							//m_pSndBonus->SetVolume(0);
@@ -1018,6 +1035,7 @@ INT CGamePlay::ColCheck()
 			//SetWindowText(m_hWnd, "Collision");
 
 			//폭발 사운드
+			GMAIN->m_pSound.Play(SND_EXPLOSION,true);
 			//m_pSndExplo->Reset();
 			//m_pSndExplo->Play();
 			//m_pSndExplo->SetVolume(0);
@@ -1056,18 +1074,21 @@ INT CGamePlay::ColCheck()
 
 			if ((*_F)->name == "Laser")
 			{
+				GMAIN->m_pSound.Play(SND_FIREBY, true);
 				//m_pSndLaserby->Reset();
 				//m_pSndLaserby->Play();
 				//m_pSndLaserby->SetVolume(0);
 			}
 			else if ((*_F)->name == "Ion")
 			{
+				GMAIN->m_pSound.Play(SND_FIREBY, true);
 				//m_pSndLaserby->Reset();
 				//m_pSndLaserby->Play();
 				//m_pSndLaserby->SetVolume(0);
 			}
 			else if ((*_F)->name == "Missile")
 			{
+				GMAIN->m_pSound.Play(SND_MISSLFLY, true);
 				//m_pSndMisslby->Reset();
 				//m_pSndMisslby->Play();
 				//m_pSndMisslby->SetVolume(0);
@@ -1149,6 +1170,7 @@ INT CGamePlay::ColCheck2()
 				//SetWindowText(m_hWnd, "Collision");
 
 				//폭발 사운드
+				GMAIN->m_pSound.Play(SND_EXPLOSION, true);
 				//m_pSndExplo->Reset();
 				//m_pSndExplo->Play();
 				//m_pSndExplo->SetVolume(0);
@@ -1227,6 +1249,7 @@ INT CGamePlay::ColCheck3()
 			{
 				//적 지나가는 사운드
 
+				GMAIN->m_pSound.Play(SND_TIE, true);
 				//m_pSndTie->Play();
 				//m_pSndTie->SetVolume(0);
 				//사운드 끝
@@ -1250,41 +1273,55 @@ INT CGamePlay::ColCheck3()
 					switch (rand() % 7)
 					{
 					case 0:
+						GMAIN->m_pSound.Play(SND_DARK_SIDE, true);
+
 						//m_pSndBossline1->Reset();
 						//m_pSndBossline1->Play();
 						//m_pSndBossline1->SetVolume(5000);
 						break;
 					case 1:
+						GMAIN->m_pSound.Play(SND_DARK_SIDE2_Y, true);
+
 						//m_pSndBossline2->Reset();
 						//m_pSndBossline2->Play();
 						//m_pSndBossline2->SetVolume(5000);
 						break;
 					case 2:
+						GMAIN->m_pSound.Play(SND_DONT_UNDERESTIMATE, true);
+
 						//m_pSndBossline3->Reset();
 						//m_pSndBossline3->Play();
 						//m_pSndBossline3->SetVolume(5000);
 						break;
 					case 3:
+						GMAIN->m_pSound.Play(SND_DONTMAKE, true);
+
 						//m_pSndBossline4->Reset();
 						//m_pSndBossline4->Play();
 						//m_pSndBossline4->SetVolume(5000);
 						break;
 					case 4:
+						GMAIN->m_pSound.Play(SND_EXPECTING_YOU, true);
+
 						//m_pSndBossline5->Reset();
 						//m_pSndBossline5->Play();
 						//m_pSndBossline5->SetVolume(5000);
 						break;
 					case 5:
+						GMAIN->m_pSound.Play(SND_MUSTOBEY, true);
+
 						//m_pSndBossline6->Reset();
 						//m_pSndBossline6->Play();
 						//m_pSndBossline6->SetVolume(5000);
 						break;
 					case 6:
+						GMAIN->m_pSound.Play(SND_YOUR_FATHER, true);
 						//m_pSndBossline7->Reset();
 						//m_pSndBossline7->Play();
 						//m_pSndBossline7->SetVolume(5000);
 						break;
 					default:
+						GMAIN->m_pSound.Play(SND_DONT_UNDERESTIMATE, true);
 						//m_pSndBossline1->Reset();
 						//m_pSndBossline1->Play();
 						//m_pSndBossline1->SetVolume(5000);
@@ -1346,6 +1383,8 @@ void	CGamePlay::InputMove()
 			if (pvLaser0.size() < m_xwing.m_laserable)
 			{
 				pvLaser0.push_back(new CLaserData(m_xwing.xval, m_xwing.yval, FALSE)); // 주인공 총알 발생
+
+				GMAIN->m_pSound.Play(SND_XWLSR1, true);
 																					   //////////////////////////////////////////////////////////////////////
 																					   //m_pSndXwLsr1->Reset();
 
