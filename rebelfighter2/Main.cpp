@@ -300,19 +300,19 @@ INT	CMain::TextureLoad()
 	, "Texture2/Lasers/laserRed13.png", 0xFFFFFFFF)))
 	hr = -1;
 	*/
-	/*
+	
 	if(FAILED(GameTextureLoad(m_pGameTex[3].m_pTex
 	,&m_pGameTex[3].m_pImg
 	,m_pd3dDevice
 	,"Texture/Tie.png",0xFFFF00FF)))
 	hr= -1;
-	*/
+	/*
 	if (FAILED(GameTextureLoad(m_pGameTex[3].m_pTex
 		, &m_pGameTex[3].m_pImg
 		, m_pd3dDevice
 		, "texture2/Enemies/enemyBlack1.png", 0xFFFFFFFF)))
 		hr = -1;
-
+	*/
 	if (FAILED(GameTextureLoad(m_pGameTex[4].m_pTex
 		, &m_pGameTex[4].m_pImg
 		, m_pd3dDevice
@@ -342,20 +342,20 @@ INT	CMain::TextureLoad()
 		, m_pd3dDevice
 		, "Texture/statusbar2.png", 0x0)))
 		hr = -1;
-	/*
+	
 	if(FAILED(GameTextureLoad(m_pGameTex[8].m_pTex
 	,&m_pGameTex[8].m_pImg
 	,m_pd3dDevice
 	,"Texture/Tie2.png",0xFFFF00FF)))
 	hr= -1;
-	*/
-
+	
+	/*
 	if (FAILED(GameTextureLoad(m_pGameTex[8].m_pTex
 		, &m_pGameTex[8].m_pImg
 		, m_pd3dDevice
 		, "texture2/Enemies/enemyBlack2.png", 0xFFFFFFFF)))
 		hr = -1;
-
+	*/
 
 	if (FAILED(GameTextureLoad(m_pGameTex[9].m_pTex
 		, &m_pGameTex[9].m_pImg
@@ -457,6 +457,12 @@ INT	CMain::TextureLoad()
 		, &m_pGameTex[25].m_pImg
 		, m_pd3dDevice
 		, "Texture/howto.png", 0x0)))
+		hr = -1;
+
+	if (FAILED(GameTextureLoad(m_pGameTex[26].m_pTex
+		, &m_pGameTex[26].m_pImg
+		, m_pd3dDevice
+		, "texture2/Lasers/laserRed09.png", 0xFFFFFFFF)))
 		hr = -1;
 
 	m_pTx = new CGameTexture;

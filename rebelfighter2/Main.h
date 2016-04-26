@@ -20,7 +20,7 @@ public:
 
 	CGameTexture*		m_pTx;
 
-	CGameTexture	m_pGameTex[26];
+	CGameTexture	m_pGameTex[27];
 	KSound			m_pSound;				// 사운드(fmod)
 	GAME_STATE		m_nGamePhase;					//게임 상태 변경(시작화면, 게임, 종료)
 
