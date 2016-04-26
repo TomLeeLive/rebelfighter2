@@ -13,6 +13,9 @@
       <UniqueIdentifier>{a0359188-da0c-4cba-b3dd-9ab0e4b50663}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
+    <Filter Include="GameScene">
+      <UniqueIdentifier>{95f760b4-4f13-43f0-b6e4-673d9e9f8e66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CharacterData.cpp">
@@ -50,6 +53,24 @@
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEnd.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameHowto.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMulti.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlay.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStart.cpp">
+      <Filter>GameScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +112,24 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEnd.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameHowto.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMulti.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlay.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStart.h">
+      <Filter>GameScene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

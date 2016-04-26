@@ -176,7 +176,7 @@ HRESULT CGameInput::MenuItemClickCheck(void)
 			&& MousePos.y > rcWindowClient.bottom*359/600
 			&& MousePos.y < rcWindowClient.bottom*391/600)
 		{
-			GMAIN->m_nGamePhase=1;
+			GMAIN->m_nGamePhase=ST_SINGLEGAME;
 			OutputDebugString("Start\n");
 		}
 		else if(MousePos.x > rcWindowClient.right*565/800
@@ -184,7 +184,7 @@ HRESULT CGameInput::MenuItemClickCheck(void)
 			&& MousePos.y > rcWindowClient.bottom*408/600
 			&& MousePos.y < rcWindowClient.bottom*442/600)
 		{
-			GMAIN->m_nGamePhase=4;
+			GMAIN->m_nGamePhase=ST_HOWTO;
 			OutputDebugString("Howto\n");
 		}
 		else if(MousePos.x > rcWindowClient.right*565/800

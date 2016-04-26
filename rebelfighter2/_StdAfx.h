@@ -49,6 +49,17 @@
 #define GHINST			g_pApp->m_hInst
 #define GHWND			g_pApp->m_hWnd
 #define GDEVICE		g_pApp->m_pd3dDevice
+#define GGAME		g_pGameplay
+
+
+enum GAME_STATE {
+	ST_START = 0,
+	ST_SINGLEGAME,
+	ST_END,
+	ST_HOWTO = 4,
+	ST_MULTI
+};
+
 
 #include "D3DApplication.h"
 #include "dsutil.h"
@@ -65,6 +76,16 @@
 #include "KSound.h"
 
 #include "Timer.h"
+
+#include "CDrawText.h"
+
+
+#include "GameScene.h"
+#include "GamePlay.h"
+#include "GameStart.h"
+#include "GameEnd.h"
+#include "GameMulti.h"
+#include "GameHowto.h"
 
 #include "Main.h"
 
@@ -104,7 +125,6 @@
 #define SND_EXPECTING_YOU		32
 #define SND_MUSTOBEY			33
 #define SND_YOUR_FATHER			34
-
 
 
 

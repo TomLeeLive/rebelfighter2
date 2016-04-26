@@ -147,7 +147,13 @@
     <ClCompile Include="CharacterData.cpp" />
     <ClCompile Include="D3DApplication.cpp" />
     <ClCompile Include="dsutil.cpp" />
+    <ClCompile Include="GameEnd.cpp" />
+    <ClCompile Include="GameHowto.cpp" />
     <ClCompile Include="GameInput.cpp" />
+    <ClCompile Include="GameMulti.cpp" />
+    <ClCompile Include="GamePlay.cpp" />
+    <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="GameStart.cpp" />
     <ClCompile Include="GameTexture.cpp" />
     <ClCompile Include="KSound.cpp" />
     <ClCompile Include="LaserData.cpp" />
@@ -162,7 +168,13 @@
     <ClInclude Include="CharacterData.h" />
     <ClInclude Include="D3DApplication.h" />
     <ClInclude Include="dsutil.h" />
+    <ClInclude Include="GameEnd.h" />
+    <ClInclude Include="GameHowto.h" />
     <ClInclude Include="GameInput.h" />
+    <ClInclude Include="GameMulti.h" />
+    <ClInclude Include="GamePlay.h" />
+    <ClInclude Include="GameScene.h" />
+    <ClInclude Include="GameStart.h" />
     <ClInclude Include="GameTexture.h" />
     <ClInclude Include="KSound.h" />
     <ClInclude Include="LaserData.h" />
