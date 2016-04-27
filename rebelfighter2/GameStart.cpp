@@ -24,6 +24,8 @@ void CGameStart::Frame()
 			GMAIN->m_nGamePhase = ST_SINGLEGAME;
 			GMAIN->m_pSound.Stop(SND_MENUBG);
 			GMAIN->m_pSound.Play(SND_PLAYBG, true);
+			GMAIN->m_pSound.Play(SND_XWENGLP, false);
+			GMAIN->m_pSound.Volume(SND_XWENGLP,0.5f, false);
 			//ImgArrayInit();
 
 			//m_pSound.Stop(10);

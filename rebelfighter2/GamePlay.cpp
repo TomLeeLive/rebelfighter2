@@ -214,6 +214,8 @@ void CGamePlay::Frame()
 	}
 	if (m_xwing.dead != TRUE)
 	{
+		
+		//GMAIN->m_pSound.Volume(SND_XWENGLP, 1000,false);
 		//m_pSndEngine->Play();
 		//m_pSndEngine->SetVolume(-1000);
 	}
@@ -845,7 +847,7 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 				GMAIN->m_nGamePhase = ST_END;
 				GMAIN->m_pSound.Play(SND_THE_FORCE, true);
 				GMAIN->m_pSound.Stop(SND_PLAYBG);
-				
+				GMAIN->m_pSound.Stop(SND_XWENGLP);
 
 				//m_pMp[0]->Reset();//m_pSndGameBg->Reset();
 				//m_pMp[0]->Stop();//m_pSndGameBg->Stop();
