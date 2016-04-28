@@ -1431,7 +1431,7 @@ void CharacterMoveBasic(std::vector<CCharacterData*>::iterator* _FT) {
 	
 
 
-	(**_FT)->xval += sinf((GMAIN->m_alphatime + 290000) * 0.0015f + (**_FT)->position);
+	(**_FT)->xval += sinf((GMAIN->m_alphatime + 290000) * 0.0015f + (**_FT)->position) * GMAIN->m_movingdist;
 
 	////(*_FT)->yval=(*_FT)->yval+movingdist;
 	////(*_FT)->yval=+cosf(timeGetTime()	 * 0.001f) * 300.f+300;
