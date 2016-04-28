@@ -145,22 +145,23 @@ void CGamePlay::Frame()
 			}
 			else
 			{
+				/*
 				pvTie0.push_back(new CCharacterData(1, int(rand() % 360), 305, float(rand() % 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(1, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(1, int(rand() % 360), 305, float(rand() % 50 + 100 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(1, int(rand() % 360), 305, float(rand() % 50 + 150 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(1, int(rand() % 360), 305, float(rand() % 50 + 200 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(1, int(rand() % 360), 305, float(rand() % 50 + 250 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-				/*
+				*/
 				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 100 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 150 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 200 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 250 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-				*/
-				if (rand() % 6 == 3)
-				{
+				
+				//if (rand() % 6 == 3)
+				//{
 					switch (rand() % 7)
 					{
 					case 0://10. 라이프 아이템 생성
@@ -195,7 +196,7 @@ void CGamePlay::Frame()
 							pvTie0.push_back(new CCharacterData(11, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
 						break;
 					}
-				}
+				//}
 			}
 
 			//////////////////////////////////////////////////////////////////
@@ -1458,8 +1459,8 @@ void CharacterMoveBasic(std::vector<CCharacterData*>::iterator* _FT) {
 	}
 	else
 	{
-		//(*_FT)->yval = (*_FT)->yval + GMAIN->m_movingdist / (*_FT)->speed;
-		(**_FT)->yval = (**_FT)->yval + GMAIN->m_movingdist / 10;
+		(**_FT)->yval = (**_FT)->yval + GMAIN->m_movingdist / (**_FT)->speed;
+		//(**_FT)->yval = (**_FT)->yval + GMAIN->m_movingdist / 10;
 	}
 }
 
