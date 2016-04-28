@@ -18,6 +18,7 @@ public:
 public:
 	bool	Init();
 	int     Load(char* pLoadName);
+	int     Load(char* pLoadName, bool bLoop);
 	void	Play(int iIndex, bool bPlay);
 	void    Stop(int iIndex)
 	{
@@ -31,6 +32,7 @@ public:
 	}
 	void   Volume(int iIndex, float fVolume, bool bUp);
 	void	Release();
+	
 public:
 	KSound();
 	virtual ~KSound();

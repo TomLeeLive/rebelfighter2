@@ -10,8 +10,12 @@ void   KSound::Volume(int iIndex, float fVolume, bool bUp)
 }
 bool KSound::Init()
 {
+	//FMOD_RESULT result;
+
 	FMOD::System_Create(&m_pSystem);
-	m_pSystem->init(32, FMOD_INIT_NORMAL, 0);
+	m_pSystem->init(g_iMaxSound, FMOD_INIT_NORMAL, 0);
+
+
 	return true;
 };
 int   KSound::Load(char* pLoadName)
@@ -20,9 +24,20 @@ int   KSound::Load(char* pLoadName)
 		FMOD_HARDWARE, 0, &m_pSound[m_iSoundList++]);
 	return m_iSoundList - 1;
 }
+int   KSound::Load(char* pLoadName, bool bLoop)
+{
+	m_pSystem->createSound(pLoadName,
+		FMOD_HARDWARE, 0, &m_pSound[m_iSoundList++]);
+
+	if(bLoop == true)
+		m_pSound[m_iSoundList-1]->setMode(FMOD_LOOP_NORMAL);
+
+	return m_iSoundList - 1;
+}
 void  KSound::Play(int iIndex, bool bPlay)
 {
 	bool playing = false;
+	
 	if (bPlay == false)
 	{
 		if (m_pChannel[iIndex] != NULL)
@@ -35,6 +50,7 @@ void  KSound::Play(int iIndex, bool bPlay)
 		m_pSystem->playSound(FMOD_CHANNEL_FREE,
 			m_pSound[iIndex], false, &m_pChannel[iIndex]);
 	}
+	
 }
 void  KSound::Release()
 {

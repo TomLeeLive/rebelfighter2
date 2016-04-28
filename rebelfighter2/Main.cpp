@@ -495,10 +495,10 @@ INT CMain::SoundLoad()
 	iIndex = m_pSound.Load("Sound/gungexpl.wav");	//총알 끼리 맞는 소리
 	iIndex = m_pSound.Load("Sound/ioncannon.wav");	//이온 캐논
 	iIndex = m_pSound.Load("Sound/javjab1.wav");	//주인공 쉴드에 레이저가 맞을때
-	iIndex = m_pSound.Load("Sound/menubg.mp3");		//시작메뉴 bgm
+	iIndex = m_pSound.Load("Sound/menubg.mp3", true);		//시작메뉴 bgm
 	iIndex = m_pSound.Load("Sound/missile.wav");	//미사일 발사
 	iIndex = m_pSound.Load("Sound/misslfly.wav");	//미사일이 지나갈때
-	iIndex = m_pSound.Load("Sound/playbg.mp3");		//게임 bgm
+	iIndex = m_pSound.Load("Sound/playbg.mp3",true);		//게임 bgm
 	iIndex = m_pSound.Load("Sound/score.wav");		//스코어, 스테이지 자막 사운드
 	iIndex = m_pSound.Load("Sound/shokwav2.wav");	//레이저발사 사운드, 포스발동 등 이용할것
 	iIndex = m_pSound.Load("Sound/tie.wav");		//적이 지나갈때
