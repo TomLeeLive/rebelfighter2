@@ -15,6 +15,7 @@ public:
 	CGamePlay  m_gameplay;
 	CGameHowto m_gamehowto;
 	CGameMulti m_gamemulti;
+	//CShtGame   m_shtgame;
 
 	CGameInput* m_pInput;
 

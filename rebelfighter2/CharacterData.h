@@ -28,6 +28,7 @@ public:
 
 	int				point;					//적기를 없애면 +될 포인트
 				
+	int				movepattern;			//이동패턴
 	CCharacterData(){};
 	CCharacterData::~CCharacterData(void);
 

@@ -145,13 +145,20 @@ void CGamePlay::Frame()
 			}
 			else
 			{
+				pvTie0.push_back(new CCharacterData(1, int(rand() % 360), 305, float(rand() % 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+				pvTie0.push_back(new CCharacterData(1, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+				pvTie0.push_back(new CCharacterData(1, int(rand() % 360), 305, float(rand() % 50 + 100 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+				pvTie0.push_back(new CCharacterData(1, int(rand() % 360), 305, float(rand() % 50 + 150 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+				pvTie0.push_back(new CCharacterData(1, int(rand() % 360), 305, float(rand() % 50 + 200 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+				pvTie0.push_back(new CCharacterData(1, int(rand() % 360), 305, float(rand() % 50 + 250 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+				/*
 				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 100 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 150 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 200 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 250 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-
+				*/
 				if (rand() % 6 == 3)
 				{
 					switch (rand() % 7)
@@ -476,7 +483,7 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 	dxsprite->Begin(D3DXSPRITE_ALPHABLEND);
 
 	vcBar = D3DXVECTOR3(650, 0, 0);							//상태바위치
-	m_xwing.AssignVal(m_xwing.xval, 540);				//주인공위치
+	m_xwing.AssignVal(m_xwing.xval, m_xwing.yval);				//주인공위치
 
 	dxsprite->Draw(GMAIN->m_pGameTex[23].m_pTex, (&GMAIN->rc), NULL, &vcPos1, D3DXCOLOR(1, 1, 1, 1.f)); //배경
 	dxsprite->Draw(GMAIN->m_pGameTex[24].m_pTex, (&GMAIN->rc), NULL, &vcPos2, D3DXCOLOR(1, 1, 1, 1.f)); //배경
@@ -773,6 +780,7 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 						if ((m_xwing.m_killcount != 0) && (m_xwing.m_killcount % 6 == 0))
 						{
 							stage++;
+							GMAIN->m_pSound.Play(SND_R2_D2, true);
 						}
 					}
 				}
@@ -1380,6 +1388,24 @@ void	CGamePlay::InputMove()
 				m_xwing.xval = 0;
 			}
 		}
+
+		if (GMAIN->m_pInput->KeyPress(VK_UP))
+		{
+			m_xwing.yval = m_xwing.yval - GMAIN->m_movingdist*m_xwing.m_speed;
+			//++m_xwing.xval;
+			if (m_xwing.yval<0)
+			{
+				m_xwing.yval = 0;
+			}
+		}
+		if (GMAIN->m_pInput->KeyPress(VK_DOWN))
+		{
+			m_xwing.yval = m_xwing.yval + GMAIN->m_movingdist*m_xwing.m_speed;
+			if (m_xwing.yval>550)
+			{
+				m_xwing.yval = 550;
+			}
+		}
 		if (GMAIN->m_pInput->KeyDown(VK_SPACE))
 		{
 			if (pvLaser0.size() < m_xwing.m_laserable)
@@ -1399,12 +1425,66 @@ void	CGamePlay::InputMove()
 	}
 }
 
+
+void CharacterMoveBasic(std::vector<CCharacterData*>::iterator* _FT) {
+	
+
+
+	(**_FT)->xval += sinf((GMAIN->m_alphatime + 290000) * 0.0015f + (**_FT)->position);
+
+	////(*_FT)->yval=(*_FT)->yval+movingdist;
+	////(*_FT)->yval=+cosf(timeGetTime()	 * 0.001f) * 300.f+300;
+
+	if ((**_FT)->yval >= 600)
+	{
+		if ((**_FT)->name == "Boss")
+		{
+			(**_FT)->yval = (**_FT)->yval = -108;
+			(**_FT)->flybysound = FALSE;
+		}
+		else
+		{
+			if ((**_FT)->name == "Life" || (**_FT)->name == "Power" || (**_FT)->name == "Speed" || (**_FT)->name == "Laser" || (**_FT)->name == "Hp")
+			{
+				delete (**_FT);
+				**_FT = 0;
+			}
+			else
+			{
+				(**_FT)->yval = (**_FT)->yval = -44;
+				(**_FT)->flybysound = FALSE;
+			}
+		}
+	}
+	else
+	{
+		//(*_FT)->yval = (*_FT)->yval + GMAIN->m_movingdist / (*_FT)->speed;
+		(**_FT)->yval = (**_FT)->yval + GMAIN->m_movingdist / 10;
+	}
+}
+
+
+void CharacterMovePath(std::vector<CCharacterData*>::iterator* _FT) {
+	//(**_FT)->xval;
+	if ((**_FT)->yval >= 600)
+	{
+		(**_FT)->yval = (**_FT)->yval = -44;
+		(**_FT)->flybysound = FALSE;
+	}
+	else{
+		(**_FT)->yval= (**_FT)->yval+GMAIN->m_movingdist;
+	}
+
+
+
+}
+
 void CGamePlay::CharacterMove()
 {
 
 	std::vector<CCharacterData*>::iterator _FT = pvTie0.begin();
 	std::vector<CCharacterData*>::iterator _LT = pvTie0.end();
-
+	
 	for (; _FT != _LT; ++_FT)
 	{
 		if (*_FT == 0)
@@ -1413,36 +1493,15 @@ void CGamePlay::CharacterMove()
 		if ((*_FT)->dead == TRUE)
 			continue;
 
-		(*_FT)->xval += sinf((GMAIN->m_alphatime + 290000) * 0.0015f + (*_FT)->position);
-
-		////(*_FT)->yval=(*_FT)->yval+movingdist;
-		////(*_FT)->yval=+cosf(timeGetTime()	 * 0.001f) * 300.f+300;
-
-		if ((*_FT)->yval >= 600)
-		{
-			if ((*_FT)->name == "Boss")
-			{
-				(*_FT)->yval = (*_FT)->yval = -108;
-				(*_FT)->flybysound = FALSE;
-			}
-			else
-			{
-				if ((*_FT)->name == "Life" || (*_FT)->name == "Power" || (*_FT)->name == "Speed" || (*_FT)->name == "Laser" || (*_FT)->name == "Hp")
-				{
-					delete (*_FT);
-					*_FT = 0;
-				}
-				else
-				{
-					(*_FT)->yval = (*_FT)->yval = -44;
-					(*_FT)->flybysound = FALSE;
-				}
-			}
-		}
-		else
-		{
-			(*_FT)->yval = (*_FT)->yval + GMAIN->m_movingdist / (*_FT)->speed;
-			//(*_FT)->yval=(*_FT)->yval+movingdist/10;
-		}
+		//if ((*_FT)->movepattern == MV_BASIC)
+		//{
+			CharacterMoveBasic(&_FT);
+		//};
+		//if ((*_FT)->movepattern == MV_PATH)
+		//{
+		//	CharacterMovePath(&_FT);
+		//};
+	
 	}
+	
 }

@@ -62,7 +62,7 @@ INT CMain::Init()
 	m_gameplay.Init();
 	m_gamehowto.Init();
 	m_gamemulti.Init();
-	
+	//m_shtgame.SetDevice(&m_pd3dDevice);
 	
 	
 	hr = this->SoundLoad();

@@ -24,6 +24,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 		missileable=FALSE;		//미사일 가능? TRUE: 가능 FALSE: 불가능
 		missileability=0;			//미사일 발사발수
 		point=10;
+
+		movepattern = MV_PATH;
 	}
 	else if(_num==2)
 	{
@@ -38,6 +40,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 		missileable=FALSE;		//미사일 가능? TRUE: 가능 FALSE: 불가능
 		missileability=0;			//미사일 발사발수
 		point=10;
+
+		movepattern = MV_BASIC;
 	}
 	else if(_num==3)
 	{
@@ -52,6 +56,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 		missileable=TRUE;			//미사일 가능? TRUE: 가능 FALSE: 불가능
 		missileability=1;			//미사일 발사발수
 		point=10;
+
+		movepattern = MV_BASIC;
 	}
 	else if(_num==4)
 	{
@@ -66,6 +72,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 		missileable=TRUE;			//미사일 가능? TRUE: 가능 FALSE: 불가능
 		missileability=1;			//미사일 발사발수
 		point=10;
+
+		movepattern = MV_BASIC;
 	}
 	else if(_num==5)
 	{
@@ -80,6 +88,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 		missileable=TRUE;			//미사일 가능? TRUE: 가능 FALSE: 불가능
 		missileability=2;			//미사일 발사발수
 		point=10;
+
+		movepattern = MV_BASIC;
 	}
 	else if(_num==6)
 	{
@@ -94,6 +104,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 		missileable=TRUE;			//미사일 가능? TRUE: 가능 FALSE: 불가능
 		missileability=2;			//미사일 발사발수
 		point=10;
+
+		movepattern = MV_BASIC;
 	}
 	else if(_num==7)
 	{
@@ -108,6 +120,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 		missileable=FALSE;		//미사일 가능? TRUE: 가능 FALSE: 불가능
 		missileability=0;			//미사일 발사발수
 		point=10;
+
+		movepattern = MV_BASIC;
 	}
 	else if(_num==8)
 	{
@@ -122,6 +136,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 		missileable=TRUE;			//미사일 가능? TRUE: 가능 FALSE: 불가능
 		missileability=1;			//미사일 발사발수
 		point=10;
+
+		movepattern = MV_BASIC;
 	}
 	else if(_num==9)
 	{
@@ -136,6 +152,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 		missileable=TRUE;			//미사일 가능? TRUE: 가능 FALSE: 불가능
 		missileability=2;			//미사일 발사발수
 		point=10;
+
+		movepattern = MV_BASIC;
 	}
 	else if(_num==10)
 	{
@@ -145,6 +163,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 
 		laserable=FALSE;laserability=0;ionable=FALSE;				
 		ionability=0;	missileable=FALSE;missileability=0;	point=0;
+	
+		movepattern = MV_BASIC;
 	}
 	else if(_num==11)
 	{
@@ -154,6 +174,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 
 		laserable=FALSE;laserability=0;ionable=FALSE;				
 		ionability=0;	missileable=FALSE;missileability=0;	point=0;
+	
+		movepattern = MV_BASIC;
 	}
 	else if(_num==12)
 	{
@@ -163,6 +185,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 
 		laserable=FALSE;laserability=0;ionable=FALSE;				
 		ionability=0;	missileable=FALSE;missileability=0;	point=0;
+	
+		movepattern = MV_BASIC;
 	}
 	else if(_num==13)
 	{
@@ -172,6 +196,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 
 		laserable=FALSE;laserability=0;ionable=FALSE;				
 		ionability=0;	missileable=FALSE;missileability=0;	point=0;
+	
+		movepattern = MV_BASIC;
 	}
 	else if(_num==14)
 	{
@@ -181,6 +207,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 
 		laserable=FALSE;laserability=0;ionable=FALSE;				
 		ionability=0;	missileable=FALSE;missileability=0;	point=0;
+	
+		movepattern = MV_BASIC;
 	}
 	else
 	{
@@ -195,6 +223,8 @@ CCharacterData::CCharacterData(int _num, int _pos, float _xval, float _yval,
 		missileable=FALSE;		//미사일 가능? TRUE: 가능 FALSE: 불가능
 		missileability=0;			//미사일 발사발수
 		point=10;
+	
+		movepattern = MV_BASIC;
 	}
 
 }

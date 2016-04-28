@@ -79,6 +79,18 @@ enum GAME_STATE {
 
 #include "CDrawText.h"
 
+//////////////////////////////////////////
+// 슈팅 알고리즘 라이브러리
+#pragma comment(lib, "sht.lib") 
+#include "Game.h"
+#include "Graphics.h"
+#include "Hit.h"
+#include "Image.h"
+#include "Input.h"
+#include "ShtMain.h"
+#include "Mover.h"
+#include "Object3D.h"
+//////////////////////////////////////////
 
 #include "GameScene.h"
 #include "GamePlay.h"
@@ -86,6 +98,7 @@ enum GAME_STATE {
 #include "GameEnd.h"
 #include "GameMulti.h"
 #include "GameHowto.h"
+
 
 #include "Main.h"
 
@@ -126,7 +139,8 @@ enum GAME_STATE {
 #define SND_MUSTOBEY			33
 #define SND_YOUR_FATHER			34
 
-
+#define MV_BASIC	0
+#define MV_PATH		1
 
 #endif
 
