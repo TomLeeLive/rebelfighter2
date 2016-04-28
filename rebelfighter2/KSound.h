@@ -15,6 +15,7 @@ public:
 	FMOD::System*   m_pSystem;
 	FMOD::Sound*    m_pSound[g_iMaxSound];
 	FMOD::Channel*    m_pChannel[g_iMaxSound];
+	//FMOD::Channel* m_pChannela;
 public:
 	bool	Init();
 	int     Load(char* pLoadName);
@@ -32,6 +33,7 @@ public:
 	}
 	void   Volume(int iIndex, float fVolume, bool bUp);
 	void	Release();
+	void	Frame();
 	
 public:
 	KSound();

@@ -106,7 +106,7 @@ void CMain::Destroy()
 
 INT CMain::GameFrameMove()
 {
-
+	m_pSound.Frame();
 
 	
 
@@ -120,7 +120,8 @@ INT CMain::GameFrameMove()
 
 	switch(m_nGamePhase)
 	{
-	case ST_START:	
+	case ST_START:
+		
 		m_gamestart.Frame();
 		break;
 
