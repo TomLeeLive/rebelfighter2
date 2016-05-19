@@ -81,15 +81,15 @@ enum GAME_STATE {
 
 //////////////////////////////////////////
 // 슈팅 알고리즘 라이브러리
-#pragma comment(lib, "sht.lib") 
-#include "Game.h"
-#include "Graphics.h"
-#include "Hit.h"
-#include "Image.h"
-#include "Input.h"
-#include "ShtMain.h"
-#include "Mover.h"
-#include "Object3D.h"
+//#pragma comment(lib, "sht.lib") 
+//#include "Game.h"
+//#include "Graphics.h"
+//#include "Hit.h"
+//#include "Image.h"
+//#include "Input.h"
+//#include "ShtMain.h"
+//#include "Mover.h"
+//#include "Object3D.h"
 //////////////////////////////////////////
 
 #include "GameScene.h"
