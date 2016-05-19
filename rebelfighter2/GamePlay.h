@@ -73,10 +73,8 @@ public:
 						//메뉴별로 게임 메뉴, 게임 실행, 스코어 
 
 
-
-
-
-
+	void CGamePlay::CharacterMovePath(std::vector<CCharacterData*>::iterator* _FT);
+	void CGamePlay::CharacterMoveBasic(std::vector<CCharacterData*>::iterator* _FT);
 
 	void	InputMove();
 	void	CharacterMove();

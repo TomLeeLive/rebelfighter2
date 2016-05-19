@@ -1427,7 +1427,7 @@ void	CGamePlay::InputMove()
 }
 
 
-void CharacterMoveBasic(std::vector<CCharacterData*>::iterator* _FT) {
+void CGamePlay::CharacterMoveBasic(std::vector<CCharacterData*>::iterator* _FT) {
 	
 
 
@@ -1465,7 +1465,7 @@ void CharacterMoveBasic(std::vector<CCharacterData*>::iterator* _FT) {
 }
 
 
-void CharacterMovePath(std::vector<CCharacterData*>::iterator* _FT) {
+void CGamePlay::CharacterMovePath(std::vector<CCharacterData*>::iterator* _FT) {
 	//(**_FT)->xval;
 	if ((**_FT)->yval >= 600)
 	{
