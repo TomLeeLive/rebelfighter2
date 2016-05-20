@@ -66,6 +66,8 @@ enum GAME_STATE {
 #include "GameInput.h"
 #include "GameTexture.h"
 
+#include "Sprite.h"
+
 #include "CharacterData.h"
 #include "PlayerData.h"
 #include "LaserData.h"
@@ -91,6 +93,7 @@ enum GAME_STATE {
 //#include "Mover.h"
 //#include "Object3D.h"
 //////////////////////////////////////////
+
 
 #include "GameScene.h"
 #include "GamePlay.h"

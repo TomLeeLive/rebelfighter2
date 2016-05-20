@@ -17,11 +17,10 @@ public:
 	std::vector<CCharacterData*> pvTie0;	    //적 케릭터 벡터 컨테이너
 
 
-	RECT				m_ImgRc2;				// RECT 애니 이미지
-
-	DWORD				m_dTimeBegin;			// 시작 타임
-	DWORD				m_dTimeEnd;				// 끝 타임
-
+	CSprite				m_boomsprite;			// 폭발스프라이트
+	//RECT				m_ImgRc2;				// RECT 애니 이미지
+	//DWORD				m_dTimeBegin;			// 시작 타임
+	//DWORD				m_dTimeEnd;				// 끝 타임
 
 
 	char phpBuf[80], scoreBuf[80], stageBuf[80], lifeBuf[80]

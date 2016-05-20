@@ -1,6 +1,6 @@
 #include "_StdAfx.h"
 
-D3DXVECTOR3 boom;			//폭발위치
+//D3DXVECTOR3 boom;			//폭발위치
 
 
 //extern  CDrawText		GMAIN->m_text;
@@ -29,7 +29,7 @@ CGamePlay::CGamePlay()
 	vcPos2 = D3DXVECTOR3(-75, -600, 0);	//배경위치
 
 
-	SetRect(&m_ImgRc2, 0, 0, 0, 70);		// RECT 애니 이미지
+	//SetRect(&m_ImgRc2, 0, 0, 0, 70);		// RECT 애니 이미지
 }
 
 INT CGamePlay::Init()
@@ -258,9 +258,11 @@ void CGamePlay::Frame()
 		{
 			if (pvLaser1.size() <= ((*_FT)->laserability + 1)*pvTie0.size())
 			{
-				m_dTimeEnd = timeGetTime();
+				//m_dTimeEnd = timeGetTime();
 
-				if ((m_dTimeEnd - m_dTimeBegin)>100)
+				//if ((m_dTimeEnd - m_dTimeBegin)>100)
+				//{
+				if(m_boomsprite.AniFrame(100, timeGetTime()))
 				{
 					if ((*_FT)->dead == FALSE)
 					{
@@ -465,7 +467,8 @@ void CGamePlay::Frame()
 						}
 						/////////////////////////////////////////////////////////////////////////
 					}
-					m_dTimeBegin = m_dTimeEnd;
+					//m_dTimeBegin = m_dTimeEnd;
+					m_boomsprite.SetTimeBegin(m_boomsprite.m_dTimeEnd);
 				}
 
 			}
@@ -643,48 +646,53 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 		{
 			if ((*_FT)->name == "Boss")
 			{
-				boom.x = (*_FT)->vcPosC.x - 15 + 29;
-				boom.y = (*_FT)->vcPosC.y - 13 + 61;
+				(*_FT)->boom.SetPosX((*_FT)->vcPosC.x - 15 + 29);
+				(*_FT)->boom.SetPosY((*_FT)->vcPosC.y - 13 + 61);
 			}
 			else
 			{
-				boom.x = (*_FT)->vcPosC.x - 15;
-				boom.y = (*_FT)->vcPosC.y - 13;
+				(*_FT)->boom.SetPosX((*_FT)->vcPosC.x - 15);
+				(*_FT)->boom.SetPosY((*_FT)->vcPosC.y - 13);
 			}
 			//////////////////////////////////////////////////////////////////////
-			(*_FT)->m_dTimeEnd = timeGetTime();
+			//(*_FT)->m_dTimeEnd = timeGetTime();
 
-			if (((*_FT)->m_dTimeEnd - (*_FT)->m_dTimeBegin)>50)
-			{
-				m_ImgRc2.left += 70;
+			//if (((*_FT)->m_dTimeEnd - (*_FT)->m_dTimeBegin)>50)
+			//{
+			//	m_ImgRc2.left += 70;
 
-				if (m_ImgRc2.left + 70 >= 1120)
-				{
-					m_ImgRc2.left = 0;
-					(*_FT)->laserhit = FALSE;
-				}
+			//	if (m_ImgRc2.left + 70 >= 1120)
+			//	{
+			//		m_ImgRc2.left = 0;
+			//		(*_FT)->laserhit = FALSE;
+			//	}
 
-				m_ImgRc2.right = m_ImgRc2.left + 70;
-				(*_FT)->m_dTimeBegin = (*_FT)->m_dTimeEnd;
+			//	m_ImgRc2.right = m_ImgRc2.left + 70;
+			//	(*_FT)->m_dTimeBegin = (*_FT)->m_dTimeEnd;
 
-			}
+			//}
+
+			(*_FT)->laserhit =(*_FT)->boom.AniFrame(50);
+
 			//////////////////////////////////////////////////////////////////////
 			if (*_FT != 0)
 			{
-				dxsprite->Draw(pTex, &m_ImgRc2, NULL, &boom, D3DXCOLOR(1, 1, 1, 1.F)); //&m_vcPosImg2
+				(*_FT)->boom.Render(dxdevice, dxsprite);
+				//dxsprite->Draw(pTex, &m_ImgRc2, NULL, &boom, D3DXCOLOR(1, 1, 1, 1.F)); //&m_vcPosImg2
 			}
 			//////////////////////////////////////////////////////////////////////
 		}
 		if ((*_FT)->dead == TRUE)
 		{
-			(*_FT)->m_dTimeEnd = timeGetTime();
-			if (((*_FT)->m_dTimeEnd - (*_FT)->m_dTimeBegin)>50)
+			m_boomsprite.SetTimeEnd(timeGetTime());
+			//(*_FT)->m_dTimeEnd = timeGetTime();
+			if ((m_boomsprite.m_dTimeEnd - m_boomsprite.m_dTimeBegin)>50)
 			{
-				m_ImgRc2.left += 70;
+				m_boomsprite.m_imgRc.left += 70;
 
-				if (m_ImgRc2.left + 70 >= 1120)
+				if (m_boomsprite.m_imgRc.left + 70 >= 1120)
 				{
-					m_ImgRc2.left = 0;
+					m_boomsprite.m_imgRc.left = 0;
 					if (*_FT != 0)
 					{
 						if ((*_FT)->laserable == TRUE) { lasercnt -= (*_FT)->laserability; }
@@ -785,7 +793,7 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 						}
 					}
 				}
-				m_ImgRc2.right = m_ImgRc2.left + 70;
+				m_boomsprite.m_imgRc.right = m_boomsprite.m_imgRc.left + 70;
 			}
 		}
 	}
@@ -797,39 +805,43 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 	}
 	if (m_xwing.laserhit == TRUE)
 	{
-		boom.x = m_xwing.vcPosC.x - 8;
-		boom.y = m_xwing.vcPosC.y - 7;
+		m_xwing.boom.SetPosX(m_xwing.vcPosC.x - 8);
+		m_xwing.boom.SetPosY(m_xwing.vcPosC.y - 7);
 		////////////////////////////////////////////////////////////////////////////////
-		m_xwing.m_dTimeEnd = timeGetTime();
+		//m_xwing.m_dTimeEnd = timeGetTime();
+		
+		//if ((m_xwing.m_dTimeEnd - m_xwing.m_dTimeBegin)>100)
+		//{
+		//	m_ImgRc2.left += 70;
 
-		if ((m_xwing.m_dTimeEnd - m_xwing.m_dTimeBegin)>100)
-		{
-			m_ImgRc2.left += 70;
+		//	if (m_ImgRc2.left + 70 >= 1120)
+		//	{
+		//		m_ImgRc2.left = 0;
+		//		m_xwing.laserhit = FALSE;
+		//	}
 
-			if (m_ImgRc2.left + 70 >= 1120)
-			{
-				m_ImgRc2.left = 0;
-				m_xwing.laserhit = FALSE;
-			}
+		//	m_ImgRc2.right = m_ImgRc2.left + 70;
+		//	m_xwing.m_dTimeBegin = m_xwing.m_dTimeEnd;
 
-			m_ImgRc2.right = m_ImgRc2.left + 70;
-			m_xwing.m_dTimeBegin = m_xwing.m_dTimeEnd;
-
-		}
+		//}
+		m_xwing.boom.AniFrame(100);
 		////////////////////////////////////////////////////////////////////////////////
-		dxsprite->Draw(pTex, &m_ImgRc2, NULL, &boom, D3DXCOLOR(1, 1, 1, 1.F)); //&m_vcPosImg2
+		//dxsprite->Draw(pTex, &m_ImgRc2, NULL, &boom, D3DXCOLOR(1, 1, 1, 1.F)); //&m_vcPosImg2
+		m_xwing.boom.Render(dxdevice, dxsprite);
+
 	}
 	if (m_xwing.dead == TRUE)
 	{
-		m_xwing.m_dTimeEnd = timeGetTime();
+		m_xwing.boom.SetTimeEnd(timeGetTime());
+		//m_xwing.m_dTimeEnd = timeGetTime();
 
-		if ((m_xwing.m_dTimeEnd - m_xwing.m_dTimeBegin)>100)
+		if ((m_xwing.boom.m_dTimeEnd - m_xwing.boom.m_dTimeBegin)>100)
 		{
-			m_ImgRc2.left += 70;
+			m_xwing.boom.m_imgRc.left += 70;
 
-			if (m_ImgRc2.left + 70 >= 1120)
+			if (m_xwing.boom.m_imgRc.left + 70 >= 1120)
 			{
-				m_ImgRc2.left = 0;
+				m_xwing.boom.m_imgRc.left = 0;
 				//m_nGamePhase=2;
 			}
 			/////////////////////////////////////////////////////////////////////////////
@@ -867,12 +879,14 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 				//m_pSound.Play(29, true);
 			}
 			////////////////////////////////////////////////////////////////////////////
-			m_ImgRc2.right = m_ImgRc2.left + 70;
-			m_xwing.m_dTimeBegin = m_xwing.m_dTimeEnd;
+			m_xwing.boom.m_imgRc.right = m_xwing.boom.m_imgRc.left + 70;
+			//m_xwing.m_dTimeBegin = m_xwing.m_dTimeEnd;
+			m_xwing.boom.SetTimeBegin(m_xwing.boom.m_dTimeEnd);
 		}
 		if (m_xwing.dead != TRUE)
 		{
-			dxsprite->Draw(pTex, &m_ImgRc2, NULL, &boom, D3DXCOLOR(1, 1, 1, 1.F)); //&m_vcPosImg2
+			m_xwing.boom.Render(dxdevice, dxsprite);
+			//dxsprite->Draw(pTex, &m_ImgRc2, NULL, &boom, D3DXCOLOR(1, 1, 1, 1.F)); //&m_vcPosImg2
 		}
 	}
 	ColCheck3(); //충돌체크 함수3: 적과 주인공의 충돌 체크
