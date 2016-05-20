@@ -3,8 +3,6 @@
 class CCharacterData
 {
 public:
-	CSprite			boom;					//폭발스프라이트
-
 	char*			name;					//케릭터 이름
 	float			xval,yval;				//캐릭터(주인공,적) 위치
 	int				laserhit;				//총알이 맞았는지?
@@ -21,8 +19,8 @@ public:
 	int				hp;						//체력
 	int				dead;					//죽었는지? FALSE: 살음 TRUE: 죽음
 	D3DXVECTOR3	vcPosC;					//위치
-	//DWORD			m_dTimeBegin;			// 시작 타임
-	//DWORD			m_dTimeEnd;			// 끝 타임
+	DWORD			m_dTimeBegin;			// 시작 타임
+	DWORD			m_dTimeEnd;			// 끝 타임
 	int				k;						//적 좌우 이동 카운트 0:좌에서 우로 1:우에서 좌로
 	int				speed;					//스피드
 	int				position;				//위상
