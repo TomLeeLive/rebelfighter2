@@ -786,7 +786,18 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 					}
 				}
 				m_ImgRc2.right = m_ImgRc2.left + 70;
+				
+				if (*_FT != 0)
+				{
+					(*_FT)->m_dTimeBegin = (*_FT)->m_dTimeEnd;
+				}
 			}
+			//////////////////////////////////////////////////////////////////////
+			if (*_FT != 0)
+			{
+				dxsprite->Draw(pTex, &m_ImgRc2, NULL, &boom, D3DXCOLOR(1, 1, 1, 1.F)); //&m_vcPosImg2
+			}
+			//////////////////////////////////////////////////////////////////////
 		}
 	}
 	////////////////////////////////////////////////////////////////////////////////
