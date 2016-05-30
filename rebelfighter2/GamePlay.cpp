@@ -1,6 +1,6 @@
 #include "_StdAfx.h"
 
-D3DXVECTOR3 boom;			//폭발위치
+//D3DXVECTOR3 boom;			//폭발위치
 
 
 //extern  CDrawText		GMAIN->m_text;
@@ -28,6 +28,7 @@ CGamePlay::CGamePlay()
 	vcPos1 = D3DXVECTOR3(-75, 0, 0);		//배경위치
 	vcPos2 = D3DXVECTOR3(-75, -600, 0);	//배경위치
 
+	boom = D3DXVECTOR3(0, 0, 0);
 
 	SetRect(&m_ImgRc2, 0, 0, 0, 70);		// RECT 애니 이미지
 }

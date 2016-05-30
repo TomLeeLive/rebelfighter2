@@ -61,9 +61,8 @@ public:
 	D3DXVECTOR3 vcBar;						//상태바위치
 	D3DXVECTOR3 vcLpos0;					//주인공총알위치0
 	D3DXVECTOR3 vcLpos1;					//적총알위치0
-											//D3DXVECTOR3 boom;						//폭발위치
-
-
+	
+	D3DXVECTOR3 boom;						//폭발위치
 
 	INT ColCheck();		//충돌체크 함수1: 적총알이 주인공에 맞았는지 체크
 	INT ColCheck2();	//충돌체크 함수2: 주인공총알이 적에 맞았는지 체크
@@ -73,8 +72,8 @@ public:
 						//메뉴별로 게임 메뉴, 게임 실행, 스코어 
 
 
-	void CGamePlay::CharacterMovePath(std::vector<CCharacterData*>::iterator* _FT);
-	void CGamePlay::CharacterMoveBasic(std::vector<CCharacterData*>::iterator* _FT);
+	void	CharacterMovePath(std::vector<CCharacterData*>::iterator* _FT);
+	void	CharacterMoveBasic(std::vector<CCharacterData*>::iterator* _FT);
 
 	void	InputMove();
 	void	CharacterMove();
