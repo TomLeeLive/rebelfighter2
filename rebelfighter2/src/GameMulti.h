@@ -1,7 +1,22 @@
 #pragma once
+
+#include "TClient.h"
+#include "TGameUser.h"
+#include "TUdpSocket.h"
+
 class CGameMulti : public CGameScene
 {
 public:
+/////////////////////////////////////////////////////////////
+// for Multi play
+
+	TUdpSocket			m_Udp;
+	//게임유저
+	//TGameUser				I_GameUser;
+	std::vector<TGameUser>	m_UserList;
+	TClient				m_Client;
+
+/////////////////////////////////////////////////////////////
 	INT Init();
 	void Frame();
 	void Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite);

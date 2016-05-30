@@ -161,7 +161,13 @@
     <ClCompile Include="MiMp3.cpp" />
     <ClCompile Include="PlayerData.cpp" />
     <ClCompile Include="RebelFighter.cpp" />
+    <ClCompile Include="TClient.cpp" />
+    <ClCompile Include="TDebugString.cpp" />
+    <ClCompile Include="TGameUser.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TStreamPacket.cpp" />
+    <ClCompile Include="TThread.cpp" />
+    <ClCompile Include="TUdpSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CDrawText.h" />
@@ -181,7 +187,16 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="MiMp3.h" />
     <ClInclude Include="PlayerData.h" />
+    <ClInclude Include="TBasisStd.h" />
+    <ClInclude Include="TBasisSys.h" />
+    <ClInclude Include="TClient.h" />
+    <ClInclude Include="TDebugString.h" />
+    <ClInclude Include="TGameUser.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TProtocol.h" />
+    <ClInclude Include="TStreamPacket.h" />
+    <ClInclude Include="TThread.h" />
+    <ClInclude Include="TUdpSocket.h" />
     <ClInclude Include="_StdAfx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

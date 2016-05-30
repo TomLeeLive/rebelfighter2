@@ -16,6 +16,9 @@
     <Filter Include="GameScene">
       <UniqueIdentifier>{95f760b4-4f13-43f0-b6e4-673d9e9f8e66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NetworkPlay">
+      <UniqueIdentifier>{e0a9616f-64a1-40f3-8828-0a7745dda385}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CharacterData.cpp">
@@ -60,9 +63,6 @@
     <ClCompile Include="GameHowto.cpp">
       <Filter>GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="GameMulti.cpp">
-      <Filter>GameScene</Filter>
-    </ClCompile>
     <ClCompile Include="GamePlay.cpp">
       <Filter>GameScene</Filter>
     </ClCompile>
@@ -71,6 +71,27 @@
     </ClCompile>
     <ClCompile Include="GameStart.cpp">
       <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="TClient.cpp">
+      <Filter>NetworkPlay</Filter>
+    </ClCompile>
+    <ClCompile Include="TDebugString.cpp">
+      <Filter>NetworkPlay</Filter>
+    </ClCompile>
+    <ClCompile Include="TGameUser.cpp">
+      <Filter>NetworkPlay</Filter>
+    </ClCompile>
+    <ClCompile Include="TStreamPacket.cpp">
+      <Filter>NetworkPlay</Filter>
+    </ClCompile>
+    <ClCompile Include="TThread.cpp">
+      <Filter>NetworkPlay</Filter>
+    </ClCompile>
+    <ClCompile Include="TUdpSocket.cpp">
+      <Filter>NetworkPlay</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMulti.cpp">
+      <Filter>NetworkPlay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -119,9 +140,6 @@
     <ClInclude Include="GameHowto.h">
       <Filter>GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="GameMulti.h">
-      <Filter>GameScene</Filter>
-    </ClInclude>
     <ClInclude Include="GamePlay.h">
       <Filter>GameScene</Filter>
     </ClInclude>
@@ -130,6 +148,36 @@
     </ClInclude>
     <ClInclude Include="GameStart.h">
       <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="TClient.h">
+      <Filter>NetworkPlay</Filter>
+    </ClInclude>
+    <ClInclude Include="TDebugString.h">
+      <Filter>NetworkPlay</Filter>
+    </ClInclude>
+    <ClInclude Include="TGameUser.h">
+      <Filter>NetworkPlay</Filter>
+    </ClInclude>
+    <ClInclude Include="TProtocol.h">
+      <Filter>NetworkPlay</Filter>
+    </ClInclude>
+    <ClInclude Include="TStreamPacket.h">
+      <Filter>NetworkPlay</Filter>
+    </ClInclude>
+    <ClInclude Include="TThread.h">
+      <Filter>NetworkPlay</Filter>
+    </ClInclude>
+    <ClInclude Include="TUdpSocket.h">
+      <Filter>NetworkPlay</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMulti.h">
+      <Filter>NetworkPlay</Filter>
+    </ClInclude>
+    <ClInclude Include="TBasisStd.h">
+      <Filter>NetworkPlay</Filter>
+    </ClInclude>
+    <ClInclude Include="TBasisSys.h">
+      <Filter>NetworkPlay</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
