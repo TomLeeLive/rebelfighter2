@@ -44,11 +44,11 @@
     <_ProjectFileVersion>14.0.23107.0</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>../output/</OutDir>
-    <IntDir>../output/obj/</IntDir>
+    <OutDir>$(ProjectDir)../../output/</OutDir>
+    <IntDir>$(ProjectDir)../../output/obj/</IntDir>
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>include;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>lib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>../include;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>../lib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>../output/</OutDir>
@@ -86,7 +86,7 @@
       <Culture>0x0412</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>../output/rebelfighter2.exe</OutputFile>
+      <OutputFile>$(ProjectDir)../../output/rebelfighter2.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\Debug/RebelFighter.pdb</ProgramDatabaseFile>
@@ -98,7 +98,7 @@
       <OutputFile>.\Debug/RebelFighter.bsc</OutputFile>
     </Bscmake>
     <BuildLog>
-      <Path>../output/$(MSBuildProjectName).log</Path>
+      <Path>$(ProjectDir)../../output/$(MSBuildProjectName).log</Path>
     </BuildLog>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

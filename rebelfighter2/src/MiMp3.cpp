@@ -3,11 +3,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-#ifdef _DEBUG
-#pragma comment(lib, "DShowStrmbase_.lib")
-#else
-#pragma comment(lib, "DShowStrmbase.lib")
-#endif
+//#ifdef _DEBUG
+//#pragma comment(lib, "DShowStrmbase_.lib")
+//#else
+//#pragma comment(lib, "DShowStrmbase.lib")
+//#endif
 
 
 #include <windows.h>

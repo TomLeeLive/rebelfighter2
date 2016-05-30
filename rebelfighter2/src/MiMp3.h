@@ -17,9 +17,9 @@
 // End--------------------------------------------------------------------------
 
 	#ifdef _DEBUG
-	#pragma comment(lib, "lib/DShowStrmbase_.lib")
+	#pragma comment(lib, "../lib/DShowStrmbase_.lib")
 	#else
-	#pragma comment(lib, "lib/DShowStrmbase.lib")
+	#pragma comment(lib, "../lib/DShowStrmbase.lib")
 	#endif
 
 #define MIMP3_MAX_VOLUME	10000L
