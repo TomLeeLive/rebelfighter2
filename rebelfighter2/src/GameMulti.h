@@ -1,5 +1,6 @@
 #pragma once
 
+#include "TDebugString.h"
 #include "TClient.h"
 #include "TGameUser.h"
 #include "TUdpSocket.h"

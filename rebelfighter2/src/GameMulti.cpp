@@ -57,7 +57,7 @@ INT CGameMulti::Init()
 
 	GMAIN->m_gamebegin = timeGetTime();
 
-	
+	I_DebugStr.Init();
 	m_Client.Init();
 	I_GameUser.Init();
 	m_Udp.Init();
@@ -980,6 +980,7 @@ void CGameMulti::Destroy()
 	I_GameUser.Release();
 	m_Client.Release();
 	m_Udp.Release();
+	I_DebugStr.Release();
 }
 
 
