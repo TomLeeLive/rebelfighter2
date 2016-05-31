@@ -26,7 +26,73 @@ typedef struct {
 	WORD	posY;
 	WORD	direction; //0 ~7 8规氢
 }TPACKET_USER_POSITION;
-#define PACKET_USER_POSITION	3000
+
+typedef struct {
+	WORD	user_idx;
+	WORD	posX;
+	WORD	posY;
+	WORD	direction; //0 ~7 8规氢
+}TPACKET_USER_PARTNER_MAKE;
+
+typedef struct {
+	WORD	user_idx;
+	WORD	posX;
+	WORD	posY;
+	WORD	direction; //0 ~7 8规氢
+}TPACKET_USER_PARTNER_POSITION;
+
+typedef struct {
+	WORD	user_idx;
+	WORD	posX;
+	WORD	posY;
+	WORD	direction; //0 ~7 8规氢
+}TPACKET_USER_LOGIN;
+
+typedef struct {
+	WORD	user_idx;
+	WORD	posX;
+	WORD	posY;
+	WORD	direction; //0 ~7 8规氢
+}TPACKET_USER_MAKEROOM;
+
+typedef struct {
+	WORD	user_idx;
+	WORD	posX;
+	WORD	posY;
+	WORD	direction; //0 ~7 8规氢
+}TPACKET_USER_ENTERTHEROOM;
+
+typedef struct {
+	WORD	user_idx;
+	WORD	posX;
+	WORD	posY;
+	WORD	direction; //0 ~7 8规氢
+}TPACKET_USER_GAMESTART;
+
+typedef struct {
+	WORD	user_idx;
+	WORD	posX;
+	WORD	posY;
+	WORD	direction; //0 ~7 8规氢
+}TPACKET_USER_GETROOMLISTINFO;
+
+typedef struct {
+	WORD	user_idx;
+	WORD	posX;
+	WORD	posY;
+	WORD	direction; //0 ~7 8规氢
+}TPACKET_USER_GETTHEROOMINFO;
+
+#define PACKET_USER_POSITION				3000
+#define PACKET_USER_PARTNER_MAKE			3001
+#define PACKET_USER_PARTNER_POSITION		3002
+#define PACKET_USER_LOGIN					4000
+#define PACKET_USER_MAKEROOM				5000
+#define PACKET_USER_ENTERTHEROOM			6000
+#define PACKET_USER_GAMESTART				7000
+#define PACKET_USER_GETROOMLISTINFO			8000
+#define PACKET_USER_GETTHEROOMINFO			9000
+
 
 #pragma pack(pop)
 

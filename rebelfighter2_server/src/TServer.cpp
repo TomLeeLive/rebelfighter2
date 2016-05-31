@@ -102,6 +102,60 @@ void TServer::ProcessPacket()
 					}	
 
 				}break;
+			case PACKET_USER_LOGIN:
+			{
+				WaitForSingleObject(I_Server.m_Mutex, INFINITE);
+
+				PacketMsg.ph.len = pPacket->ph.len;
+				PacketMsg.ph.type = PACKET_CHAT_MSG;
+
+				pPacket->msg[pPacket->ph.len - 4] = 0;
+				C_STR name = pPacket->msg;
+				memcpy(&PacketMsg.msg, &pPacket->msg, pPacket->ph.len - 4);
+
+				char buffer[64] = "님이 입장하였습니다.";
+				strcpy(&PacketMsg.msg[pPacket->ph.len - 4], buffer);
+				PacketMsg.ph.len += strlen(buffer);
+
+				I_DebugStr.DisplayText("Message:%s\r\n", PacketMsg.msg);
+
+				std::list<TUser*>::iterator	iter;
+				int iClientUser = I_Server.m_UserList.size();
+				for (iter = I_Server.m_UserList.begin();
+				iter != I_Server.m_UserList.end();
+					iter++)
+				{
+					TUser* pUser = (TUser*)*iter;
+
+					if (pUser->m_Socket != pSendUser->pUser->m_Socket)
+					{
+						retval = send(pUser->m_Socket, (char*)&PacketMsg, PacketMsg.ph.len, 0);
+						if (retval == SOCKET_ERROR)
+						{
+							break;
+						}
+					}
+					else
+					{
+						pUser->m_Name = name;
+					}
+				}
+
+			}break;
+			case PACKET_USER_MAKEROOM:
+				break;
+			case PACKET_USER_ENTERTHEROOM:
+				break;
+			case PACKET_USER_GAMESTART:
+				break;
+			case PACKET_USER_GETROOMLISTINFO:
+				break;
+			case PACKET_USER_GETTHEROOMINFO:
+				break;
+			case PACKET_USER_PARTNER_MAKE:
+				break;
+			case PACKET_USER_PARTNER_POSITION:
+				break;
 		}
 	}
 	m_StreamPacket.m_PacketList.clear();

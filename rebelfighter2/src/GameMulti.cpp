@@ -57,9 +57,11 @@ INT CGameMulti::Init()
 
 	GMAIN->m_gamebegin = timeGetTime();
 
+	
+	m_Client.Init();
+	I_GameUser.Init();
+	m_Udp.Init();
 
-
-	//return hr;
 	return 0;
 }
 
@@ -974,6 +976,10 @@ void CGameMulti::Destroy()
 	for (; _FT != _LT; ++_FT) { if (*_FT != 0) delete (*_FT); }
 	pvTie0.clear();
 
+
+	I_GameUser.Release();
+	m_Client.Release();
+	m_Udp.Release();
 }
 
 
