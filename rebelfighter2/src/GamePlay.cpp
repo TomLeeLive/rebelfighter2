@@ -865,6 +865,7 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 				//m_pSound.Stop(13);
 				//m_pSound.Play(22, true);
 
+				GMAIN->m_nGameBeforePhase = GMAIN->m_nGamePhase;
 				GMAIN->m_nGamePhase = ST_END;
 				GMAIN->m_pSound.Play(SND_THE_FORCE, true);
 				GMAIN->m_pSound.Stop(SND_PLAYBG);

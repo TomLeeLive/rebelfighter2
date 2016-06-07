@@ -27,6 +27,8 @@ public:
 
 
 public:
+	void EnemyBullet();							//적 총알 발사 처리
+	void ProcessSideBar();						//옆에 상태바 출력처리용
 
 	std::vector<CLaserData*>		pvLaser0;	//주인공 총알 벡터 컨테이너
 	std::vector<CLaserData*>		pvLaser1;	//적 총알 벡터 컨테이너
@@ -102,3 +104,4 @@ public:
 	virtual ~CGameMulti();
 };
 
+extern CGameMulti*	g_pGameMultiplay; //외부 연결 범위 선언

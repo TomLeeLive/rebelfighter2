@@ -7,26 +7,19 @@ void CGameEnd::Frame()
 {
 	if (0 == GMAIN->m_KeyOld[VK_RETURN] && GMAIN->m_KeyCur[VK_RETURN])
 	{
+		if (GMAIN->m_nGameBeforePhase == ST_MULTI) {
+			GGAMEMULTI->Init();
+		}
+		else {
+			GGAME->Init();
+		}
+
+		GMAIN->m_nGameBeforePhase = GMAIN->m_nGamePhase;
 		GMAIN->m_nGamePhase = ST_START;
-		GGAME->Init();
 
 		GMAIN->m_pSound.Stop(SND_THE_FORCE);
 		GMAIN->m_pSound.Play(SND_MENUBG, true);
-
-		//ImgArrayInit();
-
-		//m_pSound.Stop(22);
-		//m_pSound.Play(10, true);
-
-		//m_pSndExplo->Stop();
-		//m_pSndTie->Reset();
-		//m_pSndTie->Stop();
-		//m_pSndGameover->Reset();
-		//m_pSndGameover->Stop();
-		//return 0;
 	}
-
-	//return 0;
 }
 void CGameEnd::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 {
@@ -39,7 +32,13 @@ void CGameEnd::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 	char	scoreBuf[80];
 	TCHAR	fpsBuf[128];
 
-	sprintf(scoreBuf, "%d", GGAME->score);
+	if (GMAIN->m_nGameBeforePhase == ST_MULTI) {
+		sprintf(scoreBuf, "%d", GGAMEMULTI->score);//멀티 게임 점수
+	}
+	else {
+		sprintf(scoreBuf, "%d", GGAME->score);//싱글 게임 점수.
+	}
+	
 
 	GMAIN->m_text.Draw("Game Over", 355, 250, D3DXCOLOR(0, 0, 0, 1));
 

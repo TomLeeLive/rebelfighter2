@@ -10,6 +10,7 @@ void CGameHowto::Frame()
 
 	if (0 == GMAIN->m_KeyOld[VK_RETURN] && GMAIN->m_KeyCur[VK_RETURN])
 	{
+		GMAIN->m_nGameBeforePhase = GMAIN->m_nGamePhase;
 		GMAIN->m_nGamePhase = ST_START;
 		
 	

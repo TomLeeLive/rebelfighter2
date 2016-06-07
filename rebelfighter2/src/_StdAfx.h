@@ -48,16 +48,17 @@
 #define GMAIN			g_pApp
 #define GHINST			g_pApp->m_hInst
 #define GHWND			g_pApp->m_hWnd
-#define GDEVICE		g_pApp->m_pd3dDevice
-#define GGAME		g_pGameplay
+#define GDEVICE			g_pApp->m_pd3dDevice
+#define GGAME			g_pGameplay
+#define GGAMEMULTI		g_pGameMultiplay
 
 
 enum GAME_STATE {
 	ST_START = 0,
 	ST_SINGLEGAME,
+	ST_MULTI,
 	ST_END,
-	ST_HOWTO = 4,
-	ST_MULTI
+	ST_HOWTO = 4
 };
 
 
@@ -94,9 +95,9 @@ enum GAME_STATE {
 
 #include "GameScene.h"
 #include "GamePlay.h"
+#include "GameMulti.h"
 #include "GameStart.h"
 #include "GameEnd.h"
-#include "GameMulti.h"
 #include "GameHowto.h"
 
 

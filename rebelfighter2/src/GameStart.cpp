@@ -10,28 +10,15 @@ void CGameStart::Frame()
 {
 	GMAIN->m_pInput->FrameMove();
 
-
-		//m_pSndTie->Reset();
-		//m_pSndTie->Stop();
-		//m_pMp[0]->Reset();//m_pSndGameBg->Reset();
-		//m_pMp[1]->Play();//m_pSndGameMenu->Play();
-		//m_pMp[1]->SetVolume(9000L);//m_pSndGameMenu->SetVolume(1000);
-		//m_pSound.Stop(29);
-		//m_pSound.Play(10, true);
-
-		if (0 == GMAIN->m_KeyOld[VK_RETURN] && GMAIN->m_KeyCur[VK_RETURN])
-		{
-			GMAIN->m_nGamePhase = ST_SINGLEGAME;
-			GMAIN->m_pSound.Stop(SND_MENUBG);
-			GMAIN->m_pSound.Play(SND_PLAYBG, true);
-			GMAIN->m_pSound.Play(SND_XWENGLP, false);
-			GMAIN->m_pSound.Volume(SND_XWENGLP,0.5f, false);
-			//ImgArrayInit();
-
-			//m_pSound.Stop(10);
-			//m_pSound.Play(13, true);
-			//return 0;
-		}
+	if (0 == GMAIN->m_KeyOld[VK_RETURN] && GMAIN->m_KeyCur[VK_RETURN])
+	{
+		GMAIN->m_nGameBeforePhase = GMAIN->m_nGamePhase;
+		GMAIN->m_nGamePhase = ST_SINGLEGAME;
+		GMAIN->m_pSound.Stop(SND_MENUBG);
+		GMAIN->m_pSound.Play(SND_PLAYBG, true);
+		GMAIN->m_pSound.Play(SND_XWENGLP, false);
+		GMAIN->m_pSound.Volume(SND_XWENGLP,0.5f, false);
+	}
 
 	//09-08-28 Ãß°¡
 		GMAIN->m_pInput->MenuItemClickCheck();

@@ -23,7 +23,8 @@ public:
 
 	CGameTexture	m_pGameTex[27];
 	KSound			m_pSound;				// 사운드(fmod)
-	GAME_STATE		m_nGamePhase;					//게임 상태 변경(시작화면, 게임, 종료)
+	GAME_STATE		m_nGamePhase;					//게임 상태 변경(시작화면, 게임, 종료
+	GAME_STATE		m_nGameBeforePhase;				//게임 이전 상태 저장(for 게임오버 화면에서 점수 출력용. 멀티인지 싱글인지)
 
 	INT Init();
 

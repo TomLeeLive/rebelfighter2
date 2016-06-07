@@ -218,14 +218,20 @@ void CGameMulti::Frame()
 		//m_pSndEngine->SetVolume(-1000);
 	}
 
-
+	//#주인공 키보드 입력 처리 & 이동
 	this->InputMove();
 
 	GMAIN->m_alphatime = timeGetTime() - GMAIN->m_gamebegin;
 
+	//#적캐릭터 이동 처리
 	this->CharacterMove();
 
+	//#적 총알 발사 처리
+	this->EnemyBullet();
+}
 
+//적 총알 발사 처리
+void CGameMulti::EnemyBullet(){
 	////////////////////////////////////////////////////////////////////////////////
 	std::vector<CCharacterData*>::iterator _FT = pvTie0.begin();
 	std::vector<CCharacterData*>::iterator _LT = pvTie0.end();
@@ -794,7 +800,7 @@ void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 			}
 			else
 			{
-
+				GMAIN->m_nGameBeforePhase = GMAIN->m_nGamePhase;
 				GMAIN->m_nGamePhase = ST_END;
 				GMAIN->m_pSound.Play(SND_THE_FORCE, true);
 				GMAIN->m_pSound.Stop(SND_PLAYBG);
@@ -811,8 +817,17 @@ void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 	}
 	ColCheck3(); //충돌체크 함수3: 적과 주인공의 충돌 체크
 				 ////////////////////////////////////////////////////////////////////////////////
+	
+	
 	dxsprite->Draw(GMAIN->m_pGameTex[7].m_pTex, (&GMAIN->rc), NULL, &vcBar, D3DXCOLOR(1, 1, 1, 1.f)); //상태바
 	dxsprite->End();
+
+	//#옆에 상태바 출력처리용
+	this->ProcessSideBar();
+}
+
+//옆에 상태바 출력처리용
+void CGameMulti::ProcessSideBar() {
 	////////////////////////////////////////////////////////////////////////////////
 	GMAIN->m_text.Begin();
 
@@ -882,6 +897,9 @@ void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 
 	GMAIN->m_text.End();
 }
+
+
+
 void CGameMulti::Destroy()
 {
 	//주인공 총알 소멸부분

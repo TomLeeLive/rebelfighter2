@@ -5,10 +5,12 @@ int (WINAPIV * __vsnprintf)(char *, size_t, const char*, va_list) = _vsnprintf;
 
 
 CGamePlay* g_pGameplay;
+CGameMulti* g_pGameMultiplay;
 
 CMain::CMain(void)
 {
 	g_pGameplay = &m_gameplay;
+	g_pGameMultiplay = &m_gamemulti;
 
 	m_pInput = NULL;
 	m_nGamePhase = ST_START;
@@ -121,32 +123,24 @@ INT CMain::GameFrameMove()
 	switch(m_nGamePhase)
 	{
 	case ST_START:
-		
 		m_gamestart.Frame();
 		break;
 
 	case ST_SINGLEGAME:
-
-		
 		m_gameplay.Frame();
-		break;
-
-	case ST_END:
-		m_gameend.Frame();
-		//EndFrameMove();
-		break;
-
-
-	case ST_HOWTO:
-		m_gamehowto.Frame();
-		//HowtoFrameMove();
 		break;
 
 	case ST_MULTI:
 		m_gamemulti.Frame();
-		//HowtoFrameMove();
 		break;
-		}
+
+	case ST_END:
+		m_gameend.Frame();
+		break;
+	case ST_HOWTO:
+		m_gamehowto.Frame();
+		break;
+	}
 
 	return 0;
 }
@@ -173,30 +167,24 @@ INT CMain::GameRender()
 	{
 	case ST_START:
 		m_gamestart.Render(m_pd3dDevice, m_pd3dSprite);
-		//StartRender();
 		break;
 
 	case ST_SINGLEGAME:
 		m_gameplay.Render(m_pd3dDevice, m_pd3dSprite);
-		//PlayRender();
+		break;
+
+	case ST_MULTI:
+		m_gamemulti.Render(m_pd3dDevice, m_pd3dSprite);
 		break;
 
 	case ST_END:
 		m_gameend.Render(m_pd3dDevice, m_pd3dSprite);
-		//EndRender();
 		break;
 
 	case ST_HOWTO:
 		m_gamehowto.Render(m_pd3dDevice,m_pd3dSprite);
-		//HowtoRender();
-		break;
-	case ST_MULTI:
-		m_gamemulti.Render(m_pd3dDevice, m_pd3dSprite);
-		//HowtoRender();
 		break;
 	}
-
-	//m_pd3dSprite->End();
 	m_pd3dDevice->EndScene();
 
 	return m_pd3dDevice->Present( 0, 0, 0, 0);

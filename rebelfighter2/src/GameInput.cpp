@@ -176,6 +176,7 @@ HRESULT CGameInput::MenuItemClickCheck(void)
 			&& MousePos.y > rcWindowClient.bottom * 315 / 600
 			&& MousePos.y < rcWindowClient.bottom * 350 / 600)
 		{
+			GMAIN->m_nGameBeforePhase = GMAIN->m_nGamePhase;
 			GMAIN->m_nGamePhase = ST_MULTI;
 			GMAIN->m_pSound.Stop(SND_MENUBG);
 			GMAIN->m_pSound.Play(SND_PLAYBG, true);
@@ -188,6 +189,7 @@ HRESULT CGameInput::MenuItemClickCheck(void)
 			&& MousePos.y > rcWindowClient.bottom*359/600
 			&& MousePos.y < rcWindowClient.bottom*398/600)
 		{
+			GMAIN->m_nGameBeforePhase = GMAIN->m_nGamePhase;
 			GMAIN->m_nGamePhase=ST_SINGLEGAME;
 			GMAIN->m_pSound.Stop(SND_MENUBG);
 			GMAIN->m_pSound.Play(SND_PLAYBG, true);
@@ -200,6 +202,7 @@ HRESULT CGameInput::MenuItemClickCheck(void)
 			&& MousePos.y > rcWindowClient.bottom*408/600
 			&& MousePos.y < rcWindowClient.bottom*442/600)
 		{
+			GMAIN->m_nGameBeforePhase = GMAIN->m_nGamePhase;
 			GMAIN->m_nGamePhase=ST_HOWTO;
 			OutputDebugString("Howto\n");
 		}
