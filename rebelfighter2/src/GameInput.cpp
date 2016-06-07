@@ -177,7 +177,9 @@ HRESULT CGameInput::MenuItemClickCheck(void)
 			&& MousePos.y < rcWindowClient.bottom * 350 / 600)
 		{
 			GMAIN->m_nGameBeforePhase = GMAIN->m_nGamePhase;
+			GGAMEMULTI->MultiInit();
 			GMAIN->m_nGamePhase = ST_MULTI;
+
 			GMAIN->m_pSound.Stop(SND_MENUBG);
 			GMAIN->m_pSound.Play(SND_PLAYBG, true);
 			GMAIN->m_pSound.Play(SND_XWENGLP, false);

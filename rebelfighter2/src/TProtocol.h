@@ -20,7 +20,6 @@ typedef struct {
 	WORD	posY;
 	WORD	direction; //0 ~7 8πÊ«‚
 }TPACKET_USER_POSITION;
-#define PACKET_USER_POSITION	3000
 
 typedef struct {
 	WORD	user_idx;

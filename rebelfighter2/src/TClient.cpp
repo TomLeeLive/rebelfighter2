@@ -1,4 +1,4 @@
-//#include "_StdAfx.h"
+#include "_StdAfx.h"
 #include "TClient.h"
 #include "TDebugString.h"
 #include "TGameUser.h"
@@ -95,21 +95,26 @@ int TClient::ProcessPacket()
 				//}TPACKET_USER_POSITION;
 				TPACKET_USER_POSITION user;
 				memcpy( &user, pPacket->msg, sizeof(char)* pPacket->ph.len - 4);
+
 				if( user.direction ==  VK_LEFT )
 				{
-					I_GameUser.m_Direction = VK_LEFT;
+					GGAMEMULTI->m_xwing.xval = (float)user.posX;
+					//I_GameUser.m_Direction = VK_LEFT;
 				}
 				if( user.direction ==  VK_RIGHT )
 				{
-					I_GameUser.m_Direction = VK_RIGHT;
+					GGAMEMULTI->m_xwing.xval = (float)user.posX;
+					//I_GameUser.m_Direction = VK_RIGHT;
 				}
 				if( user.direction ==   VK_UP  )
 				{
-					I_GameUser.m_Direction = VK_UP;
+					GGAMEMULTI->m_xwing.yval = (float)user.posY;
+					//I_GameUser.m_Direction = VK_UP;
 				}
 				if( user.direction ==  VK_DOWN )
 				{
-					I_GameUser.m_Direction = VK_DOWN;
+					GGAMEMULTI->m_xwing.yval = (float)user.posY;
+					//I_GameUser.m_Direction = VK_DOWN;
 				}
 
 			}break;

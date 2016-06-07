@@ -1,4 +1,3 @@
-//#include "_StdAfx.h"
 #include "TUdpSocket.h"
 #include "TDebugString.h"
 
@@ -73,6 +72,7 @@ bool TUdpSocket::Run()
 		if( retval == SOCKET_ERROR )
 		{
 			I_DebugStr.T_ERROR(false);
+			return false;
 		}
 		buf[retval] = 0;		
 		I_DebugStr.DisplayText("[MSG]:%s",  buf );

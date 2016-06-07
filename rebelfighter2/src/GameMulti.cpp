@@ -1,12 +1,16 @@
 #include "_StdAfx.h"
 
+//#멀티 구현 코드 구분을 위한 매크로 for debugging
+#define MULTIIMPLE 1
+
 CGameMulti::~CGameMulti()
 {
 }
 
 CGameMulti::CGameMulti()
 {
-	m_iSerIndex  = 0;
+	m_bLogin = false;
+	m_iSerIndex = 0;
 
 	ioncnt = 0;
 	lasercnt = 0;
@@ -59,19 +63,50 @@ INT CGameMulti::Init()
 
 	GMAIN->m_gamebegin = timeGetTime();
 
-	m_iSerIndex = 0;
+	
 
-	I_DebugStr.Init();
-	m_Client.Init();
-	I_GameUser.Init();
-	m_Udp.Init();
+	//this->MultiInit();
 
 
 	return 0;
 }
 
+//#멀티플레이관련 init
+void CGameMulti::MultiInit() {
+
+	
+	if (MessageBox(GHWND, "IP입력?", "질문", MB_OK) == IDOK) {
+	// ToDo: IP입력처리.
+	}
+	
+
+	m_iSerIndex = 0;
+
+	I_DebugStr.Init();
+	m_bLogin = true;
+	m_Client.Init();
+	I_GameUser.Init();
+	m_Udp.Init();
+}
+
+
 void CGameMulti::Frame()
 {
+	/////////////////////////////////////////////////////////////
+	if (m_bLogin == false) return;
+
+	
+	m_Client.Frame();
+
+
+	I_GameUser.Frame();
+	for (int iObj = 0; iObj < m_UserList.size(); iObj++)
+	{
+		m_UserList[iObj].Frame();
+	}
+
+	/////////////////////////////////////////////////////////////
+
 	//int j = 0;
 
 	if (pvTie0.size() == 0)
@@ -465,6 +500,8 @@ void CGameMulti::EnemyBullet(){
 }
 void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 {
+	if (m_bLogin == false) return;
+
 	dxsprite->Begin(D3DXSPRITE_ALPHABLEND);
 
 	vcBar = D3DXVECTOR3(650, 0, 0);							//상태바위치
@@ -929,11 +966,12 @@ void CGameMulti::Destroy()
 	for (; _FT != _LT; ++_FT) { if (*_FT != 0) delete (*_FT); }
 	pvTie0.clear();
 
-
+	I_DebugStr.Release();
+	m_Client.m_bExit = true;
 	I_GameUser.Release();
 	m_Client.Release();
 	m_Udp.Release();
-	I_DebugStr.Release();
+
 }
 
 
@@ -1262,6 +1300,8 @@ INT CGameMulti::ColCheck3()
 	return bColl;
 }
 
+
+
 void	CGameMulti::InputMove()
 {
 	GMAIN->m_pInput->FrameMove();
@@ -1283,106 +1323,102 @@ void	CGameMulti::InputMove()
 	{
 		if (GMAIN->m_pInput->KeyPress(VK_RIGHT))
 		{
-			/*
+#ifdef MULTIIMPLE
 			TPACKET_USER_POSITION userdata;
 			userdata.direction = VK_RIGHT;
-			userdata.posX = I_GameUser.m_fPosX;
-			userdata.posY = I_GameUser.m_fPosY;
+			userdata.posX = m_xwing.xval + GMAIN->m_movingdist*m_xwing.m_speed;//I_GameUser.m_fPosX;
+			userdata.posY = m_xwing.yval;//I_GameUser.m_fPosY;
 			userdata.user_idx = m_iSerIndex;
 			char buffer[256] = { 0, };
 			int iSize = sizeof(userdata);
 			memcpy(buffer, &userdata, iSize);
 			m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
 				PACKET_USER_POSITION);
-			*/
-
-			///*
+#else
 			m_xwing.xval = m_xwing.xval + GMAIN->m_movingdist*m_xwing.m_speed;
 
 			if (m_xwing.xval>593)
 			{
 				m_xwing.xval = 593;
 			}
-			//*/
+#endif
 		}
 		if (GMAIN->m_pInput->KeyPress(VK_LEFT))
 		{
-			/*
+#ifdef MULTIIMPLE
 			TPACKET_USER_POSITION userdata;
 			userdata.direction = VK_LEFT;
-			userdata.posX = I_GameUser.m_fPosX;
-			userdata.posY = I_GameUser.m_fPosY;
+			userdata.posX = m_xwing.xval - GMAIN->m_movingdist*m_xwing.m_speed;//I_GameUser.m_fPosX;
+			userdata.posY = m_xwing.yval;//I_GameUser.m_fPosY;
 			userdata.user_idx = m_iSerIndex;
 			char buffer[256] = { 0, };
 			int iSize = sizeof(userdata);
 			memcpy(buffer, &userdata, iSize);
 			m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
 				PACKET_USER_POSITION);
-			*/
-			///*
+#else
 			m_xwing.xval = m_xwing.xval - GMAIN->m_movingdist*m_xwing.m_speed;
 			if (m_xwing.xval<0)
 			{
 				m_xwing.xval = 0;
 			}
-			//*/
+#endif
 		}
 
 		if (GMAIN->m_pInput->KeyPress(VK_UP))
 		{
-			/*
+#ifdef MULTIIMPLE
 			TPACKET_USER_POSITION userdata;
 			userdata.direction = VK_UP;
-			userdata.posX = I_GameUser.m_fPosX;
-			userdata.posY = I_GameUser.m_fPosY;
+			userdata.posX = m_xwing.xval;//I_GameUser.m_fPosX;
+			userdata.posY = m_xwing.yval - GMAIN->m_movingdist*m_xwing.m_speed; //I_GameUser.m_fPosY;
 			userdata.user_idx = m_iSerIndex;
 			char buffer[256] = { 0, };
 			int iSize = sizeof(userdata);
 			memcpy(buffer, &userdata, iSize);
 			m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
 				PACKET_USER_POSITION);
-			*/
-			///*
+#else
 			m_xwing.yval = m_xwing.yval - GMAIN->m_movingdist*m_xwing.m_speed;
 
 			if (m_xwing.yval<0)
 			{
 				m_xwing.yval = 0;
 			}
-			//*/
+#endif
 		}
 		if (GMAIN->m_pInput->KeyPress(VK_DOWN))
 		{
-			/*
+#ifdef MULTIIMPLE
 			TPACKET_USER_POSITION userdata;
 			userdata.direction = VK_DOWN;
-			userdata.posX = I_GameUser.m_fPosX;
-			userdata.posY = I_GameUser.m_fPosY;
+			userdata.posX = m_xwing.xval;//I_GameUser.m_fPosX;
+			userdata.posY = m_xwing.yval + GMAIN->m_movingdist*m_xwing.m_speed; //I_GameUser.m_fPosY;
 			userdata.user_idx = m_iSerIndex;
 			char buffer[256] = { 0, };
 			int iSize = sizeof(userdata);
 			memcpy(buffer, &userdata, iSize);
 			m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
 				PACKET_USER_POSITION);
-			*/
-			///*
+#else
 			m_xwing.yval = m_xwing.yval + GMAIN->m_movingdist*m_xwing.m_speed;
 			if (m_xwing.yval>550)
 			{
 				m_xwing.yval = 550;
 			}
-			//*/
+#endif
 		}
 		if (GMAIN->m_pInput->KeyDown(VK_SPACE))
 		{
-			///*
+#ifdef MULTIIMPLE
+#else
 			if (pvLaser0.size() < m_xwing.m_laserable)
 			{
 				pvLaser0.push_back(new CLaserData(m_xwing.xval, m_xwing.yval, FALSE)); // 주인공 총알 발생
 
 				GMAIN->m_pSound.Play(SND_XWLSR1, true);
 			}
-			//*/
+#endif
 		}
 	}
 }
