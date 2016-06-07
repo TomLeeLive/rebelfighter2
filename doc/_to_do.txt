@@ -83,7 +83,13 @@ IP입력해서 입장하기(클라, 서버)
 서버로그남기기
 스코어보드(데이터베이스 이용)
 
-
+-------------------------------------
+네트워크 초기화 순서
+bool Sample::Init()
+bool TClient::Init()
+TClient::CreateConnectSocket( int iPort)
+I_GameUser.Init();
+m_Udp.Init();
 
 
 
