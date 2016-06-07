@@ -17,6 +17,7 @@ public:
 	std::vector<TGameUser>	m_UserList;
 	TClient				m_Client;
 	int					m_iSerIndex;
+	bool				m_bLogin;
 
 /////////////////////////////////////////////////////////////
 	INT Init();
@@ -28,7 +29,8 @@ public:
 
 
 public:
-	void NextStageCreate();
+	void MultiInit();						//멀티플레이관련 init
+	void NextStageCreate();						//다음스테이지 생성관련 처리
 	void EnemyBullet();							//적 총알 발사 처리
 	void ProcessSideBar();						//옆에 상태바 출력처리용
 
