@@ -82,6 +82,13 @@ void CGameMulti::MultiInit() {
 
 	m_iSerIndex = 0;
 
+	//#멀티플레이관련 init
+	this->MultiInit();
+
+
+	return 0;
+}
+void CGameMulti::MultiInit() {
 	I_DebugStr.Init();
 	m_bLogin = true;
 	m_Client.Init();
