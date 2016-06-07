@@ -6,6 +6,8 @@ CGameMulti::~CGameMulti()
 
 CGameMulti::CGameMulti()
 {
+	m_iSerIndex  = 0;
+
 	ioncnt = 0;
 	lasercnt = 0;
 	missilecnt = 0;
@@ -57,17 +59,20 @@ INT CGameMulti::Init()
 
 	GMAIN->m_gamebegin = timeGetTime();
 
+	m_iSerIndex = 0;
+
 	I_DebugStr.Init();
 	m_Client.Init();
 	I_GameUser.Init();
 	m_Udp.Init();
+
 
 	return 0;
 }
 
 void CGameMulti::Frame()
 {
-	int j = 0;
+	//int j = 0;
 
 	if (pvTie0.size() == 0)
 	{
@@ -76,82 +81,58 @@ void CGameMulti::Frame()
 
 	if (curstage != stage)
 	{
-		if (pvTie0.size() == 0)
+		//#새 stage 시작시 게임 로직
+		this->NextStageCreate();
+	}
+	if (m_xwing.dead != TRUE)
+	{
+
+		//GMAIN->m_pSound.Volume(SND_XWENGLP, 1000,false);
+		//m_pSndEngine->Play();
+		//m_pSndEngine->SetVolume(-1000);
+	}
+
+	//#주인공 키보드 입력 처리 & 이동
+	this->InputMove();
+
+	GMAIN->m_alphatime = timeGetTime() - GMAIN->m_gamebegin;
+
+	//#적캐릭터 이동 처리
+	this->CharacterMove();
+
+	//#적 총알 발사 처리
+	this->EnemyBullet();
+}
+
+void CGameMulti::NextStageCreate() {
+	if (pvTie0.size() == 0)
+	{
+		lasercnt = 0;
+		ioncnt = 0;
+		missilecnt = 0;
+
+		pvLaser0.clear();
+		curstage = stage;
+
+		enemylevel = (50 + stage * 7) / 50;
+
+		if (stage != 0 && stage % 10 == 0 && (50 + stage * 7) - 50 * m_xwing.m_power >0)
+		{//10스테이지 마다 파워아이템 나옴
+			pvTie0.push_back(new CCharacterData(13, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
+		}
+		if (stage != 0 && stage % 5 == 0)
 		{
-			lasercnt = 0;
-			ioncnt = 0;
-			missilecnt = 0;
 
-			pvLaser0.clear();
-			curstage = stage;
+			//pvTie0.push_back(new CCharacterData("Boss",int(rand()%360),305,float(rand()%50-300),FALSE,5,500,0,FALSE));
+			pvTie0.push_back(new CCharacterData(9, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 5, stage, int(rand() % 2), FALSE));//보스 생성
+			pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+			pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 100 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+			pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 150 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+			pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 200 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+			pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 250 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
 
-			enemylevel = (50 + stage * 7) / 50;
-
-			if (stage != 0 && stage % 10 == 0 && (50 + stage * 7) - 50 * m_xwing.m_power >0)
-			{//10스테이지 마다 파워아이템 나옴
-				pvTie0.push_back(new CCharacterData(13, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
-			}
-			if (stage != 0 && stage % 5 == 0)
+			if (rand() % 6 == 3 && stage % 10 != 0)
 			{
-
-				//pvTie0.push_back(new CCharacterData("Boss",int(rand()%360),305,float(rand()%50-300),FALSE,5,500,0,FALSE));
-				pvTie0.push_back(new CCharacterData(9, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 5, stage, int(rand() % 2), FALSE));//보스 생성
-				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 100 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 150 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 200 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 250 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-
-				if (rand() % 6 == 3 && stage % 10 != 0)
-				{
-					switch (rand() % 7)
-					{
-					case 0://10. 라이프 아이템 생성
-						if (m_xwing.m_life <3)
-							pvTie0.push_back(new CCharacterData(10, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
-						break;
-
-					case 1://11. 레이저 아이템 생성
-						if (m_xwing.m_laserable <6)
-							pvTie0.push_back(new CCharacterData(11, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
-						break;
-
-					case 2://12. 스피드 아이템 생성
-						pvTie0.push_back(new CCharacterData(12, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
-						break;
-
-					case 3://13. 파워 아이템 생성
-						if ((50 + stage * 7) - 50 * m_xwing.m_power >0)
-							pvTie0.push_back(new CCharacterData(13, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
-						break;
-
-					case 4://14. HP 아이템 생성
-						pvTie0.push_back(new CCharacterData(14, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
-						break;
-
-					case 5://12. 스피드 아이템 생성
-						pvTie0.push_back(new CCharacterData(12, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
-						break;
-
-					default://11. 레이저 아이템 생성
-						if (m_xwing.m_laserable <6)
-							pvTie0.push_back(new CCharacterData(11, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
-						break;
-					}
-				}
-			}
-			else
-			{
-
-				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 100 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 150 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 200 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-				pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 250 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
-
-				//if (rand() % 6 == 3)
-				//{
 				switch (rand() % 7)
 				{
 				case 0://10. 라이프 아이템 생성
@@ -186,50 +167,78 @@ void CGameMulti::Frame()
 						pvTie0.push_back(new CCharacterData(11, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
 					break;
 				}
-				//}
 			}
-
-			//////////////////////////////////////////////////////////////////
-			std::vector<CCharacterData*>::iterator _FC = pvTie0.begin(); //레이저 종류 카운트용 반복자
-			std::vector<CCharacterData*>::iterator _LC = pvTie0.end();
-			for (; _FC != _LC; _FC++)
-			{
-				if ((*_FC)->laserable == TRUE)
-				{
-					lasercnt = lasercnt + (*_FC)->laserability;
-				}
-				if ((*_FC)->ionable == TRUE)
-				{
-					ioncnt = ioncnt + (*_FC)->ionability;
-				}
-				if ((*_FC)->missileable == TRUE)
-				{
-					missilecnt = missilecnt + (*_FC)->missileability;
-				}
-			}
-			/////////////////////////////////////////////////////////////////////////			
 		}
+		else
+		{
+
+			pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+			pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+			pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 100 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+			pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 150 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+			pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 200 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+			pvTie0.push_back(new CCharacterData(int(rand() % 9), int(rand() % 360), 305, float(rand() % 50 + 250 - 300), FALSE, 2, stage, int(rand() % 2), FALSE));
+
+			//if (rand() % 6 == 3)
+			//{
+			switch (rand() % 7)
+			{
+			case 0://10. 라이프 아이템 생성
+				if (m_xwing.m_life <3)
+					pvTie0.push_back(new CCharacterData(10, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
+				break;
+
+			case 1://11. 레이저 아이템 생성
+				if (m_xwing.m_laserable <6)
+					pvTie0.push_back(new CCharacterData(11, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
+				break;
+
+			case 2://12. 스피드 아이템 생성
+				pvTie0.push_back(new CCharacterData(12, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
+				break;
+
+			case 3://13. 파워 아이템 생성
+				if ((50 + stage * 7) - 50 * m_xwing.m_power >0)
+					pvTie0.push_back(new CCharacterData(13, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
+				break;
+
+			case 4://14. HP 아이템 생성
+				pvTie0.push_back(new CCharacterData(14, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
+				break;
+
+			case 5://12. 스피드 아이템 생성
+				pvTie0.push_back(new CCharacterData(12, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
+				break;
+
+			default://11. 레이저 아이템 생성
+				if (m_xwing.m_laserable <6)
+					pvTie0.push_back(new CCharacterData(11, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
+				break;
+			}
+			//}
+		}
+
+		//////////////////////////////////////////////////////////////////
+		std::vector<CCharacterData*>::iterator _FC = pvTie0.begin(); //레이저 종류 카운트용 반복자
+		std::vector<CCharacterData*>::iterator _LC = pvTie0.end();
+		for (; _FC != _LC; _FC++)
+		{
+			if ((*_FC)->laserable == TRUE)
+			{
+				lasercnt = lasercnt + (*_FC)->laserability;
+			}
+			if ((*_FC)->ionable == TRUE)
+			{
+				ioncnt = ioncnt + (*_FC)->ionability;
+			}
+			if ((*_FC)->missileable == TRUE)
+			{
+				missilecnt = missilecnt + (*_FC)->missileability;
+			}
+		}
+		/////////////////////////////////////////////////////////////////////////			
 	}
-	if (m_xwing.dead != TRUE)
-	{
-
-		//GMAIN->m_pSound.Volume(SND_XWENGLP, 1000,false);
-		//m_pSndEngine->Play();
-		//m_pSndEngine->SetVolume(-1000);
-	}
-
-	//#주인공 키보드 입력 처리 & 이동
-	this->InputMove();
-
-	GMAIN->m_alphatime = timeGetTime() - GMAIN->m_gamebegin;
-
-	//#적캐릭터 이동 처리
-	this->CharacterMove();
-
-	//#적 총알 발사 처리
-	this->EnemyBullet();
 }
-
 //적 총알 발사 처리
 void CGameMulti::EnemyBullet(){
 	////////////////////////////////////////////////////////////////////////////////
@@ -1268,51 +1277,112 @@ void	CGameMulti::InputMove()
 	//SetWindowText(m_hWnd, "오른쪽버튼을 눌렀습니다");
 	//}
 	////////////////////////////////////////////////////////////////////////////////
+
+
 	if (m_xwing.dead != TRUE)
 	{
 		if (GMAIN->m_pInput->KeyPress(VK_RIGHT))
 		{
+			/*
+			TPACKET_USER_POSITION userdata;
+			userdata.direction = VK_RIGHT;
+			userdata.posX = I_GameUser.m_fPosX;
+			userdata.posY = I_GameUser.m_fPosY;
+			userdata.user_idx = m_iSerIndex;
+			char buffer[256] = { 0, };
+			int iSize = sizeof(userdata);
+			memcpy(buffer, &userdata, iSize);
+			m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
+				PACKET_USER_POSITION);
+			*/
+
+			///*
 			m_xwing.xval = m_xwing.xval + GMAIN->m_movingdist*m_xwing.m_speed;
-			//++m_xwing.xval;
+
 			if (m_xwing.xval>593)
 			{
 				m_xwing.xval = 593;
 			}
+			//*/
 		}
 		if (GMAIN->m_pInput->KeyPress(VK_LEFT))
 		{
+			/*
+			TPACKET_USER_POSITION userdata;
+			userdata.direction = VK_LEFT;
+			userdata.posX = I_GameUser.m_fPosX;
+			userdata.posY = I_GameUser.m_fPosY;
+			userdata.user_idx = m_iSerIndex;
+			char buffer[256] = { 0, };
+			int iSize = sizeof(userdata);
+			memcpy(buffer, &userdata, iSize);
+			m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
+				PACKET_USER_POSITION);
+			*/
+			///*
 			m_xwing.xval = m_xwing.xval - GMAIN->m_movingdist*m_xwing.m_speed;
 			if (m_xwing.xval<0)
 			{
 				m_xwing.xval = 0;
 			}
+			//*/
 		}
 
 		if (GMAIN->m_pInput->KeyPress(VK_UP))
 		{
+			/*
+			TPACKET_USER_POSITION userdata;
+			userdata.direction = VK_UP;
+			userdata.posX = I_GameUser.m_fPosX;
+			userdata.posY = I_GameUser.m_fPosY;
+			userdata.user_idx = m_iSerIndex;
+			char buffer[256] = { 0, };
+			int iSize = sizeof(userdata);
+			memcpy(buffer, &userdata, iSize);
+			m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
+				PACKET_USER_POSITION);
+			*/
+			///*
 			m_xwing.yval = m_xwing.yval - GMAIN->m_movingdist*m_xwing.m_speed;
-			//++m_xwing.xval;
+
 			if (m_xwing.yval<0)
 			{
 				m_xwing.yval = 0;
 			}
+			//*/
 		}
 		if (GMAIN->m_pInput->KeyPress(VK_DOWN))
 		{
+			/*
+			TPACKET_USER_POSITION userdata;
+			userdata.direction = VK_DOWN;
+			userdata.posX = I_GameUser.m_fPosX;
+			userdata.posY = I_GameUser.m_fPosY;
+			userdata.user_idx = m_iSerIndex;
+			char buffer[256] = { 0, };
+			int iSize = sizeof(userdata);
+			memcpy(buffer, &userdata, iSize);
+			m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
+				PACKET_USER_POSITION);
+			*/
+			///*
 			m_xwing.yval = m_xwing.yval + GMAIN->m_movingdist*m_xwing.m_speed;
 			if (m_xwing.yval>550)
 			{
 				m_xwing.yval = 550;
 			}
+			//*/
 		}
 		if (GMAIN->m_pInput->KeyDown(VK_SPACE))
 		{
+			///*
 			if (pvLaser0.size() < m_xwing.m_laserable)
 			{
 				pvLaser0.push_back(new CLaserData(m_xwing.xval, m_xwing.yval, FALSE)); // 주인공 총알 발생
 
 				GMAIN->m_pSound.Play(SND_XWLSR1, true);
 			}
+			//*/
 		}
 	}
 }

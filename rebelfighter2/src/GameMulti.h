@@ -16,6 +16,7 @@ public:
 	//TGameUser				I_GameUser;
 	std::vector<TGameUser>	m_UserList;
 	TClient				m_Client;
+	int					m_iSerIndex;
 
 /////////////////////////////////////////////////////////////
 	INT Init();
@@ -27,6 +28,7 @@ public:
 
 
 public:
+	void NextStageCreate();
 	void EnemyBullet();							//적 총알 발사 처리
 	void ProcessSideBar();						//옆에 상태바 출력처리용
 
