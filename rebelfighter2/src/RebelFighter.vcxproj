@@ -51,11 +51,11 @@
     <LibraryPath>../lib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>../output/</OutDir>
-    <IntDir>../output/obj/</IntDir>
+    <OutDir>$(ProjectDir)../../output/</OutDir>
+    <IntDir>$(ProjectDir)../../output/obj/</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>include;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>lib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>../include;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>../lib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -73,9 +73,9 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeaderOutputFile>../output/Debug/RebelFighter2.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
-      <ObjectFileName>.\Debug/</ObjectFileName>
-      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <AssemblerListingLocation>$(ProjectDir)../../output/obj/Debug/</AssemblerListingLocation>
+      <ObjectFileName>$(ProjectDir)../../output/obj/Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>$(ProjectDir)../../output/obj/Debug/</ProgramDataBaseFileName>
       <BrowseInformation>true</BrowseInformation>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -86,17 +86,17 @@
       <Culture>0x0412</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>$(ProjectDir)../../output/rebelfighter2.exe</OutputFile>
+      <OutputFile>$(ProjectDir)../../output/rebelfighter2_debug.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>.\Debug/RebelFighter.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(ProjectDir)../../output/obj/Debug/RebelFighter.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalDependencies>legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Debug/RebelFighter.bsc</OutputFile>
+      <OutputFile>$(ProjectDir)../../output/obj/Debug/RebelFighter.bsc</OutputFile>
     </Bscmake>
     <BuildLog>
       <Path>$(ProjectDir)../../output/$(MSBuildProjectName).log</Path>
@@ -119,9 +119,9 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeaderOutputFile>../output/Release/RebelFighter2.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
-      <ObjectFileName>.\Release/</ObjectFileName>
-      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <AssemblerListingLocation>$(ProjectDir)../../output/obj/Release/</AssemblerListingLocation>
+      <ObjectFileName>$(ProjectDir)../../output/obj/Release/</ObjectFileName>
+      <ProgramDataBaseFileName>$(ProjectDir)../../output/obj/Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </ClCompile>
@@ -130,18 +130,18 @@
       <Culture>0x0412</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>../output/rebelfighter2.exe</OutputFile>
+      <OutputFile>$(ProjectDir)../../output/rebelfighter2.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ProgramDatabaseFile>.\Release/RebelFighter.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(ProjectDir)../../output/obj/Release/RebelFighter.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Release/RebelFighter.bsc</OutputFile>
+      <OutputFile>$(ProjectDir)../../output/obj/Release/RebelFighter.bsc</OutputFile>
     </Bscmake>
     <BuildLog>
-      <Path>../output/$(MSBuildProjectName).log</Path>
+      <Path>$(ProjectDir)../../output/$(MSBuildProjectName).log</Path>
     </BuildLog>
   </ItemDefinitionGroup>
   <ItemGroup>
