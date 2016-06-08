@@ -234,7 +234,7 @@ LRESULT CMain::MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 int CMain::GameTextureLoad(LPDIRECT3DTEXTURE9& pTex	//포인터는 참조(Alias), 구조체는 주소로
 	, D3DXIMAGE_INFO* pImg				//포인터는 참조(Alias), 구조체는 주소로
 	, LPDIRECT3DDEVICE9 pDevice
-	, TCHAR* sfile
+	, char* sfile
 	, DWORD dColor)
 {
 	//Texture 객체 생성
@@ -263,7 +263,7 @@ INT	CMain::TextureLoad()
 	if (FAILED(GameTextureLoad(m_pGameTex[0].m_pTex
 		, &m_pGameTex[0].m_pImg
 		, m_pd3dDevice
-		, L"Texture/bg2.png", 0x0)))
+		, "Texture/bg2.png", 0x0)))
 		hr = -1;
 
 	/*
@@ -276,14 +276,14 @@ INT	CMain::TextureLoad()
 	if (FAILED(GameTextureLoad(m_pGameTex[1].m_pTex
 		, &m_pGameTex[1].m_pImg
 		, m_pd3dDevice
-		, L"Texture2/playerShip1_red.png", 0xFFFF00FF)))
+		, "Texture2/playerShip1_red.png", 0xFFFF00FF)))
 		hr = -1;
 
 
 	if (FAILED(GameTextureLoad(m_pGameTex[2].m_pTex
 		, &m_pGameTex[2].m_pImg
 		, m_pd3dDevice
-		, L"Texture/Laser1.png", 0xFFFFFFFF)))
+		, "Texture/Laser1.png", 0xFFFFFFFF)))
 		hr = -1;
 	/*
 	if (FAILED(GameTextureLoad(m_pGameTex[2].m_pTex
@@ -296,7 +296,7 @@ INT	CMain::TextureLoad()
 	if(FAILED(GameTextureLoad(m_pGameTex[3].m_pTex
 	,&m_pGameTex[3].m_pImg
 	,m_pd3dDevice
-	,L"Texture/Tie.png",0xFFFF00FF)))
+	,"Texture/Tie.png",0xFFFF00FF)))
 	hr= -1;
 	/*
 	if (FAILED(GameTextureLoad(m_pGameTex[3].m_pTex
@@ -308,7 +308,7 @@ INT	CMain::TextureLoad()
 	if (FAILED(GameTextureLoad(m_pGameTex[4].m_pTex
 		, &m_pGameTex[4].m_pImg
 		, m_pd3dDevice
-		, L"Texture/Laser2.png", 0xFFFFFFFF)))
+		, "Texture/Laser2.png", 0xFFFFFFFF)))
 		hr = -1;
 	/*
 	if (FAILED(GameTextureLoad(m_pGameTex[4].m_pTex
@@ -320,25 +320,25 @@ INT	CMain::TextureLoad()
 	if (FAILED(GameTextureLoad(m_pGameTex[5].m_pTex
 		, &m_pGameTex[5].m_pImg
 		, m_pd3dDevice
-		, L"Texture/title2.png", 0x0)))
+		, "Texture/title2.png", 0x0)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[6].m_pTex
 		, &m_pGameTex[6].m_pImg
 		, m_pd3dDevice
-		, L"Texture/end.png", 0x0)))
+		, "Texture/end.png", 0x0)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[7].m_pTex
 		, &m_pGameTex[7].m_pImg
 		, m_pd3dDevice
-		, L"Texture/statusbar2.png", 0x0)))
+		, "Texture/statusbar2.png", 0x0)))
 		hr = -1;
 	
 	if(FAILED(GameTextureLoad(m_pGameTex[8].m_pTex
 	,&m_pGameTex[8].m_pImg
 	,m_pd3dDevice
-	,L"Texture/Tie2.png",0xFFFF00FF)))
+	,"Texture/Tie2.png",0xFFFF00FF)))
 	hr= -1;
 	
 	/*
@@ -352,113 +352,113 @@ INT	CMain::TextureLoad()
 	if (FAILED(GameTextureLoad(m_pGameTex[9].m_pTex
 		, &m_pGameTex[9].m_pImg
 		, m_pd3dDevice
-		, L"Texture/Bomber.png", 0xFFFF00FF)))
+		, "Texture/Bomber.png", 0xFFFF00FF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[10].m_pTex
 		, &m_pGameTex[10].m_pImg
 		, m_pd3dDevice
-		, L"Texture/Bomber2.png", 0xFFFF00FF)))
+		, "Texture/Bomber2.png", 0xFFFF00FF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[11].m_pTex
 		, &m_pGameTex[11].m_pImg
 		, m_pd3dDevice
-		, L"Texture/BomberAdv.png", 0xFFFF00FF)))
+		, "Texture/BomberAdv.png", 0xFFFF00FF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[12].m_pTex
 		, &m_pGameTex[12].m_pImg
 		, m_pd3dDevice
-		, L"Texture/BomberAdv2.png", 0xFFFF00FF)))
+		, "Texture/BomberAdv2.png", 0xFFFF00FF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[13].m_pTex
 		, &m_pGameTex[13].m_pImg
 		, m_pd3dDevice
-		, L"Texture/Intercepter.png", 0xFFFF00FF)))
+		, "Texture/Intercepter.png", 0xFFFF00FF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[14].m_pTex
 		, &m_pGameTex[14].m_pImg
 		, m_pd3dDevice
-		, L"Texture/Advanced.png", 0xFFFF00FF)))
+		, "Texture/Advanced.png", 0xFFFF00FF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[15].m_pTex
 		, &m_pGameTex[15].m_pImg
 		, m_pd3dDevice
-		, L"Texture/Boss.png", 0xFFFF00FF)))
+		, "Texture/Boss.png", 0xFFFF00FF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[16].m_pTex
 		, &m_pGameTex[16].m_pImg
 		, m_pd3dDevice
-		, L"Texture/Ion1.png", 0xFFFFFFFF)))
+		, "Texture/Ion1.png", 0xFFFFFFFF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[17].m_pTex
 		, &m_pGameTex[17].m_pImg
 		, m_pd3dDevice
-		, L"Texture/Missile.png", 0xFFFFFFFF)))
+		, "Texture/Missile.png", 0xFFFFFFFF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[18].m_pTex
 		, &m_pGameTex[18].m_pImg
 		, m_pd3dDevice
-		, L"Texture/life.png", 0xFFFFFFFF)))
+		, "Texture/life.png", 0xFFFFFFFF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[19].m_pTex
 		, &m_pGameTex[19].m_pImg
 		, m_pd3dDevice
-		, L"Texture/laser.png", 0xFFFFFFFF)))
+		, "Texture/laser.png", 0xFFFFFFFF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[20].m_pTex
 		, &m_pGameTex[20].m_pImg
 		, m_pd3dDevice
-		, L"Texture/speed.png", 0xFFFFFFFF)))
+		, "Texture/speed.png", 0xFFFFFFFF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[21].m_pTex
 		, &m_pGameTex[21].m_pImg
 		, m_pd3dDevice
-		, L"Texture/power.png", 0xFFFFFFFF)))
+		, "Texture/power.png", 0xFFFFFFFF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[22].m_pTex
 		, &m_pGameTex[22].m_pImg
 		, m_pd3dDevice
-		, L"Texture/hp.png", 0xFFFFFFFF)))
+		, "Texture/hp.png", 0xFFFFFFFF)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[23].m_pTex
 		, &m_pGameTex[23].m_pImg
 		, m_pd3dDevice
-		, L"Texture/bg4.png", 0x0)))
+		, "Texture/bg4.png", 0x0)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[24].m_pTex
 		, &m_pGameTex[24].m_pImg
 		, m_pd3dDevice
-		, L"Texture/bg4.png", 0x0)))
+		, "Texture/bg4.png", 0x0)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[25].m_pTex
 		, &m_pGameTex[25].m_pImg
 		, m_pd3dDevice
-		, L"Texture/howto.png", 0x0)))
+		, "Texture/howto.png", 0x0)))
 		hr = -1;
 
 	if (FAILED(GameTextureLoad(m_pGameTex[26].m_pTex
 		, &m_pGameTex[26].m_pImg
 		, m_pd3dDevice
-		, L"texture2/Lasers/laserRed09.png", 0xFFFFFFFF)))
+		, "texture2/Lasers/laserRed09.png", 0xFFFFFFFF)))
 		hr = -1;
 
 	m_pTx = new CGameTexture;
-	if (FAILED(m_pTx->Create(m_pd3dDevice, L"Texture/boom2.png", 0x00FFFFFF)))
+	if (FAILED(m_pTx->Create(m_pd3dDevice, "Texture/boom2.png", 0x00FFFFFF)))
 	{
 		delete m_pTx;
 		hr = -1;

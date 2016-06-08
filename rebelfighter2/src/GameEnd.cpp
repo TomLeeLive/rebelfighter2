@@ -29,29 +29,27 @@ void CGameEnd::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 	dxsprite->End();
 
 	GMAIN->m_text.Begin();
-	//char	scoreBuf[80];
-	TCHAR	scoreBuf[80];
+	char	scoreBuf[80];
 	TCHAR	fpsBuf[128];
 
 	if (GMAIN->m_nGameBeforePhase == ST_MULTI) {
-		_stprintf(scoreBuf, L"%d", GGAMEMULTI->score);//멀티 게임 점수
+		sprintf(scoreBuf, "%d", GGAMEMULTI->score);//멀티 게임 점수
 	}
 	else {
-		_stprintf(scoreBuf, L"%d", GGAME->score);//싱글 게임 점수.
+		sprintf(scoreBuf, "%d", GGAME->score);//싱글 게임 점수.
 	}
 	
 
-	GMAIN->m_text.Draw(L"Game Over", 355, 250, D3DXCOLOR(0, 0, 0, 1));
+	GMAIN->m_text.Draw("Game Over", 355, 250, D3DXCOLOR(0, 0, 0, 1));
 
-	GMAIN->m_text.Draw(L"Total Score", 355, 300, D3DXCOLOR(0, 0, 0, 1));
+	GMAIN->m_text.Draw("Total Score", 355, 300, D3DXCOLOR(0, 0, 0, 1));
 	GMAIN->m_text.Draw(scoreBuf, 355, 320, D3DXCOLOR(0, 0, 0, 1));
 
-	GMAIN->m_text.Draw(L"Press Enter for going back to Menu", 250, 400, D3DXCOLOR(0, 0, 0, 1));
+	GMAIN->m_text.Draw("Press Enter for going back to Menu", 250, 400, D3DXCOLOR(0, 0, 0, 1));
 
 	////////////////////////////////////////////////////////////////////////////////
 	//FPS 화면에 출력
-	//sprintf(fpsBuf, "FPS: %4.1f", GMAIN->m_fFps);
-	_stprintf(fpsBuf, L"FPS: %4.1f", GMAIN->m_fFps);
+	sprintf(fpsBuf, "FPS: %4.1f", GMAIN->m_fFps);
 	GMAIN->m_text.Draw(fpsBuf, 700, 300);
 
 	GMAIN->m_text.End();

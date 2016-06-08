@@ -37,7 +37,7 @@ TCHAR* TDebugString::GetMbtoWcs( const char* srcmsg )
 {
 	// 멀티바이트 => 유니코드 변환.
 	TCHAR msg[2048] = {0, };
-	ConvertAnsiStringToWideCch(msg, srcmsg, 2048);
+//	ConvertAnsiStringToWideCch(msg, srcmsg, 2048);
 	return msg;
 }
 void TDebugString::DisplayText( char* fmt, ...)

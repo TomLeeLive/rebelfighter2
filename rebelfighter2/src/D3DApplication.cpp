@@ -6,8 +6,7 @@ CD3DApplication::CD3DApplication()
 {
 	g_pD3DApp=this;
 
-	_tcscpy(m_sCls, L"Rebel Fighter 2 V 0.1 Programmed by Tom Jaejoon Lee [serialkk@naver.com]");
-	//strcpy(m_sCls, "Rebel Fighter 2 V 0.1 Programmed by Tom Jaejoon Lee [serialkk@naver.com]");
+	strcpy(m_sCls, "Rebel Fighter 2 V 0.1 Programmed by Tom Jaejoon Lee [serialkk@naver.com]");
 	m_hInst		= NULL;
 	m_hWnd		= NULL;
 	m_dWinStyle	= WS_OVERLAPPEDWINDOW| WS_VISIBLE;

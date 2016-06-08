@@ -11,7 +11,7 @@ public:
 	CGameTexture();
 	virtual ~CGameTexture();
 
-	virtual INT		Create(LPDIRECT3DDEVICE9 pDev, TCHAR* sFile, DWORD	dRscID=0);
+	virtual INT		Create(LPDIRECT3DDEVICE9 pDev, char* sFile, DWORD	dRscID=0);
 	virtual void	Destroy();
 
 public:

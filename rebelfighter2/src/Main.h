@@ -37,7 +37,7 @@ public:
 
 
 	virtual int GameTextureLoad(LPDIRECT3DTEXTURE9& pTex, D3DXIMAGE_INFO* pImg
-		, LPDIRECT3DDEVICE9 pDevice, TCHAR* sfile, DWORD dColor);
+		, LPDIRECT3DDEVICE9 pDevice, char* sfile, DWORD dColor);
 
 	INT	TextureLoad();
 	INT	SoundLoad();

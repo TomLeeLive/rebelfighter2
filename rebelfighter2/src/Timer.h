@@ -7,7 +7,7 @@ public:
 	float	 m_fSecondPerFrame;// 시간의 동기화
 	float	 m_fAccumulation; // 시작이후에 경과시간.
 public:
-	TCHAR	m_csBuffer[256];//char	m_csBuffer[256];
+	char	m_csBuffer[256];
 	DWORD	 m_dwBeforeTick;
 	float    m_fFrameTime;
 	DWORD	 m_dwFrameCounter;

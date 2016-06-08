@@ -901,58 +901,58 @@ void CGamePlay::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 	ss = GMAIN->m_alphatime % 3600000 % 60000 / 1000;
 
 
-	_stprintf(scoreBuf, L" %d", score);
-	_stprintf(killcount, L" %d", m_xwing.m_killcount);
-	_stprintf(enemyBuf, L"%d : Enemy", pvTie0.size());
-	_stprintf(timeBuf, L" %d : %d : %d", hh, mm, ss);
-	_stprintf(ioncntBuf, L"%d : Ion", ioncnt);
-	_stprintf(lasercntBuf, L"%d : Laser", lasercnt);
-	_stprintf(missilecntBuf, L"%d : Missile", missilecnt);
-	_stprintf(curioncntBuf, L"%d : Ion Cnt", curioncnt);
-	_stprintf(curlasercntBuf, L"%d : Laser Cnt", curlasercnt);
-	_stprintf(curmissilecntBuf, L"%d : Missile Cnt", curmissilecnt);
-	_stprintf(vectorsize, L"%d : Attack Cnt", pvLaser1.size());
-	_stprintf(stageBuf, L" %d", stage);
-	_stprintf(enemylevelBuf, L" %d", enemylevel);
-	_stprintf(lifeBuf, L" Life : %d", m_xwing.m_life);
-	_stprintf(phpBuf, L" H.P : %d", m_xwing.hp);
-	_stprintf(playerabilBuf, L" Laser : %d", m_xwing.m_laserable);
-	_stprintf(powerBuf, L" Power : %d", m_xwing.m_power);
-	_stprintf(speedBuf, L" Speed : %d", m_xwing.m_speed);
+	sprintf(scoreBuf, " %d", score);
+	sprintf(killcount, " %d", m_xwing.m_killcount);
+	sprintf(enemyBuf, "%d : Enemy", pvTie0.size());
+	sprintf(timeBuf, " %d : %d : %d", hh, mm, ss);
+	sprintf(ioncntBuf, "%d : Ion", ioncnt);
+	sprintf(lasercntBuf, "%d : Laser", lasercnt);
+	sprintf(missilecntBuf, "%d : Missile", missilecnt);
+	sprintf(curioncntBuf, "%d : Ion Cnt", curioncnt);
+	sprintf(curlasercntBuf, "%d : Laser Cnt", curlasercnt);
+	sprintf(curmissilecntBuf, "%d : Missile Cnt", curmissilecnt);
+	sprintf(vectorsize, "%d : Attack Cnt", pvLaser1.size());
+	sprintf(stageBuf, " %d", stage);
+	sprintf(enemylevelBuf, " %d", enemylevel);
+	sprintf(lifeBuf, " Life : %d", m_xwing.m_life);
+	sprintf(phpBuf, " H.P : %d", m_xwing.hp);
+	sprintf(playerabilBuf, " Laser : %d", m_xwing.m_laserable);
+	sprintf(powerBuf, " Power : %d", m_xwing.m_power);
+	sprintf(speedBuf, " Speed : %d", m_xwing.m_speed);
 
-	GMAIN->m_text.Draw(L"Score", 660, 10);
+	GMAIN->m_text.Draw("Score", 660, 10);
 	GMAIN->m_text.Draw(scoreBuf, 660, 30);
 
-	GMAIN->m_text.Draw(L"KillCount", 660, 50);
+	GMAIN->m_text.Draw("KillCount", 660, 50);
 	GMAIN->m_text.Draw(killcount, 660, 70);
-	GMAIN->m_text.Draw(L"FlightTime", 660, 90);
+	GMAIN->m_text.Draw("FlightTime", 660, 90);
 	GMAIN->m_text.Draw(timeBuf, 660, 110);
 	//GMAIN->m_text.Draw("------------------",660,150);
 	GMAIN->m_text.Draw(enemyBuf, 660, 160);
-	GMAIN->m_text.Draw(L"------------------", 660, 170);
+	GMAIN->m_text.Draw("------------------", 660, 170);
 	GMAIN->m_text.Draw(lasercntBuf, 660, 180);
 	GMAIN->m_text.Draw(ioncntBuf, 660, 200);
 	GMAIN->m_text.Draw(missilecntBuf, 660, 220);
-	GMAIN->m_text.Draw(L"------------------", 660, 230);
+	GMAIN->m_text.Draw("------------------", 660, 230);
 	GMAIN->m_text.Draw(curlasercntBuf, 660, 240);
 	GMAIN->m_text.Draw(curioncntBuf, 660, 260);
 	GMAIN->m_text.Draw(curmissilecntBuf, 660, 280);
-	GMAIN->m_text.Draw(L"------------------", 660, 290);
+	GMAIN->m_text.Draw("------------------", 660, 290);
 	GMAIN->m_text.Draw(vectorsize, 660, 300);
 	//GMAIN->m_text.Draw("------------------",660,310);
 
 	/////////////////////////////////////////////////////////////////////////////
 	//FPS 화면에 출력
-	_stprintf(fpsBuf, L"FPS: %4.1f", GMAIN->m_fFps);
+	sprintf(fpsBuf, "FPS: %4.1f", GMAIN->m_fFps);
 	GMAIN->m_text.Draw(fpsBuf, 660, 340);
 	/////////////////////////////////////////////////////////////////////////////
 
-	GMAIN->m_text.Draw(L"Stage", 660, 370);
+	GMAIN->m_text.Draw("Stage", 660, 370);
 	GMAIN->m_text.Draw(stageBuf, 660, 390);
-	GMAIN->m_text.Draw(L"Level", 660, 410);
+	GMAIN->m_text.Draw("Level", 660, 410);
 	GMAIN->m_text.Draw(enemylevelBuf, 660, 430);
 
-	GMAIN->m_text.Draw(L"Player", 660, 480);
+	GMAIN->m_text.Draw("Player", 660, 480);
 	GMAIN->m_text.Draw(lifeBuf, 660, 500);
 	GMAIN->m_text.Draw(phpBuf, 660, 520);
 	GMAIN->m_text.Draw(playerabilBuf, 660, 540);
