@@ -4,7 +4,7 @@ class CD3DApplication
 {
 public:
 	////////////////////////////////////////////////////////////////////////////////
-	char				m_sCls[128];
+	TCHAR				m_sCls[128];//char				m_sCls[128];
 	HINSTANCE			m_hInst		;
 	HWND				m_hWnd		;
 	DWORD				m_dWinStyle;

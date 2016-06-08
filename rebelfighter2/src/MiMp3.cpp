@@ -200,7 +200,7 @@ INT CMiMp3::InitialGraph()
 	IBaseFilter*	pSN	= NULL;
 	
 	// Can't find the media file
-	if(0xFFFFFFFF == GetFileAttributes(m_sFile))
+	if(0xFFFFFFFF == GetFileAttributesA(m_sFile))
 		return -1;
 	
 	WCHAR	wsFile[MAX_PATH];

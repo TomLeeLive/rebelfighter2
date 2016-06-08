@@ -46,7 +46,7 @@ public:
 
 
 
-	char phpBuf[80], scoreBuf[80], stageBuf[80], lifeBuf[80]
+	TCHAR phpBuf[80], scoreBuf[80], stageBuf[80], lifeBuf[80]
 		, playerabilBuf[80], vectorsize[80], killcount[80], timeBuf[80]
 		, ioncntBuf[80], lasercntBuf[80], missilecntBuf[80]
 		, curioncntBuf[80], curlasercntBuf[80], curmissilecntBuf[80], enemyBuf[80]

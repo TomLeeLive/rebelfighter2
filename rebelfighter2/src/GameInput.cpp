@@ -184,7 +184,7 @@ HRESULT CGameInput::MenuItemClickCheck(void)
 			GMAIN->m_pSound.Play(SND_PLAYBG, true);
 			GMAIN->m_pSound.Play(SND_XWENGLP, false);
 			GMAIN->m_pSound.Volume(SND_XWENGLP, 0.5f, false);
-			OutputDebugString("Multi Start\n");
+			OutputDebugString(L"Multi Start\n");
 		}
 		else if(MousePos.x > rcWindowClient.right*565/800
 			&& MousePos.x < rcWindowClient.right*748/800
@@ -197,7 +197,7 @@ HRESULT CGameInput::MenuItemClickCheck(void)
 			GMAIN->m_pSound.Play(SND_PLAYBG, true);
 			GMAIN->m_pSound.Play(SND_XWENGLP, false);
 			GMAIN->m_pSound.Volume(SND_XWENGLP, 0.5f, false);
-			OutputDebugString("Start\n");
+			OutputDebugString(L"Start\n");
 		}
 		else if(MousePos.x > rcWindowClient.right*565/800
 			&& MousePos.x < rcWindowClient.right*758/800
@@ -206,19 +206,19 @@ HRESULT CGameInput::MenuItemClickCheck(void)
 		{
 			GMAIN->m_nGameBeforePhase = GMAIN->m_nGamePhase;
 			GMAIN->m_nGamePhase=ST_HOWTO;
-			OutputDebugString("Howto\n");
+			OutputDebugString(L"Howto\n");
 		}
 		else if(MousePos.x > rcWindowClient.right*565/800
 			&& MousePos.x < rcWindowClient.right*623/800
 			&& MousePos.y > rcWindowClient.bottom*508/600
 			&& MousePos.y < rcWindowClient.bottom*542/600)
 		{
-			if(MessageBox(GHWND, "Quit?", "Quit", MB_YESNO)==IDYES)
+			if(MessageBox(GHWND, L"Quit?", L"Quit", MB_YESNO)==IDYES)
 			{
 				PostQuitMessage(0);
 				return 0;
 			}		
-			OutputDebugString("Quit\n");
+			OutputDebugString(L"Quit\n");
 		}
 		else{}
 	}

@@ -5,7 +5,7 @@
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
-
+#include <tchar.h>
 
 #include "GameTexture.h"
 
@@ -33,13 +33,13 @@ void CGameTexture::Destroy()
 }
 
 
-INT CGameTexture::Create(LPDIRECT3DDEVICE9 pDev, char* sFile, DWORD	dRsc)
+INT CGameTexture::Create(LPDIRECT3DDEVICE9 pDev, TCHAR* sFile, DWORD	dRsc)
 {
 	m_pDev	= pDev;
 
 	DWORD	dColorKey	= 0x00FFFFFF;
 
-	if(sFile && strlen(sFile)>6)
+	if(sFile && _tcslen(sFile)>6)
 	{
 		dColorKey	= dRsc;
 		if(FAILED(D3DXCreateTextureFromFileEx(
@@ -61,8 +61,8 @@ INT CGameTexture::Create(LPDIRECT3DDEVICE9 pDev, char* sFile, DWORD	dRsc)
 		{
 			m_pTex = NULL;
 			MessageBox( GetActiveWindow()
-				, "Create Texture Failed"
-				, "Err"
+				, L"Create Texture Failed"
+				, L"Err"
 				, MB_ICONEXCLAMATION
 				);
 			return -1;
@@ -72,7 +72,7 @@ INT CGameTexture::Create(LPDIRECT3DDEVICE9 pDev, char* sFile, DWORD	dRsc)
 	else if(dRsc)
 	{
 		HINSTANCE	hInst	= GetModuleHandle(NULL);
-		HRSRC		hrsc	= FindResource(hInst, MAKEINTRESOURCE( dRsc ), "png");
+		HRSRC		hrsc	= FindResource(hInst, MAKEINTRESOURCE( dRsc ), L"png");
 		HGLOBAL		hglobal = LoadResource(hInst, hrsc);
 		DWORD		dwSize	= SizeofResource(hInst,hrsc);
 		void*		pMemory = LockResource(hglobal);
@@ -97,8 +97,8 @@ INT CGameTexture::Create(LPDIRECT3DDEVICE9 pDev, char* sFile, DWORD	dRsc)
 		{
 			m_pTex = NULL;
 			MessageBox( GetActiveWindow()
-				, "Create Texture Failed"
-				, "Err"
+				, L"Create Texture Failed"
+				, L"Err"
 				, MB_ICONEXCLAMATION
 				);
 			return -1;

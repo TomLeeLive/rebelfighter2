@@ -37,7 +37,7 @@ bool     CTimer::Render() {
 	if (fTime >= 1.0f)
 	{
 		_stprintf(m_csBuffer,
-			"FPS=[%d] %10.4f %10.4f",
+			L"FPS=[%d] %10.4f %10.4f",
 			m_iFPS, m_fSecondPerFrame, m_fAccumulation);
 
 
