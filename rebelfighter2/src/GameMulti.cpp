@@ -3,14 +3,321 @@
 //#멀티 구현 코드 구분을 위한 매크로 for debugging
 #define MULTIIMPLE 1
 
+// We copy this from Multiplayer.cpp to keep things all in one file for this example
+unsigned char GetPacketIdentifier(RakNet::Packet *p);
+
+
+
+
+UINT WINAPI ThreadFunc(void *arg)
+{
+	st_RAKNET* raknet = (st_RAKNET*)arg;
+	
+	//RakNet::RakNetStatistics *rss;
+
+	// Pointers to the interfaces of our server and client.
+	// Note we can easily have both in the same program
+	raknet->client = RakNet::RakPeerInterface::GetInstance();
+	//	client->InitializeSecurity(0,0,0,0);
+	//RakNet::PacketLogger packetLogger;
+	//client->AttachPlugin(&packetLogger);
+
+
+	// Holds packets
+	//RakNet::Packet* p;
+
+	// GetPacketIdentifier returns this
+	//unsigned char packetIdentifier;
+
+	// Just so we can remember where the packet came from
+	//bool isServer;
+
+	// Record the first client that connects to us so we can pass it to the ping function
+	raknet->clientID = RakNet::UNASSIGNED_SYSTEM_ADDRESS;
+
+	// Crude interface
+
+	// Holds user data
+	//char ip[64], serverPort[30], clientPort[30];
+	
+
+	// A client
+	raknet->isServer = false;
+
+	printf("This is a sample implementation of a text based chat client.\n");
+	printf("Connect to the project 'Chat Example Server'.\n");
+	printf("Difficulty: Beginner\n\n");
+
+	// Get our input
+	//puts("Enter the client port to listen on");
+	//Gets(clientPort, sizeof(clientPort));
+	//if (clientPort[0] == 0)
+	strcpy(raknet->clientPort, "0");
+
+	/*
+	puts("Enter IP to connect to");
+	Gets(ip, sizeof(ip));
+	*/
+
+	raknet->client->AllowConnectionResponseIPMigration(false);
+
+	//if (ip[0] == 0)
+	strcpy(raknet->ip, "127.0.0.1");
+	// strcpy(ip, "natpunch.jenkinssoftware.com");
+
+
+	//puts("Enter the port to connect to");
+	//Gets(serverPort, sizeof(serverPort));
+	//if (serverPort[0] == 0)
+	strcpy(raknet->serverPort, "1234");
+
+	// Connecting the client is very simple.  0 means we don't care about
+	// a connectionValidationInteger, and false for low priority threads
+	RakNet::SocketDescriptor socketDescriptor(atoi(raknet->clientPort), 0);
+	socketDescriptor.socketFamily = AF_INET;
+	raknet->client->Startup(8, &socketDescriptor, 1);
+	raknet->client->SetOccasionalPing(true);
+
+
+#if LIBCAT_SECURITY==1
+	char public_key[cat::EasyHandshake::PUBLIC_KEY_BYTES];
+	FILE *fp = fopen("publicKey.dat", "rb");
+	fread(public_key, sizeof(public_key), 1, fp);
+	fclose(fp);
+#endif
+
+#if LIBCAT_SECURITY==1
+	RakNet::PublicKey pk;
+	pk.remoteServerPublicKey = public_key;
+	pk.publicKeyMode = RakNet::PKM_USE_KNOWN_PUBLIC_KEY;
+	bool b = client->Connect(ip, atoi(serverPort), "Rumpelstiltskin", (int)strlen("Rumpelstiltskin"), &pk) == RakNet::CONNECTION_ATTEMPT_STARTED;
+#else
+	RakNet::ConnectionAttemptResult car = raknet->client->Connect(raknet->ip, atoi(raknet->serverPort), "Rumpelstiltskin", (int)strlen("Rumpelstiltskin"));
+	RakAssert(car == RakNet::CONNECTION_ATTEMPT_STARTED);
+#endif
+
+	printf("\nMy IP addresses:\n");
+	unsigned int i;
+	for (i = 0; i <raknet->client->GetNumberOfAddresses(); i++)
+	{
+		printf("%i. %s\n", i + 1, raknet->client->GetLocalIP(i));
+	}
+
+	printf("My GUID is %s\n", raknet->client->GetGuidFromSystemAddress(RakNet::UNASSIGNED_SYSTEM_ADDRESS).ToString());
+	puts("'quit' to quit. 'stat' to show stats. 'ping' to ping.\n'disconnect' to disconnect. 'connect' to reconnnect. Type to talk.");
+
+
+
+	char message[2048];
+
+	// Loop for input
+	while (1)
+	{
+		// This sleep keeps RakNet responsive
+#ifdef _WIN32
+		Sleep(30);
+#else
+		usleep(30 * 1000);
+#endif
+
+
+		if (kbhit())
+		{
+			// Notice what is not here: something to keep our network running.  It's
+			// fine to block on Gets or anything we want
+			// Because the network engine was painstakingly written using threads.
+			Gets(message, sizeof(message));
+
+			if (strcmp(message, "quit") == 0)
+			{
+				puts("Quitting.");
+				break;
+			}
+
+			//if (strcmp(message, "stat") == 0)
+			//{
+
+			//	raknet->rss = raknet->client->GetStatistics(raknet->client->GetSystemAddressFromIndex(0));
+			//	StatisticsToString(raknet->rss, message, 2);
+			//	printf("%s", message);
+			//	printf("Ping=%i\n", raknet->client->GetAveragePing(raknet->client->GetSystemAddressFromIndex(0)));
+
+			//	continue;
+			//}
+
+			if (strcmp(message, "disconnect") == 0)
+			{
+				printf("Enter index to disconnect: ");
+				char str[32];
+				Gets(str, sizeof(str));
+				if (str[0] == 0)
+					strcpy(str, "0");
+				int index = atoi(str);
+				raknet->client->CloseConnection(raknet->client->GetSystemAddressFromIndex(index), false);
+				printf("Disconnecting.\n");
+				continue;
+			}
+
+			if (strcmp(message, "shutdown") == 0)
+			{
+				raknet->client->Shutdown(100);
+				printf("Shutdown.\n");
+				continue;
+			}
+
+			if (strcmp(message, "startup") == 0)
+			{
+				bool b = raknet->client->Startup(8, &socketDescriptor, 1) == RakNet::RAKNET_STARTED;
+				if (b)
+					printf("Started.\n");
+				else
+					printf("Startup failed.\n");
+				continue;
+			}
+
+
+			if (strcmp(message, "connect") == 0)
+			{
+				printf("Enter server ip: ");
+				Gets(raknet->ip, sizeof(raknet->ip));
+				if (raknet->ip[0] == 0)
+					strcpy(raknet->ip, "127.0.0.1");
+
+				printf("Enter server port: ");
+				Gets(raknet->serverPort, sizeof(raknet->serverPort));
+				if (raknet->serverPort[0] == 0)
+					strcpy(raknet->serverPort, "1234");
+
+#if LIBCAT_SECURITY==1
+				bool b = client->Connect(ip, atoi(serverPort), "Rumpelstiltskin", (int)strlen("Rumpelstiltskin"), &pk) == RakNet::CONNECTION_ATTEMPT_STARTED;
+#else
+				bool b = raknet->client->Connect(raknet->ip, atoi(raknet->serverPort), "Rumpelstiltskin", (int)strlen("Rumpelstiltskin")) == RakNet::CONNECTION_ATTEMPT_STARTED;
+#endif
+
+				if (b)
+					puts("Attempting connection");
+				else
+				{
+					puts("Bad connection attempt.  Terminating.");
+					exit(1);
+				}
+				continue;
+			}
+
+			if (strcmp(message, "ping") == 0)
+			{
+				if (raknet->client->GetSystemAddressFromIndex(0) != RakNet::UNASSIGNED_SYSTEM_ADDRESS)
+					raknet->client->Ping(raknet->client->GetSystemAddressFromIndex(0));
+
+				continue;
+			}
+
+			if (strcmp(message, "getlastping") == 0)
+			{
+				if (raknet->client->GetSystemAddressFromIndex(0) != RakNet::UNASSIGNED_SYSTEM_ADDRESS)
+					printf("Last ping is %i\n", raknet->client->GetLastPing(raknet->client->GetSystemAddressFromIndex(0)));
+
+				continue;
+			}
+
+			// message is the data to send
+			// strlen(message)+1 is to send the null terminator
+			// HIGH_PRIORITY doesn't actually matter here because we don't use any other priority
+			// RELIABLE_ORDERED means make sure the message arrives in the right order
+			raknet->client->Send(message, (int)strlen(message) + 1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+		}
+
+		// Get a packet from either the server or the client
+
+		for (raknet->p = raknet->client->Receive(); raknet->p; raknet->client->DeallocatePacket(raknet->p), raknet->p = raknet->client->Receive())
+		{
+			// We got a packet, get the identifier with our handy function
+			raknet->packetIdentifier = GetPacketIdentifier(raknet->p);
+
+			// Check if this is a network message packet
+			switch (raknet->packetIdentifier)
+			{
+			case ID_DISCONNECTION_NOTIFICATION:
+				// Connection lost normally
+				printf("ID_DISCONNECTION_NOTIFICATION\n");
+				break;
+			case ID_ALREADY_CONNECTED:
+				// Connection lost normally
+				printf("ID_ALREADY_CONNECTED with guid %" PRINTF_64_BIT_MODIFIER "u\n", raknet->p->guid);
+				break;
+			case ID_INCOMPATIBLE_PROTOCOL_VERSION:
+				printf("ID_INCOMPATIBLE_PROTOCOL_VERSION\n");
+				break;
+			case ID_REMOTE_DISCONNECTION_NOTIFICATION: // Server telling the clients of another client disconnecting gracefully.  You can manually broadcast this in a peer to peer enviroment if you want.
+				printf("ID_REMOTE_DISCONNECTION_NOTIFICATION\n");
+				break;
+			case ID_REMOTE_CONNECTION_LOST: // Server telling the clients of another client disconnecting forcefully.  You can manually broadcast this in a peer to peer enviroment if you want.
+				printf("ID_REMOTE_CONNECTION_LOST\n");
+				break;
+			case ID_REMOTE_NEW_INCOMING_CONNECTION: // Server telling the clients of another client connecting.  You can manually broadcast this in a peer to peer enviroment if you want.
+				printf("ID_REMOTE_NEW_INCOMING_CONNECTION\n");
+				break;
+			case ID_CONNECTION_BANNED: // Banned from this server
+				printf("We are banned from this server.\n");
+				break;
+			case ID_CONNECTION_ATTEMPT_FAILED:
+				printf("Connection attempt failed\n");
+				break;
+			case ID_NO_FREE_INCOMING_CONNECTIONS:
+				// Sorry, the server is full.  I don't do anything here but
+				// A real app should tell the user
+				printf("ID_NO_FREE_INCOMING_CONNECTIONS\n");
+				break;
+
+			case ID_INVALID_PASSWORD:
+				printf("ID_INVALID_PASSWORD\n");
+				break;
+
+			case ID_CONNECTION_LOST:
+				// Couldn't deliver a reliable packet - i.e. the other system was abnormally
+				// terminated
+				printf("ID_CONNECTION_LOST\n");
+				break;
+
+			case ID_CONNECTION_REQUEST_ACCEPTED:
+				// This tells the client they have connected
+				printf("ID_CONNECTION_REQUEST_ACCEPTED to %s with GUID %s\n", raknet->p->systemAddress.ToString(true), raknet->p->guid.ToString());
+				printf("My external address is %s\n", raknet->client->GetExternalID(raknet->p->systemAddress).ToString(true));
+				break;
+			case ID_CONNECTED_PING:
+			case ID_UNCONNECTED_PING:
+				printf("Ping from %s\n", raknet->p->systemAddress.ToString(true));
+				break;
+			case ID_USER_1P_MOVE:
+				break;
+
+			default:
+				// It's a client, so just show the message
+				printf("%s\n", raknet->p->data);
+				break;
+			}
+		}
+	}
+
+	// Be nice and let the server know we quit.
+	raknet->client->Shutdown(300);
+
+	// We're done with the network
+	RakNet::RakPeerInterface::DestroyInstance(raknet->client);
+	return 0;
+}
+
+
+
+
 CGameMulti::~CGameMulti()
 {
 }
 
 CGameMulti::CGameMulti()
 {
-	m_bLogin = false;
-	m_iSerIndex = 0;
+	//m_bLogin = false;
+	//m_iSerIndex = 0;
 
 	ioncnt = 0;
 	lasercnt = 0;
@@ -75,33 +382,42 @@ INT CGameMulti::Init()
 void CGameMulti::MultiInit() {
 
 	
-	if (MessageBox(GHWND, "IP입력?", "질문", MB_OK) == IDOK) {
-	// ToDo: IP입력처리.
-	}
+	//if (MessageBox(GHWND, "IP입력?", "질문", MB_OK) == IDOK) {
+	//// ToDo: IP입력처리.
+	//}
+	//
+	//m_iSerIndex = 0;
+	//I_DebugStr.Init();
+	//m_bLogin = true;
+	//m_Client.Init();
+	//I_GameUser.Init();
+	//m_Udp.Init();
+
+
+	//memset(&m_raknet, 0, sizeof(m_raknet));
+
+	DWORD dwThreadID;
+
+	hThread = (HANDLE)_beginthreadex(0, 0, ThreadFunc, (void*)&m_raknet, 0, (unsigned int*)&dwThreadID);
 	
-	m_iSerIndex = 0;
-	I_DebugStr.Init();
-	m_bLogin = true;
-	m_Client.Init();
-	I_GameUser.Init();
-	m_Udp.Init();
 }
+
 
 
 void CGameMulti::Frame()
 {
 	/////////////////////////////////////////////////////////////
-	if (m_bLogin == false) return;
+	//if (m_bLogin == false) return;
 
-	
-	m_Client.Frame();
+	//
+	//m_Client.Frame();
 
 
-	I_GameUser.Frame();
-	for (int iObj = 0; iObj < m_UserList.size(); iObj++)
-	{
-		m_UserList[iObj].Frame();
-	}
+	//I_GameUser.Frame();
+	//for (int iObj = 0; iObj < m_UserList.size(); iObj++)
+	//{
+	//	m_UserList[iObj].Frame();
+	//}
 
 	/////////////////////////////////////////////////////////////
 
@@ -498,7 +814,7 @@ void CGameMulti::EnemyBullet(){
 }
 void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 {
-	if (m_bLogin == false) return;
+	//if (m_bLogin == false) return;
 
 	dxsprite->Begin(D3DXSPRITE_ALPHABLEND);
 
@@ -964,11 +1280,15 @@ void CGameMulti::Destroy()
 	for (; _FT != _LT; ++_FT) { if (*_FT != 0) delete (*_FT); }
 	pvTie0.clear();
 
-	I_DebugStr.Release();
-	m_Client.m_bExit = true;
-	I_GameUser.Release();
-	m_Client.Release();
-	m_Udp.Release();
+	//I_DebugStr.Release();
+	//m_Client.m_bExit = true;
+	//I_GameUser.Release();
+	//m_Client.Release();
+	//m_Udp.Release();
+
+
+
+
 
 }
 
@@ -1322,16 +1642,9 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_RIGHT))
 		{
 #ifdef MULTIIMPLE
-			TPACKET_USER_POSITION userdata;
-			userdata.direction = VK_RIGHT;
-			userdata.posX = m_xwing.xval + GMAIN->m_movingdist*m_xwing.m_speed;//I_GameUser.m_fPosX;
-			userdata.posY = m_xwing.yval;//I_GameUser.m_fPosY;
-			userdata.user_idx = m_iSerIndex;
-			char buffer[256] = { 0, };
-			int iSize = sizeof(userdata);
-			memcpy(buffer, &userdata, iSize);
-			m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
-				PACKET_USER_POSITION);
+			//TID_USER_1P_MOVE message;
+
+			m_raknet.client->Send(message, (int)strlen(message) + 1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 #else
 			m_xwing.xval = m_xwing.xval + GMAIN->m_movingdist*m_xwing.m_speed;
 
@@ -1344,16 +1657,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_LEFT))
 		{
 #ifdef MULTIIMPLE
-			TPACKET_USER_POSITION userdata;
-			userdata.direction = VK_LEFT;
-			userdata.posX = m_xwing.xval - GMAIN->m_movingdist*m_xwing.m_speed;//I_GameUser.m_fPosX;
-			userdata.posY = m_xwing.yval;//I_GameUser.m_fPosY;
-			userdata.user_idx = m_iSerIndex;
-			char buffer[256] = { 0, };
-			int iSize = sizeof(userdata);
-			memcpy(buffer, &userdata, iSize);
-			m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
-				PACKET_USER_POSITION);
+
 #else
 			m_xwing.xval = m_xwing.xval - GMAIN->m_movingdist*m_xwing.m_speed;
 			if (m_xwing.xval<0)
@@ -1366,16 +1670,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_UP))
 		{
 #ifdef MULTIIMPLE
-			TPACKET_USER_POSITION userdata;
-			userdata.direction = VK_UP;
-			userdata.posX = m_xwing.xval;//I_GameUser.m_fPosX;
-			userdata.posY = m_xwing.yval - GMAIN->m_movingdist*m_xwing.m_speed; //I_GameUser.m_fPosY;
-			userdata.user_idx = m_iSerIndex;
-			char buffer[256] = { 0, };
-			int iSize = sizeof(userdata);
-			memcpy(buffer, &userdata, iSize);
-			m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
-				PACKET_USER_POSITION);
+
 #else
 			m_xwing.yval = m_xwing.yval - GMAIN->m_movingdist*m_xwing.m_speed;
 
@@ -1388,16 +1683,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_DOWN))
 		{
 #ifdef MULTIIMPLE
-			TPACKET_USER_POSITION userdata;
-			userdata.direction = VK_DOWN;
-			userdata.posX = m_xwing.xval;//I_GameUser.m_fPosX;
-			userdata.posY = m_xwing.yval + GMAIN->m_movingdist*m_xwing.m_speed; //I_GameUser.m_fPosY;
-			userdata.user_idx = m_iSerIndex;
-			char buffer[256] = { 0, };
-			int iSize = sizeof(userdata);
-			memcpy(buffer, &userdata, iSize);
-			m_Client.SendMsg(buffer, iSize,//(char*)&userdata, 
-				PACKET_USER_POSITION);
+
 #else
 			m_xwing.yval = m_xwing.yval + GMAIN->m_movingdist*m_xwing.m_speed;
 			if (m_xwing.yval>550)
@@ -1500,4 +1786,23 @@ void CGameMulti::CharacterMove()
 
 	}
 
+}
+
+
+
+// Copied from Multiplayer.cpp
+// If the first byte is ID_TIMESTAMP, then we want the 5th byte
+// Otherwise we want the 1st byte
+unsigned char GetPacketIdentifier(RakNet::Packet *p)
+{
+	if (p == 0)
+		return 255;
+
+	if ((unsigned char)p->data[0] == ID_TIMESTAMP)
+	{
+		RakAssert(p->length > sizeof(RakNet::MessageID) + sizeof(RakNet::Time));
+		return (unsigned char)p->data[sizeof(RakNet::MessageID) + sizeof(RakNet::Time)];
+	}
+	else
+		return (unsigned char)p->data[0];
 }

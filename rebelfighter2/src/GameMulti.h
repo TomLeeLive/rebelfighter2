@@ -1,9 +1,37 @@
 #pragma once
 
-#include "TDebugString.h"
-#include "TClient.h"
-#include "TGameUser.h"
-#include "TUdpSocket.h"
+//#include "TDebugString.h"
+//#include "TClient.h"
+//#include "TGameUser.h"
+//#include "TUdpSocket.h"
+
+typedef struct _raknet {
+	RakNet::RakNetStatistics *rss;
+	// Pointers to the interfaces of our server and client.
+	// Note we can easily have both in the same program
+	RakNet::RakPeerInterface *client;
+	//	client->InitializeSecurity(0,0,0,0);
+	//RakNet::PacketLogger packetLogger;
+	//client->AttachPlugin(&packetLogger);
+
+
+	// Holds packets
+	RakNet::Packet* p;
+
+	// GetPacketIdentifier returns this
+	unsigned char packetIdentifier;
+
+	// Just so we can remember where the packet came from
+	bool isServer;
+
+	// Record the first client that connects to us so we can pass it to the ping function
+	RakNet::SystemAddress clientID;
+
+	// Crude interface
+
+	// Holds user data
+	char ip[64], serverPort[30], clientPort[30];
+}st_RAKNET;
 
 class CGameMulti : public CGameScene
 {
@@ -11,14 +39,17 @@ public:
 /////////////////////////////////////////////////////////////
 // for Multi play
 
-	TUdpSocket			m_Udp;
-	//게임유저
-	//TGameUser				I_GameUser;
-	std::vector<TGameUser>	m_UserList;
-	TClient				m_Client;
-	int					m_iSerIndex;
-	bool				m_bLogin;
+	//TUdpSocket			m_Udp;
+	////게임유저
+	////TGameUser				I_GameUser;
+	//std::vector<TGameUser>	m_UserList;
+	//TClient				m_Client;
+	//int					m_iSerIndex;
+	//bool				m_bLogin;
 
+	HANDLE hThread;
+
+	st_RAKNET m_raknet;
 /////////////////////////////////////////////////////////////
 	INT Init();
 	void Frame();

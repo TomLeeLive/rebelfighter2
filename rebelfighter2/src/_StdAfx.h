@@ -93,6 +93,43 @@ enum GAME_STATE {
 //#include "Object3D.h"
 //////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////
+//RAKNET
+#ifdef _DEBUG
+#pragma comment(lib, "./../lib/RebelFighter2_LibStatic_Debug_Win32.lib")
+#else
+#pragma comment(lib, "./../lib/RakNet_VS2008_LibStatic_Release_Win32.lib")
+#endif
+#pragma comment(lib, "ws2_32.lib")
+
+#include "../Source/MessageIdentifiers.h"
+
+#include "../Source/RakPeerInterface.h"
+#include "../Source/RakNetStatistics.h"
+#include "../Source/RakNetTypes.h"
+#include "../Source/BitStream.h"
+#include "../Source/PacketLogger.h"
+#include <assert.h>
+#include <cstdio>
+#include <cstring>
+#include <stdlib.h>
+#include "../Source/RakNetTypes.h"
+#ifdef _WIN32
+#include "../Source/Kbhit.h"
+#include "../Source/WindowsIncludes.h" // Sleep
+#else
+#include "Kbhit.h"
+#include <unistd.h> // usleep
+#endif
+#include "../Source/Gets.h"
+
+#if LIBCAT_SECURITY==1
+#include "SecureHandshake.h" // Include header for secure handshake
+#endif
+//////////////////////////////////////////////////////////////////////
+
+#include <process.h>
+
 #include "GameScene.h"
 #include "GamePlay.h"
 #include "GameMulti.h"

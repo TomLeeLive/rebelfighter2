@@ -72,24 +72,6 @@
     <ClCompile Include="GameStart.cpp">
       <Filter>GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="TClient.cpp">
-      <Filter>NetworkPlay</Filter>
-    </ClCompile>
-    <ClCompile Include="TDebugString.cpp">
-      <Filter>NetworkPlay</Filter>
-    </ClCompile>
-    <ClCompile Include="TGameUser.cpp">
-      <Filter>NetworkPlay</Filter>
-    </ClCompile>
-    <ClCompile Include="TStreamPacket.cpp">
-      <Filter>NetworkPlay</Filter>
-    </ClCompile>
-    <ClCompile Include="TThread.cpp">
-      <Filter>NetworkPlay</Filter>
-    </ClCompile>
-    <ClCompile Include="TUdpSocket.cpp">
-      <Filter>NetworkPlay</Filter>
-    </ClCompile>
     <ClCompile Include="GameMulti.cpp">
       <Filter>NetworkPlay</Filter>
     </ClCompile>
@@ -149,34 +131,7 @@
     <ClInclude Include="GameStart.h">
       <Filter>GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="TClient.h">
-      <Filter>NetworkPlay</Filter>
-    </ClInclude>
-    <ClInclude Include="TDebugString.h">
-      <Filter>NetworkPlay</Filter>
-    </ClInclude>
-    <ClInclude Include="TGameUser.h">
-      <Filter>NetworkPlay</Filter>
-    </ClInclude>
-    <ClInclude Include="TProtocol.h">
-      <Filter>NetworkPlay</Filter>
-    </ClInclude>
-    <ClInclude Include="TStreamPacket.h">
-      <Filter>NetworkPlay</Filter>
-    </ClInclude>
-    <ClInclude Include="TThread.h">
-      <Filter>NetworkPlay</Filter>
-    </ClInclude>
-    <ClInclude Include="TUdpSocket.h">
-      <Filter>NetworkPlay</Filter>
-    </ClInclude>
     <ClInclude Include="GameMulti.h">
-      <Filter>NetworkPlay</Filter>
-    </ClInclude>
-    <ClInclude Include="TBasisStd.h">
-      <Filter>NetworkPlay</Filter>
-    </ClInclude>
-    <ClInclude Include="TBasisSys.h">
       <Filter>NetworkPlay</Filter>
     </ClInclude>
   </ItemGroup>
