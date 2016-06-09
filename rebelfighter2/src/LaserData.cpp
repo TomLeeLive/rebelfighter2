@@ -40,6 +40,9 @@ CLaserData::CLaserData(char* _name,float _laserxval, float _laseryval)
 	else
 	{
 	}
+
+	id = 0;
+
 }
 
 void CLaserData::LaserDraw(char* name,RECT rc,std::vector<CLaserData*>::iterator _F)

@@ -509,7 +509,8 @@ struct TID_USER_LASER_FIRE_DATA
 	unsigned short	posX;
 	unsigned short	posY;
 	unsigned short	direction; //0 ~7 8방향
-	unsigned short	bullettype; //0 ~7 8방향
+	unsigned short	bullettype; //총알 타입
+	unsigned short	id;
 };
 
 struct TID_USER_LASER_FIRE

@@ -12,6 +12,50 @@ CRITICAL_SECTION g_cs_pvTie0;
 // We copy this from Multiplayer.cpp to keep things all in one file for this example
 unsigned char GetPacketIdentifier(RakNet::Packet *p);
 
+template <typename T>
+unsigned short CreateUniqueID(T a) {
+	srand((int)time(NULL));
+
+	unsigned short usTemp;
+
+	bool bLoop = true;
+
+	T::iterator _F = a.begin();
+	T::iterator _L = a.end();
+
+	while (bLoop) {
+		usTemp = unsigned short(rand() % 100);
+
+		if (a.size() == 0) {
+			return usTemp;
+		}
+		else {
+			for (; _F != _L;)
+			{
+				if (*_F == 0)
+					continue;
+
+				if ((*_F)->id == usTemp) {
+					_F = a.begin();
+					break;
+				}
+
+				++_F;
+
+				if (_F == _L) {
+					bLoop = false;
+					break;
+				}
+
+			}
+		}
+		
+	}
+	return usTemp;
+
+}
+
+
 
 void Process_ID_USER_MOVE(RakNet::Packet *p) {
 	long lTemp;
@@ -58,6 +102,10 @@ void Process_ID_USER_MOVE(RakNet::Packet *p) {
 }
 
 void Process_ID_USER_LASER_FIRE(RakNet::Packet *p) {
+	
+	if (GGAMEMULTI->m_iMultiPlayer == 1)
+		return;
+
 	long lTempX, lTempY;
 
 	TID_USER_LASER_FIRE_DATA temp;
@@ -70,7 +118,7 @@ void Process_ID_USER_LASER_FIRE(RakNet::Packet *p) {
 	EnterCriticalSection(&g_cs_pvLaser0);
 	if (GGAMEMULTI->pvLaser0.size() < GGAMEMULTI->m_xwing_1p.m_laserable)
 	{
-		GGAMEMULTI->pvLaser0.push_back(new CLaserData(GGAMEMULTI->m_xwing_1p.xval, GGAMEMULTI->m_xwing_1p.yval, FALSE)); // 주인공 총알 발생
+		GGAMEMULTI->pvLaser0.push_back(new CLaserData(GGAMEMULTI->m_xwing_1p.xval, GGAMEMULTI->m_xwing_1p.yval, FALSE, temp.id)); // 주인공 총알 발생
 
 		GMAIN->m_pSound.Play(SND_XWLSR1, true);
 	}
@@ -473,7 +521,7 @@ void CGameMulti::MultiInit() {
 	//// ToDo: IP입력처리.
 	//}
 
-	m_iMultiPlayer = 0;
+	m_iMultiPlayer = 1;
 
 	//memset(&m_raknet, 0, sizeof(m_raknet));
 
@@ -1734,7 +1782,7 @@ INT CGameMulti::ColCheck3()
 	return bColl;
 }
 
-void	CGameMulti::UserMoveSend(float fPosX, float fPosY, int iDirection )
+void	CGameMulti::Send_ID_USER_MOVE(float fPosX, float fPosY, int iDirection )
 {
 	char message[2048];
 	int ping = m_raknet.client->GetAveragePing(m_raknet.client->GetSystemAddressFromIndex(0));
@@ -1765,7 +1813,66 @@ void	CGameMulti::UserMoveSend(float fPosX, float fPosY, int iDirection )
 #endif
 }
 
-void	CGameMulti::UserFireSend(float fPosX, float fPosY)
+
+
+
+void	CGameMulti::Send_ID_USER_LASER_FIRE(float fPosX, float fPosY)
+{
+	TID_USER_LASER_FIRE packet;
+
+	char message[2048];
+	int ping = m_raknet.client->GetAveragePing(m_raknet.client->GetSystemAddressFromIndex(0));
+	long lTemp;
+
+	if (m_iMultiPlayer == 1) { //1p
+
+		EnterCriticalSection(&g_cs_pvLaser0);
+		
+ 		unsigned short usTemp = CreateUniqueID(pvLaser0);
+
+		if (pvLaser0.size() < m_xwing_1p.m_laserable)
+		{
+  			pvLaser0.push_back(new CLaserData(m_xwing_1p.xval, m_xwing_1p.yval, FALSE, usTemp)); // 주인공 총알 발생
+
+			GMAIN->m_pSound.Play(SND_XWLSR1, true);
+		}
+
+		LeaveCriticalSection(&g_cs_pvLaser0);
+
+
+
+
+		packet.typeId = ID_USER_LASER_FIRE;
+
+		lTemp = (long)(fPosX*10.0f);
+		packet.data.posX = (unsigned short)lTemp;
+		lTemp = (long)(fPosY*10.0f);
+		packet.data.posY = (unsigned short)lTemp;
+		packet.data.direction = DIRECTION_UU;
+		packet.data.id = usTemp;
+
+		if (m_iMultiPlayer != 0) {
+			packet.data.user_idx = m_iMultiPlayer;
+		}
+
+		memcpy(message, &packet, sizeof(packet));
+		//strcpy(message, "right");
+		m_raknet.client->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+		//m_raknet.client->Send(message, (int)strlen(message) + 1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	}
+	else { //2p
+	}
+	
+
+#ifdef _DEBUG
+	char buf[80];
+	sprintf(buf, "ID_USER_LASER_FIRE user:%d, posX:%hu, posY:%hu, id:%hu, ping:%d \n", packet.data.user_idx, packet.data.posX, packet.data.posY, packet.data.id, ping);
+	OutputDebugString(buf);
+#endif
+}
+
+
+void	CGameMulti::Send_ID_USER_LASER_MOVE(unsigned short id, float fPosX, float fPosY)
 {
 	char message[2048];
 	int ping = m_raknet.client->GetAveragePing(m_raknet.client->GetSystemAddressFromIndex(0));
@@ -1818,7 +1925,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_RIGHT))
 		{
 #ifdef MULTIIMPLE
-			UserMoveSend( GMAIN->m_movingdist*m_xwing_1p.m_speed, 0, DIRECTION_RR);
+			Send_ID_USER_MOVE( GMAIN->m_movingdist*m_xwing_1p.m_speed, 0, DIRECTION_RR);
 #else
 			m_xwing.xval = m_xwing.xval + GMAIN->m_movingdist*m_xwing.m_speed;
 
@@ -1831,7 +1938,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_LEFT))
 		{
 #ifdef MULTIIMPLE
-			UserMoveSend( GMAIN->m_movingdist*m_xwing_1p.m_speed, 0, DIRECTION_LL);
+			Send_ID_USER_MOVE( GMAIN->m_movingdist*m_xwing_1p.m_speed, 0, DIRECTION_LL);
 #else
 			m_xwing.xval = m_xwing.xval - GMAIN->m_movingdist*m_xwing.m_speed;
 			if (m_xwing.xval<0)
@@ -1844,7 +1951,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_UP))
 		{
 #ifdef MULTIIMPLE
-			UserMoveSend( 0, GMAIN->m_movingdist*m_xwing_1p.m_speed, DIRECTION_UU);
+			Send_ID_USER_MOVE( 0, GMAIN->m_movingdist*m_xwing_1p.m_speed, DIRECTION_UU);
 #else
 			m_xwing.yval = m_xwing.yval - GMAIN->m_movingdist*m_xwing.m_speed;
 
@@ -1857,7 +1964,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_DOWN))
 		{
 #ifdef MULTIIMPLE
-			UserMoveSend(0, GMAIN->m_movingdist*m_xwing_1p.m_speed, DIRECTION_DD);
+			Send_ID_USER_MOVE(0, GMAIN->m_movingdist*m_xwing_1p.m_speed, DIRECTION_DD);
 #else
 			m_xwing.yval = m_xwing.yval + GMAIN->m_movingdist*m_xwing.m_speed;
 			if (m_xwing.yval>550)
@@ -1869,7 +1976,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyDown(VK_SPACE))
 		{
 #ifdef MULTIIMPLE
-			UserFireSend(m_xwing_1p.xval, m_xwing_1p.yval);
+			Send_ID_USER_LASER_FIRE(m_xwing_1p.xval, m_xwing_1p.yval);
 #else
 			if (pvLaser0.size() < m_xwing.m_laserable)
 			{
