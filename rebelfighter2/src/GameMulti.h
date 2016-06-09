@@ -39,8 +39,9 @@ public:
 
 	st_RAKNET m_raknet;
 
-	int m_iMultiPlayer;//멀티플레이어 유저 번호. 1: 1p, 2: 2p,  0: 접속되지 않음. 3: 접속자수 2명이상이라 서버로 접속 끊음.
-
+	int		m_iMultiPlayer;		//멀티플레이어 유저 번호. 1: 1p, 2: 2p,  0: 접속되지 않음. 3: 접속자수 2명이상이라 서버로 접속 끊음.
+	int     m_iMultiPlayerCount;//멀티플레이 총 유저 수
+	bool	m_bMultiPlaying;	//멀티플레이 실행중인지?
 	void	Send_ID_USER_LASER_FIRE(float fPosX, float fPosY);
 	void	Send_ID_USER_LASER_MOVE(unsigned short id, float fPosX, float fPosY);
 	void	Send_ID_USER_MOVE(float fPosX, float fPosY, int iDirection);

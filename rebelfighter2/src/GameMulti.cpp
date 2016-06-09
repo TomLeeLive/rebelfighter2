@@ -56,6 +56,25 @@ unsigned short CreateUniqueID(T a) {
 }
 
 
+void Send_ID_USER_ASK_PLAYER_NUM()
+{
+	char message[2048];
+	int ping = GGAMEMULTI->m_raknet.client->GetAveragePing(GGAMEMULTI->m_raknet.client->GetSystemAddressFromIndex(0));
+	long lTemp;
+
+	TID_USER_ASK_PLAYER_NUM packet;
+	packet.typeId = ID_USER_ASK_PLAYER_NUM;
+
+	memcpy(message, &packet, sizeof(packet));
+	GGAMEMULTI->m_raknet.client->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+
+#ifdef _DEBUG
+	char buf[80];
+	sprintf(buf, "ID_USER_ASK_PLAYER_NUM\n");
+	OutputDebugString(buf);
+#endif
+}
+
 
 void Process_ID_USER_MOVE(RakNet::Packet *p) {
 	long lTemp;
@@ -99,6 +118,16 @@ void Process_ID_USER_MOVE(RakNet::Packet *p) {
 			GGAMEMULTI->m_xwing_1p.yval = 550;
 		}
 	}
+}
+
+void Process_ID_USER_ANS_PLAYER_NUM(RakNet::Packet *p) {
+
+	TID_USER_ANS_PLAYER_NUM_DATA temp;
+	memcpy(&temp, &(p->data[1]), sizeof(TID_USER_ANS_PLAYER_NUM_DATA));
+
+	GGAMEMULTI->m_iMultiPlayerCount =temp.howmany;
+	GGAMEMULTI->m_iMultiPlayer=temp.yournum;
+
 }
 
 void Process_ID_USER_LASER_FIRE(RakNet::Packet *p) {
@@ -225,6 +254,12 @@ UINT WINAPI ThreadFunc(void *arg)
 
 
 	char message[2048];
+
+
+
+
+
+
 
 	// Loop for input
 	while (1)
@@ -404,17 +439,40 @@ UINT WINAPI ThreadFunc(void *arg)
 			case ID_UNCONNECTED_PING:
 				printf("Ping from %s\n", raknet->p->systemAddress.ToString(true));
 				break;
+
 			case ID_USER_MOVE:
 				Process_ID_USER_MOVE(raknet->p);
 				break;
+
 			case ID_USER_LASER_FIRE:
 				Process_ID_USER_LASER_FIRE(raknet->p);
+				break;
+
+			case ID_USER_ANS_PLAYER_NUM:
+				Process_ID_USER_ANS_PLAYER_NUM(raknet->p);
+				break;
+
+			case ID_USER_ASK_PLAYER_NUM: {}break;
+			case ID_USER_LASER_MOVE: {}break;
+			case ID_USER_LASER_ERASE: {}break;
+			case ID_USER_OBJECT_CREATE: {}break;
+			case ID_USER_OBJECT_MOVE: {}break;
+			case ID_USER_OBJECT_ERASE: {}break;
+			case ID_USER_GAMESCORE_UPDATE: {}break;
+			case ID_USER_KILLCOUNT_UPDATE: {}break;
+			case ID_USER_2P_STATUS_UPDATE: {}break;
+
 			default:
 				// It's a client, so just show the message
 				printf("%s\n", raknet->p->data);
 				break;
 			}
 		}
+		//#접속후 처음 메시지는  ID_USER_ASK_PLAYER_NUM 클라->서버
+		
+		if(GGAMEMULTI->m_iMultiPlayer==0)
+			Send_ID_USER_ASK_PLAYER_NUM();
+
 	}
 
 	// Be nice and let the server know we quit.
@@ -521,7 +579,9 @@ void CGameMulti::MultiInit() {
 	//// ToDo: IP입력처리.
 	//}
 
-	m_iMultiPlayer = 1;
+	m_iMultiPlayer = 0;
+	m_iMultiPlayerCount = 0;
+	m_bMultiPlaying = false;
 
 	//memset(&m_raknet, 0, sizeof(m_raknet));
 
@@ -1835,40 +1895,44 @@ void	CGameMulti::Send_ID_USER_LASER_FIRE(float fPosX, float fPosY)
   			pvLaser0.push_back(new CLaserData(m_xwing_1p.xval, m_xwing_1p.yval, FALSE, usTemp)); // 주인공 총알 발생
 
 			GMAIN->m_pSound.Play(SND_XWLSR1, true);
-		}
 
+
+			packet.typeId = ID_USER_LASER_FIRE;
+
+			lTemp = (long)(fPosX*10.0f);
+			packet.data.posX = (unsigned short)lTemp;
+			lTemp = (long)(fPosY*10.0f);
+			packet.data.posY = (unsigned short)lTemp;
+			packet.data.direction = DIRECTION_UU;
+			packet.data.id = usTemp;
+
+			if (m_iMultiPlayer != 0) {
+				packet.data.user_idx = m_iMultiPlayer;
+			}
+
+			memcpy(message, &packet, sizeof(packet));
+			//strcpy(message, "right");
+			m_raknet.client->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+			//m_raknet.client->Send(message, (int)strlen(message) + 1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+
+#ifdef _DEBUG
+			char buf[80];
+			sprintf(buf, "ID_USER_LASER_FIRE user:%d, posX:%hu, posY:%hu, id:%hu, ping:%d \n", packet.data.user_idx, packet.data.posX, packet.data.posY, packet.data.id, ping);
+			OutputDebugString(buf);
+#endif
+		}
 		LeaveCriticalSection(&g_cs_pvLaser0);
-
-
-
-
-		packet.typeId = ID_USER_LASER_FIRE;
-
-		lTemp = (long)(fPosX*10.0f);
-		packet.data.posX = (unsigned short)lTemp;
-		lTemp = (long)(fPosY*10.0f);
-		packet.data.posY = (unsigned short)lTemp;
-		packet.data.direction = DIRECTION_UU;
-		packet.data.id = usTemp;
-
-		if (m_iMultiPlayer != 0) {
-			packet.data.user_idx = m_iMultiPlayer;
-		}
-
-		memcpy(message, &packet, sizeof(packet));
-		//strcpy(message, "right");
-		m_raknet.client->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
-		//m_raknet.client->Send(message, (int)strlen(message) + 1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 	}
 	else { //2p
+//#ifdef _DEBUG
+//		char buf[80];
+//		sprintf(buf, "ID_USER_LASER_FIRE user:%d, posX:%hu, posY:%hu, id:%hu, ping:%d \n", packet.data.user_idx, packet.data.posX, packet.data.posY, packet.data.id, ping);
+//		OutputDebugString(buf);
+//#endif
 	}
 	
 
-#ifdef _DEBUG
-	char buf[80];
-	sprintf(buf, "ID_USER_LASER_FIRE user:%d, posX:%hu, posY:%hu, id:%hu, ping:%d \n", packet.data.user_idx, packet.data.posX, packet.data.posY, packet.data.id, ping);
-	OutputDebugString(buf);
-#endif
+
 }
 
 

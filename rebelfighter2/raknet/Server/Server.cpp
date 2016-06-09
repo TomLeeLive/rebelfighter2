@@ -31,6 +31,8 @@
 #include <string.h>
 #include "Gets.h"
 
+#include <list>
+
 #ifdef _DEBUG
 #pragma comment(lib, "./../../lib/RebelFighter2_LibStatic_Debug_Win32.lib")
 #else
@@ -53,6 +55,58 @@ unsigned char GetPacketIdentifier(RakNet::Packet *p);
 #ifdef _CONSOLE_2
 _CONSOLE_2_SetSystemProcessParams
 #endif
+
+
+
+class CUserInfoList
+{
+public:
+	RakNet::SystemAddress	internalId;
+	unsigned short			usUserNum;
+
+	CUserInfoList() {};
+	~CUserInfoList() {};
+
+	CUserInfoList(RakNet::SystemAddress	_internalId, unsigned short	_usUserNum) {
+		internalId = _internalId;
+		usUserNum = _usUserNum;
+	}
+};
+
+std::list<CUserInfoList*> g_UserInfoList;
+
+
+template <typename T>
+unsigned short FindUserNum(T a, RakNet::Packet* p) {
+
+	T::iterator _F = a.begin();
+	T::iterator _L = a.end();
+
+	if (a.size() == 0)
+		return 0;
+
+	/*
+	const char* temp1 = p->systemAddress.ToString(true); p->systemAddress.GetPort();
+	const char* temp2;
+
+	for (; _F != _L; _F++)
+	{
+		temp2 = (*_F)->internalId.ToString(true);
+		if (strcmp(temp1,temp2 ) == 0)
+			return (*_F)->usUserNum;
+	}
+	*/
+	 
+	for (; _F != _L; _F++)
+	{
+		if (p->systemAddress.GetPort() == (*_F)->internalId.GetPort())
+			return (*_F)->usUserNum;
+	}
+	return 0;
+}
+
+
+
 
 int main(void)
 {
@@ -277,8 +331,12 @@ int main(void)
 					if (internalId != RakNet::UNASSIGNED_SYSTEM_ADDRESS)
 					{
 						printf("%i. %s\n", index + 1, internalId.ToString(true));
+
+						//#추가함. 유저가 들어오면 벡터 컨테이너에 넣는다.
+						g_UserInfoList.push_back(new CUserInfoList(internalId, g_UserInfoList.size() + 1));
 					}
 				}
+
 
 				break;
 
@@ -317,7 +375,35 @@ int main(void)
 				server->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 			}
 			break;
+
+			case ID_USER_ASK_PLAYER_NUM:
+			{
+				printf("ID_USER_ASK_PLAYER_NUM received. \n");
+				if (g_UserInfoList.size()==0) {
+					printf("g_UserInfoList.size()==0 \n");
+				}
+				else {
+					TID_USER_ANS_PLAYER_NUM packet;
+					packet.typeId = ID_USER_ANS_PLAYER_NUM;
+					packet.data.howmany = g_UserInfoList.size();
+					packet.data.yournum = FindUserNum(g_UserInfoList, p);
+					memcpy(message, &packet, sizeof(packet));
+					server->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+					printf("ID_USER_ANS_PLAYER_NUM sent. \n");
+				}
+			}
+			break;
 			
+			case ID_USER_ANS_PLAYER_NUM: {}break;
+			case ID_USER_LASER_MOVE: {}break;
+			case ID_USER_LASER_ERASE: {}break;
+			case ID_USER_OBJECT_CREATE: {}break;
+			case ID_USER_OBJECT_MOVE: {}break;
+			case ID_USER_OBJECT_ERASE: {}break;
+			case ID_USER_GAMESCORE_UPDATE: {}break;
+			case ID_USER_KILLCOUNT_UPDATE: {}break;
+			case ID_USER_2P_STATUS_UPDATE: {}break;
+
 			default:
 				// The server knows the static data of all clients, so we can prefix the message
 				// With the name data

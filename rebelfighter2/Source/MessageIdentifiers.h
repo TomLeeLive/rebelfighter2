@@ -476,20 +476,15 @@ struct TID_USER_MOVE
 	TID_USER_MOVE_DATA data;
 };
 
-struct TID_USER_ASK_PLAYER_NUM_DATA
-{
-	unsigned short	user_idx;
-};
-
 struct TID_USER_ASK_PLAYER_NUM
 {
 	unsigned char typeId; // Your type here
-	TID_USER_ASK_PLAYER_NUM_DATA data;
 };
 
 struct TID_USER_ANS_PLAYER_NUM_DATA
 {
 	unsigned short	user_idx;
+	unsigned short	yournum; //클라의번호를 알려줌.
 	unsigned short	howmany; //접속한 플레이어 수 를 클라이언트에게 알려줌. 접속한 플레이어수가 2가 되면 클라이언트는 게임 시작함.
 };
 
