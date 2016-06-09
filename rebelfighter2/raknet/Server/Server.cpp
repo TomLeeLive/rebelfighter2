@@ -88,17 +88,22 @@ int main(void)
 	// Holds user data
 	char portstring[30];
 
-	printf("This is a sample implementation of a text based chat server.\n");
-	printf("Connect to the project 'Chat Example Client'.\n");
-	printf("Difficulty: Beginner\n\n");
+	//printf("This is a sample implementation of a text based chat server.\n");
+	//printf("Connect to the project 'Chat Example Client'.\n");
+	//printf("Difficulty: Beginner\n\n");
+	
+
+	printf("Rebelfighter2 Server. Powered by RakNet (Multiplayer game network engine). \n\n");
 
 	// A server
-	puts("Enter the server port to listen on");
-	Gets(portstring,sizeof(portstring));
-	if (portstring[0]==0)
+
+	//#포트 설정.
+	//puts("Enter the server port to listen on");
+	//Gets(portstring,sizeof(portstring));
+	//if (portstring[0]==0)
 		strcpy(portstring, "1234");
 	
-	puts("Starting server.");
+	puts("Starting server. \n");
 	// Starting the server is very simple.  2 players allowed.
 	// 0 means we don't care about a connectionValidationInteger, and false
 	// for low priority threads
@@ -290,6 +295,21 @@ int main(void)
 				// Couldn't deliver a reliable packet - i.e. the other system was abnormally
 				// terminated
 				printf("ID_CONNECTION_LOST from %s\n", p->systemAddress.ToString(true));;
+				break;
+			case ID_USER_MOVE:
+				TID_USER_MOVE packet;
+				packet.typeId = ID_USER_MOVE;
+				//packet.data.posX = ((TID_USER_1P_MOVE_DATA*)(p->data))->posX;
+				//packet.data.posY = ((TID_USER_1P_MOVE_DATA*)(p->data))->posY;
+				//packet.data.direction = ((TID_USER_1P_MOVE_DATA*)(p->data))->direction;
+				//packet.data.user_idx = ((TID_USER_1P_MOVE_DATA*)(p->data))->user_idx;
+
+				memcpy(&packet.data, &(p->data[1]), sizeof(TID_USER_MOVE_DATA));
+
+				memcpy(message, &packet, sizeof(packet));
+				//memcpy(&(packet.data), p->data, sizeof(TID_USER_1P_MOVE_DATA));
+				//server->Send((char*)&packet, sizeof(TID_USER_1P_MOVE), HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, true);
+				server->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 				break;
 
 			default:

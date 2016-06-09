@@ -429,18 +429,67 @@ enum DefaultMessageIDTypes
 	// For the user to use.  Start your first enumeration at this value.
 	ID_USER_PACKET_ENUM,
 	//-------------------------------------------------------------------------------------------------------------
-	ID_USER_1P_MOVE
+	ID_USER_MOVE,
+	ID_USER_ASK_PLAYER_NUM,
+	ID_USER_ANS_PLAYER_NUM
 };
 
+
+/*
+8  1  2
+7     3
+6  5  4
+*/
+#define DIRECTION_UU 1
+#define DIRECTION_RU 2
+#define DIRECTION_RR 3
+#define DIRECTION_RD 4
+#define DIRECTION_DD 5
+#define DIRECTION_LD 6
+#define DIRECTION_LL 7
+#define DIRECTION_LU 8
+
+
 #pragma pack(push, 1)
-struct TID_USER_1P_MOVE
+
+
+struct TID_USER_MOVE_DATA
 {
-	unsigned char typeId; // Your type here
 	unsigned short	user_idx;
 	unsigned short	posX;
 	unsigned short	posY;
 	unsigned short	direction; //0 ~7 8방향
 };
+
+struct TID_USER_MOVE
+{
+	unsigned char typeId; // Your type here
+	TID_USER_MOVE_DATA data;
+};
+
+struct TID_USER_ASK_PLAYER_NUM_DATA
+{
+	unsigned short	user_idx;
+};
+
+struct TID_USER_ASK_PLAYER_NUM
+{
+	unsigned char typeId; // Your type here
+	TID_USER_ASK_PLAYER_NUM_DATA data;
+};
+
+struct TID_USER_ANS_PLAYER_NUM_DATA
+{
+	unsigned short	user_idx;
+	unsigned short	howmany; //접속한 플레이어 수 를 클라이언트에게 알려줌. 접속한 플레이어수가 2가 되면 클라이언트는 게임 시작함.
+};
+
+struct TID_USER_ANS_PLAYER_NUM
+{
+	unsigned char typeId; // Your type here
+	TID_USER_ANS_PLAYER_NUM_DATA data;
+};
+
 #pragma pack(pop)
 
 /*
@@ -467,6 +516,8 @@ unsigned char typeId; // Your type here
 };
 #pragma pack(pop)
 */
+
+
 
 
 #endif // RAKNET_USE_CUSTOM_PACKET_IDS

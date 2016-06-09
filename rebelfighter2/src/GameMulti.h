@@ -50,6 +50,11 @@ public:
 	HANDLE hThread;
 
 	st_RAKNET m_raknet;
+
+	int m_iMultiPlayer;//멀티플레이어 유저 번호. 1: 1p, 2: 2p,  0: 접속되지 않음. 3: 접속자수 2명이상이라 서버로 접속 끊음.
+
+
+	void	UserMoveSend(int iUserNum, float fPosX, float fPosY, int iDirection);
 /////////////////////////////////////////////////////////////
 	INT Init();
 	void Frame();

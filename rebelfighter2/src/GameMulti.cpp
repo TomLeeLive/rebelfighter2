@@ -288,7 +288,26 @@ UINT WINAPI ThreadFunc(void *arg)
 			case ID_UNCONNECTED_PING:
 				printf("Ping from %s\n", raknet->p->systemAddress.ToString(true));
 				break;
-			case ID_USER_1P_MOVE:
+			case ID_USER_MOVE:
+				long lTemp;
+
+				TID_USER_MOVE_DATA temp;
+				memcpy(&temp,&(raknet->p->data[1]),sizeof(TID_USER_MOVE_DATA));
+
+				lTemp = (long)temp.posX;
+
+				if (temp.direction == DIRECTION_RR)
+					GGAMEMULTI->m_xwing.xval += ((float)lTemp)/10.0f;
+				else if(temp.direction == DIRECTION_LL)
+					GGAMEMULTI->m_xwing.xval -= ((float)lTemp)/10.0f;
+
+				lTemp = (long)temp.posY;
+
+				if (temp.direction == DIRECTION_UU)
+					GGAMEMULTI->m_xwing.yval -= ((float)lTemp)/10.0f;
+				else if (temp.direction == DIRECTION_DD)
+					GGAMEMULTI->m_xwing.yval += ((float)lTemp)/10.0f;
+
 				break;
 
 			default:
@@ -393,6 +412,7 @@ void CGameMulti::MultiInit() {
 	//I_GameUser.Init();
 	//m_Udp.Init();
 
+	m_iMultiPlayer = 0;
 
 	//memset(&m_raknet, 0, sizeof(m_raknet));
 
@@ -1618,7 +1638,32 @@ INT CGameMulti::ColCheck3()
 	return bColl;
 }
 
+void	CGameMulti::UserMoveSend(int iUserNum, float fPosX, float fPosY, int iDirection )
+{
+	char message[2048];
+	int ping = m_raknet.client->GetAveragePing(m_raknet.client->GetSystemAddressFromIndex(0));
+	long lTemp;
 
+	TID_USER_MOVE packet;
+	packet.typeId = ID_USER_MOVE;
+
+	lTemp = (long)(fPosX*10.0f);
+	packet.data.posX = (unsigned short)lTemp;
+	lTemp = (long)(fPosY*10.0f);
+	packet.data.posY = (unsigned short)lTemp;
+	packet.data.direction = iDirection;
+	packet.data.user_idx = iUserNum;
+	memcpy(message, &packet, sizeof(packet));
+	//strcpy(message, "right");
+	m_raknet.client->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	//m_raknet.client->Send(message, (int)strlen(message) + 1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+
+	#ifdef _DEBUG
+	char buf[80];
+	sprintf(buf, "INPUT RIGHT posX:%d posY:%d ping:%d \n", packet.data.posX, packet.data.posY, ping);
+	OutputDebugString(buf);
+	#endif
+}
 
 void	CGameMulti::InputMove()
 {
@@ -1642,9 +1687,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_RIGHT))
 		{
 #ifdef MULTIIMPLE
-			//TID_USER_1P_MOVE message;
-
-			m_raknet.client->Send(message, (int)strlen(message) + 1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+			UserMoveSend(0, GMAIN->m_movingdist*m_xwing.m_speed, 0, DIRECTION_RR);
 #else
 			m_xwing.xval = m_xwing.xval + GMAIN->m_movingdist*m_xwing.m_speed;
 
@@ -1657,7 +1700,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_LEFT))
 		{
 #ifdef MULTIIMPLE
-
+			UserMoveSend(0, GMAIN->m_movingdist*m_xwing.m_speed, 0, DIRECTION_LL);
 #else
 			m_xwing.xval = m_xwing.xval - GMAIN->m_movingdist*m_xwing.m_speed;
 			if (m_xwing.xval<0)
@@ -1670,7 +1713,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_UP))
 		{
 #ifdef MULTIIMPLE
-
+			UserMoveSend(0, 0, GMAIN->m_movingdist*m_xwing.m_speed, DIRECTION_UU);
 #else
 			m_xwing.yval = m_xwing.yval - GMAIN->m_movingdist*m_xwing.m_speed;
 
@@ -1683,7 +1726,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_DOWN))
 		{
 #ifdef MULTIIMPLE
-
+			UserMoveSend(0, 0, GMAIN->m_movingdist*m_xwing.m_speed, DIRECTION_DD);
 #else
 			m_xwing.yval = m_xwing.yval + GMAIN->m_movingdist*m_xwing.m_speed;
 			if (m_xwing.yval>550)
@@ -1806,3 +1849,4 @@ unsigned char GetPacketIdentifier(RakNet::Packet *p)
 	else
 		return (unsigned char)p->data[0];
 }
+
