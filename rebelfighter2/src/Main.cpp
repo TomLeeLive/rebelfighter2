@@ -457,6 +457,12 @@ INT	CMain::TextureLoad()
 		, "texture2/Lasers/laserRed09.png", 0xFFFFFFFF)))
 		hr = -1;
 
+	if (FAILED(GameTextureLoad(m_pGameTex[27].m_pTex
+		, &m_pGameTex[1].m_pImg
+		, m_pd3dDevice
+		, "Texture2/playerShip1_blue.png", 0xFFFF00FF)))
+		hr = -1;
+
 	m_pTx = new CGameTexture;
 	if (FAILED(m_pTx->Create(m_pd3dDevice, "Texture/boom2.png", 0x00FFFFFF)))
 	{

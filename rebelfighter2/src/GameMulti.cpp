@@ -3,11 +3,79 @@
 //#멀티 구현 코드 구분을 위한 매크로 for debugging
 #define MULTIIMPLE 1
 
+
+CRITICAL_SECTION g_cs_pvLaser0;
+CRITICAL_SECTION g_cs_pvLaser1;
+CRITICAL_SECTION g_cs_pvTie0;
+
+
 // We copy this from Multiplayer.cpp to keep things all in one file for this example
 unsigned char GetPacketIdentifier(RakNet::Packet *p);
 
 
+void Process_ID_USER_MOVE(RakNet::Packet *p) {
+	long lTemp;
 
+	TID_USER_MOVE_DATA temp;
+	memcpy(&temp, &(p->data[1]), sizeof(TID_USER_MOVE_DATA));
+
+	lTemp = (long)temp.posX;
+
+	if (temp.direction == DIRECTION_RR) {
+		GGAMEMULTI->m_xwing_1p.xval += ((float)lTemp) / 10.0f;
+
+		if (GGAMEMULTI->m_xwing_1p.xval>593)
+		{
+			GGAMEMULTI->m_xwing_1p.xval = 593;
+		}
+	}
+	else if (temp.direction == DIRECTION_LL) {
+		GGAMEMULTI->m_xwing_1p.xval -= ((float)lTemp) / 10.0f;
+
+		if (GGAMEMULTI->m_xwing_1p.xval<0)
+		{
+			GGAMEMULTI->m_xwing_1p.xval = 0;
+		}
+	}
+	lTemp = (long)temp.posY;
+
+	if (temp.direction == DIRECTION_UU) {
+		GGAMEMULTI->m_xwing_1p.yval -= ((float)lTemp) / 10.0f;
+
+		if (GGAMEMULTI->m_xwing_1p.yval<0)
+		{
+			GGAMEMULTI->m_xwing_1p.yval = 0;
+		}
+	}
+	else if (temp.direction == DIRECTION_DD) {
+		GGAMEMULTI->m_xwing_1p.yval += ((float)lTemp) / 10.0f;
+
+		if (GGAMEMULTI->m_xwing_1p.yval>550)
+		{
+			GGAMEMULTI->m_xwing_1p.yval = 550;
+		}
+	}
+}
+
+void Process_ID_USER_LASER_FIRE(RakNet::Packet *p) {
+	long lTempX, lTempY;
+
+	TID_USER_LASER_FIRE_DATA temp;
+	memcpy(&temp, &(p->data[1]), sizeof(TID_USER_LASER_FIRE_DATA));
+
+	lTempX = (long)temp.posX;
+
+	lTempY = (long)temp.posY;
+
+	EnterCriticalSection(&g_cs_pvLaser0);
+	if (GGAMEMULTI->pvLaser0.size() < GGAMEMULTI->m_xwing_1p.m_laserable)
+	{
+		GGAMEMULTI->pvLaser0.push_back(new CLaserData(GGAMEMULTI->m_xwing_1p.xval, GGAMEMULTI->m_xwing_1p.yval, FALSE)); // 주인공 총알 발생
+
+		GMAIN->m_pSound.Play(SND_XWLSR1, true);
+	}
+	LeaveCriticalSection(&g_cs_pvLaser0);
+}
 
 UINT WINAPI ThreadFunc(void *arg)
 {
@@ -289,27 +357,10 @@ UINT WINAPI ThreadFunc(void *arg)
 				printf("Ping from %s\n", raknet->p->systemAddress.ToString(true));
 				break;
 			case ID_USER_MOVE:
-				long lTemp;
-
-				TID_USER_MOVE_DATA temp;
-				memcpy(&temp,&(raknet->p->data[1]),sizeof(TID_USER_MOVE_DATA));
-
-				lTemp = (long)temp.posX;
-
-				if (temp.direction == DIRECTION_RR)
-					GGAMEMULTI->m_xwing.xval += ((float)lTemp)/10.0f;
-				else if(temp.direction == DIRECTION_LL)
-					GGAMEMULTI->m_xwing.xval -= ((float)lTemp)/10.0f;
-
-				lTemp = (long)temp.posY;
-
-				if (temp.direction == DIRECTION_UU)
-					GGAMEMULTI->m_xwing.yval -= ((float)lTemp)/10.0f;
-				else if (temp.direction == DIRECTION_DD)
-					GGAMEMULTI->m_xwing.yval += ((float)lTemp)/10.0f;
-
+				Process_ID_USER_MOVE(raknet->p);
 				break;
-
+			case ID_USER_LASER_FIRE:
+				Process_ID_USER_LASER_FIRE(raknet->p);
 			default:
 				// It's a client, so just show the message
 				printf("%s\n", raknet->p->data);
@@ -357,31 +408,47 @@ CGameMulti::CGameMulti()
 	boom = D3DXVECTOR3(0, 0, 0);
 
 	SetRect(&m_ImgRc2, 0, 0, 0, 70);		// RECT 애니 이미지
+
+
 }
 
 INT CGameMulti::Init()
 {
 	HRESULT hr;
 
+	InitializeCriticalSection(&g_cs_pvLaser0);
+	InitializeCriticalSection(&g_cs_pvLaser1);
+	InitializeCriticalSection(&g_cs_pvTie0);
 
 	score = 0;
 	curstage = 0;
 	stage = 1;
-	m_xwing.xval = 325;
-	m_xwing.yval = 500;
-	m_xwing.hp = 100;
-	m_xwing.dead = FALSE;
-	m_xwing.laserhit = FALSE;
-	m_xwing.laserability = 3;
-	m_xwing.m_killcount = 0;
-	m_xwing.m_life = 2;
-	m_xwing.m_laserable = 3;
-	m_xwing.m_speed = 1;
-	m_xwing.m_power = 1;
 
+	//1p init
+	m_xwing_1p.xval = 225;
+	m_xwing_1p.yval = 500;
+	m_xwing_1p.hp = 100;
+	m_xwing_1p.dead = FALSE;
+	m_xwing_1p.laserhit = FALSE;
+	m_xwing_1p.laserability = 3;
+	m_xwing_1p.m_killcount = 0;
+	m_xwing_1p.m_life = 2;
+	m_xwing_1p.m_laserable = 3;
+	m_xwing_1p.m_speed = 1;
+	m_xwing_1p.m_power = 1;
+
+
+	EnterCriticalSection(&g_cs_pvLaser0);
 	pvLaser0.clear();
+	LeaveCriticalSection(&g_cs_pvLaser0);
+
+	EnterCriticalSection(&g_cs_pvLaser1);
 	pvLaser1.clear();
+	LeaveCriticalSection(&g_cs_pvLaser1);
+
+	EnterCriticalSection(&g_cs_pvTie0);
 	pvTie0.clear();
+	LeaveCriticalSection(&g_cs_pvTie0);
 
 	curmissilecnt = 0;
 	curlasercnt = 0;
@@ -390,6 +457,7 @@ INT CGameMulti::Init()
 	GMAIN->m_gamebegin = timeGetTime();
 
 	
+
 
 	//this->MultiInit();
 
@@ -404,13 +472,6 @@ void CGameMulti::MultiInit() {
 	//if (MessageBox(GHWND, "IP입력?", "질문", MB_OK) == IDOK) {
 	//// ToDo: IP입력처리.
 	//}
-	//
-	//m_iSerIndex = 0;
-	//I_DebugStr.Init();
-	//m_bLogin = true;
-	//m_Client.Init();
-	//I_GameUser.Init();
-	//m_Udp.Init();
 
 	m_iMultiPlayer = 0;
 
@@ -419,6 +480,20 @@ void CGameMulti::MultiInit() {
 	DWORD dwThreadID;
 
 	hThread = (HANDLE)_beginthreadex(0, 0, ThreadFunc, (void*)&m_raknet, 0, (unsigned int*)&dwThreadID);
+
+
+	//2p init
+	m_xwing_2p.xval = 425;
+	m_xwing_2p.yval = 500;
+	m_xwing_2p.hp = 100;
+	m_xwing_2p.dead = FALSE;
+	m_xwing_2p.laserhit = FALSE;
+	m_xwing_2p.laserability = 3;
+	m_xwing_2p.m_killcount = 0;
+	m_xwing_2p.m_life = 2;
+	m_xwing_2p.m_laserable = 3;
+	m_xwing_2p.m_speed = 1;
+	m_xwing_2p.m_power = 1;
 	
 }
 
@@ -453,7 +528,7 @@ void CGameMulti::Frame()
 		//#새 stage 시작시 게임 로직
 		this->NextStageCreate();
 	}
-	if (m_xwing.dead != TRUE)
+	if (m_xwing_1p.dead != TRUE)
 	{
 
 		//GMAIN->m_pSound.Volume(SND_XWENGLP, 1000,false);
@@ -480,12 +555,15 @@ void CGameMulti::NextStageCreate() {
 		ioncnt = 0;
 		missilecnt = 0;
 
+		EnterCriticalSection(&g_cs_pvLaser0);
 		pvLaser0.clear();
+		LeaveCriticalSection(&g_cs_pvLaser0);
+
 		curstage = stage;
 
 		enemylevel = (50 + stage * 7) / 50;
 
-		if (stage != 0 && stage % 10 == 0 && (50 + stage * 7) - 50 * m_xwing.m_power >0)
+		if (stage != 0 && stage % 10 == 0 && (50 + stage * 7) - 50 * m_xwing_1p.m_power >0)
 		{//10스테이지 마다 파워아이템 나옴
 			pvTie0.push_back(new CCharacterData(13, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
 		}
@@ -505,12 +583,12 @@ void CGameMulti::NextStageCreate() {
 				switch (rand() % 7)
 				{
 				case 0://10. 라이프 아이템 생성
-					if (m_xwing.m_life <3)
+					if (m_xwing_1p.m_life <3)
 						pvTie0.push_back(new CCharacterData(10, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
 					break;
 
 				case 1://11. 레이저 아이템 생성
-					if (m_xwing.m_laserable <6)
+					if (m_xwing_1p.m_laserable <6)
 						pvTie0.push_back(new CCharacterData(11, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
 					break;
 
@@ -519,7 +597,7 @@ void CGameMulti::NextStageCreate() {
 					break;
 
 				case 3://13. 파워 아이템 생성
-					if ((50 + stage * 7) - 50 * m_xwing.m_power >0)
+					if ((50 + stage * 7) - 50 * m_xwing_1p.m_power >0)
 						pvTie0.push_back(new CCharacterData(13, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
 					break;
 
@@ -532,7 +610,7 @@ void CGameMulti::NextStageCreate() {
 					break;
 
 				default://11. 레이저 아이템 생성
-					if (m_xwing.m_laserable <6)
+					if (m_xwing_1p.m_laserable <6)
 						pvTie0.push_back(new CCharacterData(11, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
 					break;
 				}
@@ -553,12 +631,12 @@ void CGameMulti::NextStageCreate() {
 			switch (rand() % 7)
 			{
 			case 0://10. 라이프 아이템 생성
-				if (m_xwing.m_life <3)
+				if (m_xwing_1p.m_life <3)
 					pvTie0.push_back(new CCharacterData(10, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
 				break;
 
 			case 1://11. 레이저 아이템 생성
-				if (m_xwing.m_laserable <6)
+				if (m_xwing_1p.m_laserable <6)
 					pvTie0.push_back(new CCharacterData(11, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
 				break;
 
@@ -567,7 +645,7 @@ void CGameMulti::NextStageCreate() {
 				break;
 
 			case 3://13. 파워 아이템 생성
-				if ((50 + stage * 7) - 50 * m_xwing.m_power >0)
+				if ((50 + stage * 7) - 50 * m_xwing_1p.m_power >0)
 					pvTie0.push_back(new CCharacterData(13, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
 				break;
 
@@ -580,7 +658,7 @@ void CGameMulti::NextStageCreate() {
 				break;
 
 			default://11. 레이저 아이템 생성
-				if (m_xwing.m_laserable <6)
+				if (m_xwing_1p.m_laserable <6)
 					pvTie0.push_back(new CCharacterData(11, int(rand() % 360), 305, float(rand() % 50 + 50 - 300), FALSE, 0, 50, int(rand() % 2), FALSE));
 				break;
 			}
@@ -622,7 +700,7 @@ void CGameMulti::EnemyBullet(){
 		if (*_FT == 0)
 			continue;
 
-		if ((*_FT)->xval <= m_xwing.xval + 0.3 && (*_FT)->xval >= m_xwing.xval - 0.3 && (*_FT)->yval >= 0 && (*_FT)->yval <= 600)
+		if ((*_FT)->xval <= m_xwing_1p.xval + 0.3 && (*_FT)->xval >= m_xwing_1p.xval - 0.3 && (*_FT)->yval >= 0 && (*_FT)->yval <= 600)
 		{
 			if (pvLaser1.size() <= ((*_FT)->laserability + 1)*pvTie0.size())
 			{
@@ -839,18 +917,21 @@ void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 	dxsprite->Begin(D3DXSPRITE_ALPHABLEND);
 
 	vcBar = D3DXVECTOR3(650, 0, 0);							//상태바위치
-	m_xwing.AssignVal(m_xwing.xval, m_xwing.yval);				//주인공위치
 
+	m_xwing_1p.AssignVal(m_xwing_1p.xval, m_xwing_1p.yval);				//1p주인공위치
+	m_xwing_2p.AssignVal(m_xwing_2p.xval, m_xwing_2p.yval);				//2p주인공위치
+
+	//D3DXCOLOR 마지막 매개변수는 알파값을 의미하고 이 함수의 각 매개변수는 RGBA값으로서 각각 0f~1f의 값을 가진다.
 	dxsprite->Draw(GMAIN->m_pGameTex[23].m_pTex, (&GMAIN->rc), NULL, &vcPos1, D3DXCOLOR(1, 1, 1, 1.f)); //배경
 	dxsprite->Draw(GMAIN->m_pGameTex[24].m_pTex, (&GMAIN->rc), NULL, &vcPos2, D3DXCOLOR(1, 1, 1, 1.f)); //배경
-																										//D3DXCOLOR 마지막 매개변수는 알파값을 의미하고 이 함수의 각 매개변수는 RGBA값으로서 각각 0f~1f의 값을 가진다.
+
 	if (vcPos1.y >= 600) { vcPos1.y = -600; }
 	else { vcPos1.y += GMAIN->m_movingdist / 20; }
 	if (vcPos2.y >= 600) { vcPos2.y = -600; }
 	else { vcPos2.y += GMAIN->m_movingdist / 20; }
 
 
-	if (m_xwing.dead == TRUE)
+	if (m_xwing_1p.dead == TRUE)
 	{
 		pvLaser1.clear();
 		curlasercnt = 0;
@@ -858,14 +939,21 @@ void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 		curmissilecnt = 0;
 	}
 
-	if (m_xwing.dead != TRUE)
+	if (m_xwing_1p.dead != TRUE)
 	{
-		dxsprite->Draw(GMAIN->m_pGameTex[1].m_pTex, &(GMAIN->rc), NULL, &m_xwing.vcPosC, D3DXCOLOR(1, 1, 1, 1.f)); //주인공캐릭터
+		dxsprite->Draw(GMAIN->m_pGameTex[1].m_pTex, &(GMAIN->rc), NULL, &m_xwing_1p.vcPosC, D3DXCOLOR(1, 1, 1, 1.f)); //1p주인공캐릭터
 	}
+
+	if (m_xwing_2p.dead != TRUE)
+	{
+		dxsprite->Draw(GMAIN->m_pGameTex[27].m_pTex, &(GMAIN->rc), NULL, &m_xwing_2p.vcPosC, D3DXCOLOR(1, 1, 1, 1.f)); //2p주인공캐릭터
+	}
+
 
 	/////////////////////////////////////////////////////////////////////////////
 	//주인공 총알
 
+	EnterCriticalSection(&g_cs_pvLaser0);
 	std::vector<CLaserData*>::iterator _F = pvLaser0.begin();
 	std::vector<CLaserData*>::iterator _L = pvLaser0.end();
 
@@ -900,6 +988,7 @@ void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 		else
 			_F++;
 	}
+	LeaveCriticalSection(&g_cs_pvLaser0);
 	/////////////////////////////////////////////////////////////////////////////
 	//적캐릭터
 	std::vector<CCharacterData*>::iterator _FT = pvTie0.begin();
@@ -1050,31 +1139,31 @@ void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 						{
 							if ((*_FT)->name == "Life")
 							{
-								m_xwing.m_life++;
+								m_xwing_1p.m_life++;
 								GMAIN->m_pSound.Play(SND_BONUS, true);
 								GMAIN->m_pSound.Play(SND_R2_D2, true);
 							}
 							else if ((*_FT)->name == "Laser")
 							{
-								m_xwing.m_laserable++;
+								m_xwing_1p.m_laserable++;
 								GMAIN->m_pSound.Play(SND_BONUS, true);
 								GMAIN->m_pSound.Play(SND_WONTFAIL, true);
 							}
 							else if ((*_FT)->name == "Power")
 							{
-								m_xwing.m_power++;
+								m_xwing_1p.m_power++;
 								GMAIN->m_pSound.Play(SND_BONUS, true);
 								GMAIN->m_pSound.Play(SND_USEFORCE, true);
 							}
 							else if ((*_FT)->name == "Hp")
 							{
-								m_xwing.hp = 100;
+								m_xwing_1p.hp = 100;
 								GMAIN->m_pSound.Play(SND_BONUS, true);
 								GMAIN->m_pSound.Play(SND_WITHYOU, true);
 							}
 							else if ((*_FT)->name == "Speed")
 							{
-								m_xwing.m_speed++;
+								m_xwing_1p.m_speed++;
 								GMAIN->m_pSound.Play(SND_BONUS, true);
 								GMAIN->m_pSound.Play(SND_GOODINU, true);
 							}
@@ -1088,16 +1177,16 @@ void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 							delete (*_FT);
 							*_FT = 0;
 							score = score + 10;
-							m_xwing.m_killcount++;
+							m_xwing_1p.m_killcount++;
 						}
 						if (score != 0 && score % 1000 == 0)
 						{
-							m_xwing.m_life++;
+							m_xwing_1p.m_life++;
 							GMAIN->m_pSound.Play(SND_BONUS, true);
 							GMAIN->m_pSound.Play(SND_R2_D2, true);
 						}
 
-						if ((m_xwing.m_killcount != 0) && (m_xwing.m_killcount % 6 == 0))
+						if ((m_xwing_1p.m_killcount != 0) && (m_xwing_1p.m_killcount % 6 == 0))
 						{
 							stage++;
 							GMAIN->m_pSound.Play(SND_R2_D2, true);
@@ -1121,39 +1210,39 @@ void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 	}
 	////////////////////////////////////////////////////////////////////////////////
 	//폭발 : 적들이 쏜 총알 주인공에게 충돌 되었는가?
-	if (m_xwing.dead != TRUE)
+	if (m_xwing_1p.dead != TRUE)
 	{
 		ColCheck();	// 적 -> 주인공 충돌체크
 	}
-	if (m_xwing.laserhit == TRUE)
+	if (m_xwing_1p.laserhit == TRUE)
 	{
-		boom.x = m_xwing.vcPosC.x - 8;
-		boom.y = m_xwing.vcPosC.y - 7;
+		boom.x = m_xwing_1p.vcPosC.x - 8;
+		boom.y = m_xwing_1p.vcPosC.y - 7;
 		////////////////////////////////////////////////////////////////////////////////
-		m_xwing.m_dTimeEnd = timeGetTime();
+		m_xwing_1p.m_dTimeEnd = timeGetTime();
 
-		if ((m_xwing.m_dTimeEnd - m_xwing.m_dTimeBegin)>100)
+		if ((m_xwing_1p.m_dTimeEnd - m_xwing_1p.m_dTimeBegin)>100)
 		{
 			m_ImgRc2.left += 70;
 
 			if (m_ImgRc2.left + 70 >= 1120)
 			{
 				m_ImgRc2.left = 0;
-				m_xwing.laserhit = FALSE;
+				m_xwing_1p.laserhit = FALSE;
 			}
 
 			m_ImgRc2.right = m_ImgRc2.left + 70;
-			m_xwing.m_dTimeBegin = m_xwing.m_dTimeEnd;
+			m_xwing_1p.m_dTimeBegin = m_xwing_1p.m_dTimeEnd;
 
 		}
 		////////////////////////////////////////////////////////////////////////////////
 		dxsprite->Draw(pTex, &m_ImgRc2, NULL, &boom, D3DXCOLOR(1, 1, 1, 1.F)); //&m_vcPosImg2
 	}
-	if (m_xwing.dead == TRUE)
+	if (m_xwing_1p.dead == TRUE)
 	{
-		m_xwing.m_dTimeEnd = timeGetTime();
+		m_xwing_1p.m_dTimeEnd = timeGetTime();
 
-		if ((m_xwing.m_dTimeEnd - m_xwing.m_dTimeBegin)>100)
+		if ((m_xwing_1p.m_dTimeEnd - m_xwing_1p.m_dTimeBegin)>100)
 		{
 			m_ImgRc2.left += 70;
 
@@ -1163,16 +1252,18 @@ void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 				//m_nGamePhase=2;
 			}
 			/////////////////////////////////////////////////////////////////////////////
-			if (m_xwing.dead == TRUE && m_xwing.m_life != 0)
+			if (m_xwing_1p.dead == TRUE && m_xwing_1p.m_life != 0)
 			{
-				m_xwing.xval = 325;
-				m_xwing.yval = 500;
-				m_xwing.hp = 100;
-				m_xwing.dead = FALSE;
-				m_xwing.laserhit = FALSE;
-				m_xwing.laserability = 3;
-				--m_xwing.m_life;
+				m_xwing_1p.xval = 325;
+				m_xwing_1p.yval = 500;
+				m_xwing_1p.hp = 100;
+				m_xwing_1p.dead = FALSE;
+				m_xwing_1p.laserhit = FALSE;
+				m_xwing_1p.laserability = 3;
+				--m_xwing_1p.m_life;
+				EnterCriticalSection(&g_cs_pvLaser0);
 				pvLaser0.clear();
+				LeaveCriticalSection(&g_cs_pvLaser0);
 				pvLaser1.clear();
 				curmissilecnt = 0;
 				curlasercnt = 0;
@@ -1188,9 +1279,9 @@ void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 			}
 			////////////////////////////////////////////////////////////////////////////
 			m_ImgRc2.right = m_ImgRc2.left + 70;
-			m_xwing.m_dTimeBegin = m_xwing.m_dTimeEnd;
+			m_xwing_1p.m_dTimeBegin = m_xwing_1p.m_dTimeEnd;
 		}
-		if (m_xwing.dead != TRUE)
+		if (m_xwing_1p.dead != TRUE)
 		{
 			dxsprite->Draw(pTex, &m_ImgRc2, NULL, &boom, D3DXCOLOR(1, 1, 1, 1.F)); //&m_vcPosImg2
 		}
@@ -1218,7 +1309,7 @@ void CGameMulti::ProcessSideBar() {
 
 
 	sprintf(scoreBuf, " %d", score);
-	sprintf(killcount, " %d", m_xwing.m_killcount);
+	sprintf(killcount, " %d", m_xwing_1p.m_killcount);
 	sprintf(enemyBuf, "%d : Enemy", pvTie0.size());
 	sprintf(timeBuf, " %d : %d : %d", hh, mm, ss);
 	sprintf(ioncntBuf, "%d : Ion", ioncnt);
@@ -1230,11 +1321,11 @@ void CGameMulti::ProcessSideBar() {
 	sprintf(vectorsize, "%d : Attack Cnt", pvLaser1.size());
 	sprintf(stageBuf, " %d", stage);
 	sprintf(enemylevelBuf, " %d", enemylevel);
-	sprintf(lifeBuf, " Life : %d", m_xwing.m_life);
-	sprintf(phpBuf, " H.P : %d", m_xwing.hp);
-	sprintf(playerabilBuf, " Laser : %d", m_xwing.m_laserable);
-	sprintf(powerBuf, " Power : %d", m_xwing.m_power);
-	sprintf(speedBuf, " Speed : %d", m_xwing.m_speed);
+	sprintf(lifeBuf, " Life : %d", m_xwing_1p.m_life);
+	sprintf(phpBuf, " H.P : %d", m_xwing_1p.hp);
+	sprintf(playerabilBuf, " Laser : %d", m_xwing_1p.m_laserable);
+	sprintf(powerBuf, " Power : %d", m_xwing_1p.m_power);
+	sprintf(speedBuf, " Speed : %d", m_xwing_1p.m_speed);
 
 	GMAIN->m_text.Draw("Score", 660, 10);
 	GMAIN->m_text.Draw(scoreBuf, 660, 30);
@@ -1282,11 +1373,13 @@ void CGameMulti::ProcessSideBar() {
 
 void CGameMulti::Destroy()
 {
+	EnterCriticalSection(&g_cs_pvLaser0);
 	//주인공 총알 소멸부분
 	std::vector<CLaserData*>::iterator _F = pvLaser0.begin();
 	std::vector<CLaserData*>::iterator _L = pvLaser0.end();
 	for (; _F != _L; ++_F) { if (*_F != 0) delete (*_F); }
 	pvLaser0.clear();
+	LeaveCriticalSection(&g_cs_pvLaser0);
 
 	//적 총알 소멸부분
 	std::vector<CLaserData*>::iterator _F1 = pvLaser1.begin();
@@ -1306,7 +1399,9 @@ void CGameMulti::Destroy()
 	//m_Client.Release();
 	//m_Udp.Release();
 
-
+	DeleteCriticalSection(&g_cs_pvLaser0);
+	DeleteCriticalSection(&g_cs_pvLaser1);
+	DeleteCriticalSection(&g_cs_pvTie0);
 
 
 
@@ -1342,16 +1437,16 @@ INT CGameMulti::ColCheck()
 				, INT(TempPos.y) + 30	//m_pGameTex[4].GetImageHeight()
 				);
 
-			SetRect(&rcCol2, INT(m_xwing.vcPosC.x + 22)
-				, INT(m_xwing.vcPosC.y)
-				, INT(m_xwing.vcPosC.x + 22) + 11	//m_pGameTex[1].GetImageWidth()
-				, INT(m_xwing.vcPosC.y) + 56	//m_pGameTex[1].GetImageHeight()
+			SetRect(&rcCol2, INT(m_xwing_1p.vcPosC.x + 22)
+				, INT(m_xwing_1p.vcPosC.y)
+				, INT(m_xwing_1p.vcPosC.x + 22) + 11	//m_pGameTex[1].GetImageWidth()
+				, INT(m_xwing_1p.vcPosC.y) + 56	//m_pGameTex[1].GetImageHeight()
 				);
 
-			SetRect(&rcColSound, INT(m_xwing.vcPosC.x - 112)
-				, INT(m_xwing.vcPosC.y)
-				, INT(m_xwing.vcPosC.x - 112) + 275	//m_pGameTex[1].GetImageWidth()
-				, INT(m_xwing.vcPosC.y + 56)			//+ m_pGameTex[1].GetImageHeight()
+			SetRect(&rcColSound, INT(m_xwing_1p.vcPosC.x - 112)
+				, INT(m_xwing_1p.vcPosC.y)
+				, INT(m_xwing_1p.vcPosC.x - 112) + 275	//m_pGameTex[1].GetImageWidth()
+				, INT(m_xwing_1p.vcPosC.y + 56)			//+ m_pGameTex[1].GetImageHeight()
 				);
 		}
 		else
@@ -1362,15 +1457,15 @@ INT CGameMulti::ColCheck()
 				, INT(TempPos.y) + GMAIN->m_pGameTex[4].GetImageHeight()
 				);
 
-			SetRect(&rcCol2, INT(m_xwing.vcPosC.x + 22)
-				, INT(m_xwing.vcPosC.y)
-				, INT(m_xwing.vcPosC.x + 22) + 11		//m_pGameTex[1].GetImageWidth()
-				, INT(m_xwing.vcPosC.y) + 56		//m_pGameTex[1].GetImageHeight()
+			SetRect(&rcCol2, INT(m_xwing_1p.vcPosC.x + 22)
+				, INT(m_xwing_1p.vcPosC.y)
+				, INT(m_xwing_1p.vcPosC.x + 22) + 11		//m_pGameTex[1].GetImageWidth()
+				, INT(m_xwing_1p.vcPosC.y) + 56		//m_pGameTex[1].GetImageHeight()
 				);
-			SetRect(&rcColSound, INT(m_xwing.vcPosC.x - 112)
-				, INT(m_xwing.vcPosC.y)
-				, INT(m_xwing.vcPosC.x - 112) + 275	//m_pGameTex[1].GetImageWidth()
-				, INT(m_xwing.vcPosC.y + 56)			//+ m_pGameTex[1].GetImageHeight()
+			SetRect(&rcColSound, INT(m_xwing_1p.vcPosC.x - 112)
+				, INT(m_xwing_1p.vcPosC.y)
+				, INT(m_xwing_1p.vcPosC.x - 112) + 275	//m_pGameTex[1].GetImageWidth()
+				, INT(m_xwing_1p.vcPosC.y + 56)			//+ m_pGameTex[1].GetImageHeight()
 				);
 		}
 		///////////////////////////////////////////////////////////////////////
@@ -1392,10 +1487,10 @@ INT CGameMulti::ColCheck()
 			//사운드 끝
 
 
-			m_xwing.hp = m_xwing.hp - (*_F)->damage; //주인공 캐릭터 체력 - (*_F)->damage
-			if (m_xwing.hp <= 0)
+			m_xwing_1p.hp = m_xwing_1p.hp - (*_F)->damage; //주인공 캐릭터 체력 - (*_F)->damage
+			if (m_xwing_1p.hp <= 0)
 			{
-				m_xwing.dead = TRUE;
+				m_xwing_1p.dead = TRUE;
 
 				//주인공이 죽으면 모든 적을 화면 상단으로 이동
 
@@ -1411,7 +1506,7 @@ INT CGameMulti::ColCheck()
 				}
 			}
 			(*_F)->laserhit = TRUE;
-			m_xwing.laserhit = TRUE;
+			m_xwing_1p.laserhit = TRUE;
 		}
 
 		else if (rcCol1.left <= rcColSound.right &&
@@ -1452,7 +1547,7 @@ INT CGameMulti::ColCheck2()
 {
 	D3DXVECTOR3	TempPos;
 	INT bColl = 0;
-
+	EnterCriticalSection(&g_cs_pvLaser0);
 	std::vector<CLaserData*>::iterator _F = pvLaser0.begin();
 	std::vector<CLaserData*>::iterator _L = pvLaser0.end();
 
@@ -1514,7 +1609,7 @@ INT CGameMulti::ColCheck2()
 				GMAIN->m_pSound.Play(SND_EXPLOSION, true);
 				//사운드 끝
 
-				(*_FT)->hp = (*_FT)->hp - 50 * m_xwing.m_power;		//적케릭터 체력 -50
+				(*_FT)->hp = (*_FT)->hp - 50 * m_xwing_1p.m_power;		//적케릭터 체력 -50
 
 				if ((*_FT)->hp <= 0)				//HP가 0일경우 적캐릭 사망
 				{
@@ -1536,6 +1631,7 @@ INT CGameMulti::ColCheck2()
 			}
 		}
 	}
+	LeaveCriticalSection(&g_cs_pvLaser0);
 
 	return bColl;
 }
@@ -1565,14 +1661,14 @@ INT CGameMulti::ColCheck3()
 			, INT(TempPos.x) + GMAIN->m_pGameTex[3].GetImageWidth()
 			, INT(TempPos.y) + GMAIN->m_pGameTex[3].GetImageHeight());
 
-		SetRect(&rcCol2, INT(m_xwing.vcPosC.x - 112), INT(m_xwing.vcPosC.y - 112)
-			, INT(m_xwing.vcPosC.x - 112) + 275
-			, INT(m_xwing.vcPosC.y) + 112);
+		SetRect(&rcCol2, INT(m_xwing_1p.vcPosC.x - 112), INT(m_xwing_1p.vcPosC.y - 112)
+			, INT(m_xwing_1p.vcPosC.x - 112) + 275
+			, INT(m_xwing_1p.vcPosC.y) + 112);
 
-		SetRect(&rcCol3, INT(m_xwing.vcPosC.x + 22)
-			, INT(m_xwing.vcPosC.y)
-			, INT(m_xwing.vcPosC.x + 22) + 11//m_pGameTex[1].GetImageWidth()
-			, INT(m_xwing.vcPosC.y) + 56//m_pGameTex[1].GetImageHeight()
+		SetRect(&rcCol3, INT(m_xwing_1p.vcPosC.x + 22)
+			, INT(m_xwing_1p.vcPosC.y)
+			, INT(m_xwing_1p.vcPosC.x + 22) + 11//m_pGameTex[1].GetImageWidth()
+			, INT(m_xwing_1p.vcPosC.y) + 56//m_pGameTex[1].GetImageHeight()
 			);
 
 		if (rcCol1.left <= rcCol2.right &&
@@ -1638,7 +1734,7 @@ INT CGameMulti::ColCheck3()
 	return bColl;
 }
 
-void	CGameMulti::UserMoveSend(int iUserNum, float fPosX, float fPosY, int iDirection )
+void	CGameMulti::UserMoveSend(float fPosX, float fPosY, int iDirection )
 {
 	char message[2048];
 	int ping = m_raknet.client->GetAveragePing(m_raknet.client->GetSystemAddressFromIndex(0));
@@ -1652,17 +1748,52 @@ void	CGameMulti::UserMoveSend(int iUserNum, float fPosX, float fPosY, int iDirec
 	lTemp = (long)(fPosY*10.0f);
 	packet.data.posY = (unsigned short)lTemp;
 	packet.data.direction = iDirection;
-	packet.data.user_idx = iUserNum;
+
+	if (m_iMultiPlayer != 0) {
+		packet.data.user_idx = m_iMultiPlayer;
+	}
+
 	memcpy(message, &packet, sizeof(packet));
 	//strcpy(message, "right");
 	m_raknet.client->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 	//m_raknet.client->Send(message, (int)strlen(message) + 1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	char buf[80];
-	sprintf(buf, "INPUT RIGHT posX:%d posY:%d ping:%d \n", packet.data.posX, packet.data.posY, ping);
+	sprintf(buf, "ID_USER_MOVE user: %d, dir:%d, posX:%hu, posY:%hu, ping:%d \n", packet.data.user_idx, iDirection, packet.data.posX, packet.data.posY, ping);
 	OutputDebugString(buf);
-	#endif
+#endif
+}
+
+void	CGameMulti::UserFireSend(float fPosX, float fPosY)
+{
+	char message[2048];
+	int ping = m_raknet.client->GetAveragePing(m_raknet.client->GetSystemAddressFromIndex(0));
+	long lTemp;
+
+	TID_USER_LASER_FIRE packet;
+	packet.typeId = ID_USER_LASER_FIRE;
+
+	lTemp = (long)(fPosX*10.0f);
+	packet.data.posX = (unsigned short)lTemp;
+	lTemp = (long)(fPosY*10.0f);
+	packet.data.posY = (unsigned short)lTemp;
+	packet.data.direction = DIRECTION_UU;
+
+	if (m_iMultiPlayer != 0) {
+		packet.data.user_idx = m_iMultiPlayer;
+	}
+
+	memcpy(message, &packet, sizeof(packet));
+	//strcpy(message, "right");
+	m_raknet.client->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	//m_raknet.client->Send(message, (int)strlen(message) + 1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+
+#ifdef _DEBUG
+	char buf[80];
+	sprintf(buf, "ID_USER_LASER_FIRE user:%d, posX:%hu, posY:%hu, ping:%d \n", packet.data.user_idx, packet.data.posX, packet.data.posY, ping);
+	OutputDebugString(buf);
+#endif
 }
 
 void	CGameMulti::InputMove()
@@ -1682,12 +1813,12 @@ void	CGameMulti::InputMove()
 	////////////////////////////////////////////////////////////////////////////////
 
 
-	if (m_xwing.dead != TRUE)
+	if (m_xwing_1p.dead != TRUE)
 	{
 		if (GMAIN->m_pInput->KeyPress(VK_RIGHT))
 		{
 #ifdef MULTIIMPLE
-			UserMoveSend(0, GMAIN->m_movingdist*m_xwing.m_speed, 0, DIRECTION_RR);
+			UserMoveSend( GMAIN->m_movingdist*m_xwing_1p.m_speed, 0, DIRECTION_RR);
 #else
 			m_xwing.xval = m_xwing.xval + GMAIN->m_movingdist*m_xwing.m_speed;
 
@@ -1700,7 +1831,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_LEFT))
 		{
 #ifdef MULTIIMPLE
-			UserMoveSend(0, GMAIN->m_movingdist*m_xwing.m_speed, 0, DIRECTION_LL);
+			UserMoveSend( GMAIN->m_movingdist*m_xwing_1p.m_speed, 0, DIRECTION_LL);
 #else
 			m_xwing.xval = m_xwing.xval - GMAIN->m_movingdist*m_xwing.m_speed;
 			if (m_xwing.xval<0)
@@ -1713,7 +1844,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_UP))
 		{
 #ifdef MULTIIMPLE
-			UserMoveSend(0, 0, GMAIN->m_movingdist*m_xwing.m_speed, DIRECTION_UU);
+			UserMoveSend( 0, GMAIN->m_movingdist*m_xwing_1p.m_speed, DIRECTION_UU);
 #else
 			m_xwing.yval = m_xwing.yval - GMAIN->m_movingdist*m_xwing.m_speed;
 
@@ -1726,7 +1857,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyPress(VK_DOWN))
 		{
 #ifdef MULTIIMPLE
-			UserMoveSend(0, 0, GMAIN->m_movingdist*m_xwing.m_speed, DIRECTION_DD);
+			UserMoveSend(0, GMAIN->m_movingdist*m_xwing_1p.m_speed, DIRECTION_DD);
 #else
 			m_xwing.yval = m_xwing.yval + GMAIN->m_movingdist*m_xwing.m_speed;
 			if (m_xwing.yval>550)
@@ -1738,6 +1869,7 @@ void	CGameMulti::InputMove()
 		if (GMAIN->m_pInput->KeyDown(VK_SPACE))
 		{
 #ifdef MULTIIMPLE
+			UserFireSend(m_xwing_1p.xval, m_xwing_1p.yval);
 #else
 			if (pvLaser0.size() < m_xwing.m_laserable)
 			{

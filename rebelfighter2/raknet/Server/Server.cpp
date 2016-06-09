@@ -268,15 +268,15 @@ int main(void)
 			case ID_NEW_INCOMING_CONNECTION:
 				// Somebody connected.  We have their IP now
 				printf("ID_NEW_INCOMING_CONNECTION from %s with GUID %s\n", p->systemAddress.ToString(true), p->guid.ToString());
-				clientID=p->systemAddress; // Record the player ID of the client
+				clientID = p->systemAddress; // Record the player ID of the client
 
 				printf("Remote internal IDs:\n");
-				for (int index=0; index < MAXIMUM_NUMBER_OF_INTERNAL_IDS; index++)
+				for (int index = 0; index < MAXIMUM_NUMBER_OF_INTERNAL_IDS; index++)
 				{
 					RakNet::SystemAddress internalId = server->GetInternalID(p->systemAddress, index);
-					if (internalId!=RakNet::UNASSIGNED_SYSTEM_ADDRESS)
+					if (internalId != RakNet::UNASSIGNED_SYSTEM_ADDRESS)
 					{
-						printf("%i. %s\n", index+1, internalId.ToString(true));
+						printf("%i. %s\n", index + 1, internalId.ToString(true));
 					}
 				}
 
@@ -297,21 +297,27 @@ int main(void)
 				printf("ID_CONNECTION_LOST from %s\n", p->systemAddress.ToString(true));;
 				break;
 			case ID_USER_MOVE:
+			{
+				printf("ID_USER_MOVE\n");
 				TID_USER_MOVE packet;
 				packet.typeId = ID_USER_MOVE;
-				//packet.data.posX = ((TID_USER_1P_MOVE_DATA*)(p->data))->posX;
-				//packet.data.posY = ((TID_USER_1P_MOVE_DATA*)(p->data))->posY;
-				//packet.data.direction = ((TID_USER_1P_MOVE_DATA*)(p->data))->direction;
-				//packet.data.user_idx = ((TID_USER_1P_MOVE_DATA*)(p->data))->user_idx;
-
 				memcpy(&packet.data, &(p->data[1]), sizeof(TID_USER_MOVE_DATA));
-
 				memcpy(message, &packet, sizeof(packet));
-				//memcpy(&(packet.data), p->data, sizeof(TID_USER_1P_MOVE_DATA));
-				//server->Send((char*)&packet, sizeof(TID_USER_1P_MOVE), HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, true);
 				server->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
-				break;
+			}
+			break;
 
+			case ID_USER_LASER_FIRE:
+			{
+				printf("ID_USER_LASER_FIRE\n");
+				TID_USER_LASER_FIRE packet;
+				packet.typeId = ID_USER_LASER_FIRE;
+				memcpy(&packet.data, &(p->data[1]), sizeof(TID_USER_LASER_FIRE_DATA));
+				memcpy(message, &packet, sizeof(packet));
+				server->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+			}
+			break;
+			
 			default:
 				// The server knows the static data of all clients, so we can prefix the message
 				// With the name data

@@ -1,10 +1,5 @@
 #pragma once
 
-//#include "TDebugString.h"
-//#include "TClient.h"
-//#include "TGameUser.h"
-//#include "TUdpSocket.h"
-
 typedef struct _raknet {
 	RakNet::RakNetStatistics *rss;
 	// Pointers to the interfaces of our server and client.
@@ -39,13 +34,6 @@ public:
 /////////////////////////////////////////////////////////////
 // for Multi play
 
-	//TUdpSocket			m_Udp;
-	////게임유저
-	////TGameUser				I_GameUser;
-	//std::vector<TGameUser>	m_UserList;
-	//TClient				m_Client;
-	//int					m_iSerIndex;
-	//bool				m_bLogin;
 
 	HANDLE hThread;
 
@@ -53,8 +41,8 @@ public:
 
 	int m_iMultiPlayer;//멀티플레이어 유저 번호. 1: 1p, 2: 2p,  0: 접속되지 않음. 3: 접속자수 2명이상이라 서버로 접속 끊음.
 
-
-	void	UserMoveSend(int iUserNum, float fPosX, float fPosY, int iDirection);
+	void	UserFireSend(float fPosX, float fPosY);
+	void	UserMoveSend(float fPosX, float fPosY, int iDirection);
 /////////////////////////////////////////////////////////////
 	INT Init();
 	void Frame();
@@ -72,7 +60,7 @@ public:
 
 	std::vector<CLaserData*>		pvLaser0;	//주인공 총알 벡터 컨테이너
 	std::vector<CLaserData*>		pvLaser1;	//적 총알 벡터 컨테이너
-	std::vector<CCharacterData*> pvTie0;	    //적 케릭터 벡터 컨테이너
+	std::vector<CCharacterData*>	pvTie0;	    //적 케릭터 벡터 컨테이너
 
 
 	RECT				m_ImgRc2;				// RECT 애니 이미지
@@ -109,9 +97,8 @@ public:
 
 
 
-
-
-	CPlayerData m_xwing;
+	CPlayerData m_xwing_1p;
+	CPlayerData m_xwing_2p;
 
 
 	D3DXVECTOR3 vcPos1;						//배경위치

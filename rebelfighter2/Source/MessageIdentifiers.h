@@ -429,25 +429,34 @@ enum DefaultMessageIDTypes
 	// For the user to use.  Start your first enumeration at this value.
 	ID_USER_PACKET_ENUM,
 	//-------------------------------------------------------------------------------------------------------------
-	ID_USER_MOVE,
-	ID_USER_ASK_PLAYER_NUM,
-	ID_USER_ANS_PLAYER_NUM
+	ID_USER_MOVE,				//1p, 2p 캐릭터 이동
+	ID_USER_ASK_PLAYER_NUM,		//서버 접속을 하며 클라-> 서버로 접속 플레이어 수를 물어옴
+	ID_USER_ANS_PLAYER_NUM,		//서버 -> 클라로 접속 플레이어 수를 알려줌. ex) 네가 1번째.
+	ID_USER_LASER_FIRE,			//레이저발사(생성)
+	ID_USER_LASER_MOVE,			//레이저이동
+	ID_USER_LASER_ERASE,		//레어저삭제
+	ID_USER_OBJECT_CREATE,		//스테이지(적기,아이템)생성
+	ID_USER_OBJECT_MOVE,		//적기(&아이템)이동
+	ID_USER_OBJECT_ERASE,		//적기(&아이템)삭제
+	ID_USER_GAMESCORE_UPDATE,	//게임스코어업데이트
+	ID_USER_KILLCOUNT_UPDATE,	//킬카운트업데이트
+	ID_USER_2P_STATUS_UPDATE	//2P 상태 업데이트
 };
 
 
 /*
-8  1  2
-7     3
-6  5  4
+7  8  9
+4     6
+1  2  3
 */
-#define DIRECTION_UU 1
-#define DIRECTION_RU 2
-#define DIRECTION_RR 3
-#define DIRECTION_RD 4
-#define DIRECTION_DD 5
-#define DIRECTION_LD 6
-#define DIRECTION_LL 7
-#define DIRECTION_LU 8
+#define DIRECTION_LD 1
+#define DIRECTION_DD 2
+#define DIRECTION_RD 3
+#define DIRECTION_LL 4
+#define DIRECTION_RR 6
+#define DIRECTION_LU 7
+#define DIRECTION_UU 8
+#define DIRECTION_RU 9
 
 
 #pragma pack(push, 1)
@@ -488,6 +497,41 @@ struct TID_USER_ANS_PLAYER_NUM
 {
 	unsigned char typeId; // Your type here
 	TID_USER_ANS_PLAYER_NUM_DATA data;
+};
+
+
+
+
+
+struct TID_USER_LASER_FIRE_DATA
+{
+	unsigned short	user_idx;
+	unsigned short	posX;
+	unsigned short	posY;
+	unsigned short	direction; //0 ~7 8방향
+	unsigned short	bullettype; //0 ~7 8방향
+};
+
+struct TID_USER_LASER_FIRE
+{
+	unsigned char typeId; // Your type here
+	TID_USER_LASER_FIRE_DATA data;
+};
+
+
+
+struct TID_USER_LASER_MOVE_DATA
+{
+	unsigned short	user_idx;
+	unsigned short	posX;
+	unsigned short	posY;
+	unsigned short	direction; //0 ~7 8방향
+};
+
+struct TID_USER_LASER_MOVE
+{
+	unsigned char typeId; // Your type here
+	TID_USER_LASER_MOVE_DATA data;
 };
 
 #pragma pack(pop)
