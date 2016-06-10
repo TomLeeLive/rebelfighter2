@@ -8,6 +8,46 @@ CRITICAL_SECTION g_cs_pvLaser0;
 CRITICAL_SECTION g_cs_pvLaser1;
 CRITICAL_SECTION g_cs_pvTie0;
 
+char		g_szIP[16];
+
+
+//////////////////////////////////////////////////////////////////
+// Dialog 프로시져.
+//////////////////////////////////////////////////////////////////
+BOOL CALLBACK DialogProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+{
+	static HWND hEditBox;
+
+	switch (iMsg)
+	{
+	case WM_INITDIALOG:
+		memset(g_szIP, 0, 16);
+
+		//---------------------------------------------------------------
+		// 기본 윈도우 IP 주소 입력  127.0.0.1
+		//---------------------------------------------------------------
+		hEditBox = GetDlgItem(hWnd, IDC_EDIT);
+		SetWindowText(hEditBox, "127.0.0.1");
+		return TRUE;
+
+
+	case WM_COMMAND:
+
+		switch (wParam)
+		{
+		case IDOK:
+			//---------------------------------------------------------------
+			// 전송 버튼 눌릴때 에디트 창의 내용 전송.
+			//---------------------------------------------------------------
+			GetDlgItemText(hWnd, IDC_EDIT, g_szIP, 16);
+			EndDialog(hWnd, TRUE);
+			return TRUE;
+			break;
+		}
+		break;
+	}
+	return FALSE;
+}
 
 // We copy this from Multiplayer.cpp to keep things all in one file for this example
 unsigned char GetPacketIdentifier(RakNet::Packet *p);
@@ -207,7 +247,9 @@ UINT WINAPI ThreadFunc(void *arg)
 	raknet->client->AllowConnectionResponseIPMigration(false);
 
 	//if (ip[0] == 0)
-	strcpy(raknet->ip, "127.0.0.1");
+	strcpy(raknet->ip, g_szIP);
+	//strcpy(raknet->ip, "127.0.0.1");
+
 	// strcpy(ip, "natpunch.jenkinssoftware.com");
 
 
@@ -578,6 +620,12 @@ void CGameMulti::MultiInit() {
 	//if (MessageBox(GHWND, "IP입력?", "질문", MB_OK) == IDOK) {
 	//// ToDo: IP입력처리.
 	//}
+
+	//------------------------------------------------------------
+	// 아이피 입력을 위한 다이알로그를 생성한다.
+	//------------------------------------------------------------
+	DialogBox(GHINST, MAKEINTRESOURCE(IDD_ADDR), NULL, DialogProc);
+
 
 	m_iMultiPlayer = 0;
 	m_iMultiPlayerCount = 0;

@@ -127,8 +127,9 @@ enum GAME_STATE {
 #include "SecureHandshake.h" // Include header for secure handshake
 #endif
 //////////////////////////////////////////////////////////////////////
-
 #include <process.h>
+
+#include "resource.h"
 
 #include "GameScene.h"
 #include "GamePlay.h"

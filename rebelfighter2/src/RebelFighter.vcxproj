@@ -182,8 +182,12 @@
     <ClInclude Include="Main.h" />
     <ClInclude Include="MiMp3.h" />
     <ClInclude Include="PlayerData.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="_StdAfx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RebelFighter.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
