@@ -169,6 +169,11 @@ LRESULT CD3DApplication::MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 			{
 			case VK_ESCAPE:
 				{
+					if (GGAMEMULTI->m_bMultiPlaying == true) {
+						GGAMEMULTI->m_bMultiPlaying = false;
+						GGAMEMULTI->Send_ID_DISCONNECTION_NOTIFICATION();
+					}
+
 					SendMessage(hWnd, WM_DESTROY, 0,0);
 					break;
 				}
@@ -180,6 +185,11 @@ LRESULT CD3DApplication::MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 
 	case WM_DESTROY:
 		{
+			if(GGAMEMULTI->m_bMultiPlaying == true){
+				GGAMEMULTI->m_bMultiPlaying = false;
+				GGAMEMULTI->Send_ID_DISCONNECTION_NOTIFICATION();
+			}
+
 			Cleanup();
 			PostQuitMessage( 0 );
 			return 0;

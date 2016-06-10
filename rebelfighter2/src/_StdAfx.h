@@ -98,7 +98,7 @@ enum GAME_STATE {
 #ifdef _DEBUG
 #pragma comment(lib, "./../lib/RebelFighter2_LibStatic_Debug_Win32.lib")
 #else
-#pragma comment(lib, "./../lib/RakNet_VS2008_LibStatic_Release_Win32.lib")
+#pragma comment(lib, "./../lib/RebelFighter2_LibStatic_Release_Win32.lib")
 #endif
 #pragma comment(lib, "ws2_32.lib")
 

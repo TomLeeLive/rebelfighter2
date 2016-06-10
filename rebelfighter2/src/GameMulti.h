@@ -45,6 +45,9 @@ public:
 	void	Send_ID_USER_LASER_FIRE(float fPosX, float fPosY);
 	void	Send_ID_USER_LASER_MOVE(unsigned short id, float fPosX, float fPosY);
 	void	Send_ID_USER_MOVE(float fPosX, float fPosY, int iDirection);
+
+	void	PrintNetworkConnectStatus();
+	void	Send_ID_DISCONNECTION_NOTIFICATION();
 /////////////////////////////////////////////////////////////
 	INT Init();
 	void Frame();

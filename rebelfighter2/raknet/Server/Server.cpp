@@ -31,12 +31,12 @@
 #include <string.h>
 #include "Gets.h"
 
-#include <list>
+#include <vector>
 
 #ifdef _DEBUG
 #pragma comment(lib, "./../../lib/RebelFighter2_LibStatic_Debug_Win32.lib")
 #else
-#pragma comment(lib, "./../../lib/RakNet_VS2008_LibStatic_Release_Win32.lib")
+#pragma comment(lib, "./../../lib/RebelFighter2_LibStatic_Release_Win32.lib")
 #endif
 #pragma comment(lib, "ws2_32.lib")
 
@@ -73,11 +73,14 @@ public:
 	}
 };
 
-std::list<CUserInfoList*> g_UserInfoList;
+std::vector<CUserInfoList*> g_UserInfoList;
 
+//int g_iUserCnt;
 
 template <typename T>
 unsigned short FindUserNum(T a, RakNet::Packet* p) {
+
+	//g_iUserCnt = 0;
 
 	T::iterator _F = a.begin();
 	T::iterator _L = a.end();
@@ -101,6 +104,48 @@ unsigned short FindUserNum(T a, RakNet::Packet* p) {
 	{
 		if (p->systemAddress.GetPort() == (*_F)->internalId.GetPort())
 			return (*_F)->usUserNum;
+	}
+	return 0;
+}
+
+template <typename T>
+unsigned short DeleteUser(T* a, RakNet::Packet* p) {
+
+	T::iterator _F = a->begin();
+	T::iterator _L = a->end();
+
+	if (a->size() == 0)
+		return 0;
+
+	unsigned short temp1 = 0;
+	unsigned short temp2 = 0;
+
+	temp1 = p->systemAddress.GetPort();
+
+	for (; _F != _L; _F++)
+	{
+		if (*_F == 0)
+			continue;
+
+		temp2 = (*_F)->internalId.GetPort();
+		if ( temp1 ==  temp2 )
+		{
+			if (*_F != 0)
+			{
+				delete (*_F);
+				*_F = 0;
+			}
+		}
+
+	}
+
+	_F = a->begin();
+	while (_F != a->end())
+	{
+		if (*_F == 0)
+			_F = a->erase(_F);
+		else
+			_F++;
 	}
 	return 0;
 }
@@ -315,7 +360,12 @@ int main(void)
 			{
 			case ID_DISCONNECTION_NOTIFICATION:
 				// Connection lost normally
-				printf("ID_DISCONNECTION_NOTIFICATION from %s\n", p->systemAddress.ToString(true));;
+				printf("ID_DISCONNECTION_NOTIFICATION from %s\n", p->systemAddress.ToString(true));
+				printf("Before g_UserInfoList.size(): %d\n", g_UserInfoList.size());
+				DeleteUser(&g_UserInfoList, p);
+				printf("After  g_UserInfoList.size(): %d\n", g_UserInfoList.size());
+				//#ToDo 전체유저에게 한 유가가 접속이 끊겨서 게임 진행이 안됨을 통보.
+
 				break;
 
 
@@ -333,7 +383,8 @@ int main(void)
 						printf("%i. %s\n", index + 1, internalId.ToString(true));
 
 						//#추가함. 유저가 들어오면 벡터 컨테이너에 넣는다.
-						g_UserInfoList.push_back(new CUserInfoList(internalId, g_UserInfoList.size() + 1));
+						//g_iUserCnt++;
+						g_UserInfoList.push_back(new CUserInfoList(internalId, g_UserInfoList.size()+1));
 					}
 				}
 
@@ -352,7 +403,12 @@ int main(void)
 			case ID_CONNECTION_LOST:
 				// Couldn't deliver a reliable packet - i.e. the other system was abnormally
 				// terminated
-				printf("ID_CONNECTION_LOST from %s\n", p->systemAddress.ToString(true));;
+				printf("ID_CONNECTION_LOST from %s\n", p->systemAddress.ToString(true));
+				printf("Before g_UserInfoList.size(): %d\n", g_UserInfoList.size());
+				DeleteUser(&g_UserInfoList, p);
+				printf("After  g_UserInfoList.size(): %d\n", g_UserInfoList.size());
+				//#ToDo 전체유저에게 한 유가가 접속이 끊겨서 게임 진행이 안됨을 통보.
+
 				break;
 			case ID_USER_MOVE:
 			{
@@ -388,7 +444,7 @@ int main(void)
 					packet.data.howmany = g_UserInfoList.size();
 					packet.data.yournum = FindUserNum(g_UserInfoList, p);
 					memcpy(message, &packet, sizeof(packet));
-					server->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+					server->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, p->systemAddress, false);
 					printf("ID_USER_ANS_PLAYER_NUM sent. \n");
 				}
 			}
@@ -424,6 +480,16 @@ int main(void)
 	server->Shutdown(300);
 	// We're done with the network
 	RakNet::RakPeerInterface::DestroyInstance(server);
+
+
+	std::vector<CUserInfoList*>::iterator _F = g_UserInfoList.begin();
+	std::vector<CUserInfoList*>::iterator _L = g_UserInfoList.end();
+
+	for (; _F != _L; ++_F)
+	{
+		delete (*_F);
+	}
+	g_UserInfoList.clear();
 
 	return 0;
 }

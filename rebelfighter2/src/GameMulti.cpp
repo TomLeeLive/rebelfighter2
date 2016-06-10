@@ -7,6 +7,7 @@
 CRITICAL_SECTION g_cs_pvLaser0;
 CRITICAL_SECTION g_cs_pvLaser1;
 CRITICAL_SECTION g_cs_pvTie0;
+//CRITICAL_SECTION g_cs_m_raknet;
 
 char		g_szIP[16];
 
@@ -95,10 +96,28 @@ unsigned short CreateUniqueID(T a) {
 
 }
 
+void CGameMulti::Send_ID_DISCONNECTION_NOTIFICATION()
+{
+	char message[2048];
+	//RakNet::Packet packet;
+	TID_USER_ASK_PLAYER_NUM packet;
+	//(unsigned char)packet.data[0] = ID_DISCONNECTION_NOTIFICATION;
+	packet.typeId = ID_DISCONNECTION_NOTIFICATION;
+	memcpy(message, &packet, sizeof(packet));
+	//EnterCriticalSection(&g_cs_m_raknet);
+	GGAMEMULTI->m_raknet.client->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	//LeaveCriticalSection(&g_cs_m_raknet);
+#ifdef _DEBUG
+	char buf[80];
+	sprintf(buf, "ID_USER_ASK_PLAYER_NUM\n");
+	OutputDebugString(buf);
+#endif
+}
 
 void Send_ID_USER_ASK_PLAYER_NUM()
 {
 	char message[2048];
+	//EnterCriticalSection(&g_cs_m_raknet);
 	int ping = GGAMEMULTI->m_raknet.client->GetAveragePing(GGAMEMULTI->m_raknet.client->GetSystemAddressFromIndex(0));
 	long lTemp;
 
@@ -107,6 +126,7 @@ void Send_ID_USER_ASK_PLAYER_NUM()
 
 	memcpy(message, &packet, sizeof(packet));
 	GGAMEMULTI->m_raknet.client->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	//LeaveCriticalSection(&g_cs_m_raknet);
 
 #ifdef _DEBUG
 	char buf[80];
@@ -124,38 +144,76 @@ void Process_ID_USER_MOVE(RakNet::Packet *p) {
 
 	lTemp = (long)temp.posX;
 
-	if (temp.direction == DIRECTION_RR) {
-		GGAMEMULTI->m_xwing_1p.xval += ((float)lTemp) / 10.0f;
+	if (temp.user_idx == 1) {
+		if (temp.direction == DIRECTION_RR) {
+			GGAMEMULTI->m_xwing_1p.xval += ((float)lTemp) / 10.0f;
 
-		if (GGAMEMULTI->m_xwing_1p.xval>593)
-		{
-			GGAMEMULTI->m_xwing_1p.xval = 593;
+			if (GGAMEMULTI->m_xwing_1p.xval > 593)
+			{
+				GGAMEMULTI->m_xwing_1p.xval = 593;
+			}
+		}
+		else if (temp.direction == DIRECTION_LL) {
+			GGAMEMULTI->m_xwing_1p.xval -= ((float)lTemp) / 10.0f;
+
+			if (GGAMEMULTI->m_xwing_1p.xval < 0)
+			{
+				GGAMEMULTI->m_xwing_1p.xval = 0;
+			}
+		}
+		lTemp = (long)temp.posY;
+
+		if (temp.direction == DIRECTION_UU) {
+			GGAMEMULTI->m_xwing_1p.yval -= ((float)lTemp) / 10.0f;
+
+			if (GGAMEMULTI->m_xwing_1p.yval < 0)
+			{
+				GGAMEMULTI->m_xwing_1p.yval = 0;
+			}
+		}
+		else if (temp.direction == DIRECTION_DD) {
+			GGAMEMULTI->m_xwing_1p.yval += ((float)lTemp) / 10.0f;
+
+			if (GGAMEMULTI->m_xwing_1p.yval > 550)
+			{
+				GGAMEMULTI->m_xwing_1p.yval = 550;
+			}
 		}
 	}
-	else if (temp.direction == DIRECTION_LL) {
-		GGAMEMULTI->m_xwing_1p.xval -= ((float)lTemp) / 10.0f;
+	else if(temp.user_idx == 2){
+		if (temp.direction == DIRECTION_RR) {
+			GGAMEMULTI->m_xwing_2p.xval += ((float)lTemp) / 10.0f;
 
-		if (GGAMEMULTI->m_xwing_1p.xval<0)
-		{
-			GGAMEMULTI->m_xwing_1p.xval = 0;
+			if (GGAMEMULTI->m_xwing_2p.xval > 593)
+			{
+				GGAMEMULTI->m_xwing_2p.xval = 593;
+			}
 		}
-	}
-	lTemp = (long)temp.posY;
+		else if (temp.direction == DIRECTION_LL) {
+			GGAMEMULTI->m_xwing_2p.xval -= ((float)lTemp) / 10.0f;
 
-	if (temp.direction == DIRECTION_UU) {
-		GGAMEMULTI->m_xwing_1p.yval -= ((float)lTemp) / 10.0f;
-
-		if (GGAMEMULTI->m_xwing_1p.yval<0)
-		{
-			GGAMEMULTI->m_xwing_1p.yval = 0;
+			if (GGAMEMULTI->m_xwing_2p.xval < 0)
+			{
+				GGAMEMULTI->m_xwing_2p.xval = 0;
+			}
 		}
-	}
-	else if (temp.direction == DIRECTION_DD) {
-		GGAMEMULTI->m_xwing_1p.yval += ((float)lTemp) / 10.0f;
+		lTemp = (long)temp.posY;
 
-		if (GGAMEMULTI->m_xwing_1p.yval>550)
-		{
-			GGAMEMULTI->m_xwing_1p.yval = 550;
+		if (temp.direction == DIRECTION_UU) {
+			GGAMEMULTI->m_xwing_2p.yval -= ((float)lTemp) / 10.0f;
+
+			if (GGAMEMULTI->m_xwing_2p.yval < 0)
+			{
+				GGAMEMULTI->m_xwing_2p.yval = 0;
+			}
+		}
+		else if (temp.direction == DIRECTION_DD) {
+			GGAMEMULTI->m_xwing_2p.yval += ((float)lTemp) / 10.0f;
+
+			if (GGAMEMULTI->m_xwing_2p.yval > 550)
+			{
+				GGAMEMULTI->m_xwing_2p.yval = 550;
+			}
 		}
 	}
 }
@@ -167,7 +225,6 @@ void Process_ID_USER_ANS_PLAYER_NUM(RakNet::Packet *p) {
 
 	GGAMEMULTI->m_iMultiPlayerCount =temp.howmany;
 	GGAMEMULTI->m_iMultiPlayer=temp.yournum;
-
 }
 
 void Process_ID_USER_LASER_FIRE(RakNet::Packet *p) {
@@ -304,7 +361,8 @@ UINT WINAPI ThreadFunc(void *arg)
 
 
 	// Loop for input
-	while (1)
+	//while (1)
+	while (GGAMEMULTI->m_bMultiPlaying)
 	{
 		// This sleep keeps RakNet responsive
 #ifdef _WIN32
@@ -512,9 +570,12 @@ UINT WINAPI ThreadFunc(void *arg)
 		}
 		//#접속후 처음 메시지는  ID_USER_ASK_PLAYER_NUM 클라->서버
 		
-		if(GGAMEMULTI->m_iMultiPlayer==0)
+		if (GGAMEMULTI->m_iMultiPlayerCount < 2) {
+			//GMAIN->m_text.Begin();
+			//GMAIN->m_text.Draw("Waiting for Other Player", 660, 480);
+			//GMAIN->m_text.End();
 			Send_ID_USER_ASK_PLAYER_NUM();
-
+		}
 	}
 
 	// Be nice and let the server know we quit.
@@ -567,6 +628,7 @@ INT CGameMulti::Init()
 	InitializeCriticalSection(&g_cs_pvLaser0);
 	InitializeCriticalSection(&g_cs_pvLaser1);
 	InitializeCriticalSection(&g_cs_pvTie0);
+	//InitializeCriticalSection(&g_cs_m_raknet);
 
 	score = 0;
 	curstage = 0;
@@ -629,7 +691,7 @@ void CGameMulti::MultiInit() {
 
 	m_iMultiPlayer = 0;
 	m_iMultiPlayerCount = 0;
-	m_bMultiPlaying = false;
+	m_bMultiPlaying = true;
 
 	//memset(&m_raknet, 0, sizeof(m_raknet));
 
@@ -657,6 +719,10 @@ void CGameMulti::MultiInit() {
 
 void CGameMulti::Frame()
 {
+
+	if (m_iMultiPlayerCount < 2)
+		return;
+
 	/////////////////////////////////////////////////////////////
 	//if (m_bLogin == false) return;
 
@@ -1068,9 +1134,17 @@ void CGameMulti::EnemyBullet(){
 }
 void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 {
+
+	if (m_iMultiPlayerCount < 2) {
+		PrintNetworkConnectStatus();
+		return;
+	}
+
 	//if (m_bLogin == false) return;
 
 	dxsprite->Begin(D3DXSPRITE_ALPHABLEND);
+
+
 
 	vcBar = D3DXVECTOR3(650, 0, 0);							//상태바위치
 
@@ -1453,6 +1527,18 @@ void CGameMulti::Render(LPDIRECT3DDEVICE9& dxdevice, LPD3DXSPRITE& dxsprite)
 	this->ProcessSideBar();
 }
 
+void CGameMulti::PrintNetworkConnectStatus() {
+	////////////////////////////////////////////////////////////////////////////////
+	//char scoreBuf[80];
+	//sprintf(scoreBuf, " %d", score);
+
+	GMAIN->m_text.Begin();
+	GMAIN->m_text.Draw("Waiting for other player", 0, 0);
+	//GMAIN->m_text.Draw(killcount, 660, 70);
+	GMAIN->m_text.End();
+
+}
+
 //옆에 상태바 출력처리용
 void CGameMulti::ProcessSideBar() {
 	////////////////////////////////////////////////////////////////////////////////
@@ -1558,6 +1644,7 @@ void CGameMulti::Destroy()
 	DeleteCriticalSection(&g_cs_pvLaser0);
 	DeleteCriticalSection(&g_cs_pvLaser1);
 	DeleteCriticalSection(&g_cs_pvTie0);
+	//DeleteCriticalSection(&g_cs_m_raknet);
 
 
 
@@ -1893,7 +1980,9 @@ INT CGameMulti::ColCheck3()
 void	CGameMulti::Send_ID_USER_MOVE(float fPosX, float fPosY, int iDirection )
 {
 	char message[2048];
+	//EnterCriticalSection(&g_cs_m_raknet);
 	int ping = m_raknet.client->GetAveragePing(m_raknet.client->GetSystemAddressFromIndex(0));
+
 	long lTemp;
 
 	TID_USER_MOVE packet;
@@ -1913,6 +2002,7 @@ void	CGameMulti::Send_ID_USER_MOVE(float fPosX, float fPosY, int iDirection )
 	//strcpy(message, "right");
 	m_raknet.client->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 	//m_raknet.client->Send(message, (int)strlen(message) + 1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	//LeaveCriticalSection(&g_cs_m_raknet);
 
 #ifdef _DEBUG
 	char buf[80];
@@ -1929,7 +2019,9 @@ void	CGameMulti::Send_ID_USER_LASER_FIRE(float fPosX, float fPosY)
 	TID_USER_LASER_FIRE packet;
 
 	char message[2048];
+	//EnterCriticalSection(&g_cs_m_raknet);
 	int ping = m_raknet.client->GetAveragePing(m_raknet.client->GetSystemAddressFromIndex(0));
+	//LeaveCriticalSection(&g_cs_m_raknet);
 	long lTemp;
 
 	if (m_iMultiPlayer == 1) { //1p
@@ -1960,9 +2052,10 @@ void	CGameMulti::Send_ID_USER_LASER_FIRE(float fPosX, float fPosY)
 
 			memcpy(message, &packet, sizeof(packet));
 			//strcpy(message, "right");
+			//EnterCriticalSection(&g_cs_m_raknet);
 			m_raknet.client->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 			//m_raknet.client->Send(message, (int)strlen(message) + 1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
-
+			//LeaveCriticalSection(&g_cs_m_raknet);
 #ifdef _DEBUG
 			char buf[80];
 			sprintf(buf, "ID_USER_LASER_FIRE user:%d, posX:%hu, posY:%hu, id:%hu, ping:%d \n", packet.data.user_idx, packet.data.posX, packet.data.posY, packet.data.id, ping);
@@ -1987,7 +2080,9 @@ void	CGameMulti::Send_ID_USER_LASER_FIRE(float fPosX, float fPosY)
 void	CGameMulti::Send_ID_USER_LASER_MOVE(unsigned short id, float fPosX, float fPosY)
 {
 	char message[2048];
+	//EnterCriticalSection(&g_cs_m_raknet);
 	int ping = m_raknet.client->GetAveragePing(m_raknet.client->GetSystemAddressFromIndex(0));
+	//LeaveCriticalSection(&g_cs_m_raknet);
 	long lTemp;
 
 	TID_USER_LASER_FIRE packet;
@@ -2005,7 +2100,9 @@ void	CGameMulti::Send_ID_USER_LASER_MOVE(unsigned short id, float fPosX, float f
 
 	memcpy(message, &packet, sizeof(packet));
 	//strcpy(message, "right");
+	//EnterCriticalSection(&g_cs_m_raknet);
 	m_raknet.client->Send(message, sizeof(packet), HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+	//LeaveCriticalSection(&g_cs_m_raknet);
 	//m_raknet.client->Send(message, (int)strlen(message) + 1, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 
 #ifdef _DEBUG
@@ -2017,6 +2114,9 @@ void	CGameMulti::Send_ID_USER_LASER_MOVE(unsigned short id, float fPosX, float f
 
 void	CGameMulti::InputMove()
 {
+	if (m_iMultiPlayerCount < 2)
+		return;
+
 	GMAIN->m_pInput->FrameMove();
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -2030,6 +2130,8 @@ void	CGameMulti::InputMove()
 	//SetWindowText(m_hWnd, "오른쪽버튼을 눌렀습니다");
 	//}
 	////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 	if (m_xwing_1p.dead != TRUE)
